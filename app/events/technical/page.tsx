@@ -55,13 +55,34 @@ function Technical() {
     <div className="relative w-full min-h-screen text-white overflow-x-hidden selection:bg-[#33ABB9]/30">
       <TechnicalBackground />
       <div className="container mx-auto py-8">
-        <h1 className="text-3xl font-bold mb-6">Technical Events</h1>
+        <div className="flex flex-col items-center w-full animate-fade-in">
+          <h1
+            className="text-7xl sm:text-8xl md:text-9xl uppercase tracking-normal leading-[1.1] font-black mb-4"
+            style={{
+              fontFamily: 'Barlow Condensed, sans-serif',
+              color: '#e5e7eb', // off-white
+              fontWeight: 900,
+              textShadow: '0 2px 8px rgba(0,0,0,0.25)'
+            }}
+          >
+            TECHNICAL
+          </h1>
+        </div>
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map(event => (
             <div key={event._id} className="bg-[#222] rounded-lg p-6 shadow-md">
-              <h2 className="text-xl font-semibold mb-2">{event.name}</h2>
+              <h2
+                className="text-xl font-semibold mb-2"
+                style={{
+                  color: '#e0e4ea', // off-white
+                  fontWeight: 800,
+                  textShadow: '0 1px 6px rgba(0,0,0,0.18)'
+                }}
+              >
+                {event.name}
+              </h2>
               <p className="text-gray-300">{event.description}</p>
             </div>
           ))}
