@@ -4,7 +4,7 @@
 // import EventCard from '@/components/managerial/EventCard';
 // import { IMAGES } from '@/components/events/constants'; // Import real data
 // import Link from 'next/link';
-import ManagerialBackground from "@/components/ManagerialBackground";
+import ManagerialBackground from "@/components/events/ManagerialBackground";
 
 // Helper to generate slug consistent with the detail page logic
 // const generateSlug = (item: any) => {

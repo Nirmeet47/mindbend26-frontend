@@ -2,7 +2,7 @@
 
 import React from 'react';
 TechnicalBackground;
-import TechnicalBackground from '@/components/TechnicalBackground';
+import TechnicalBackground from '@/components/events/TechnicalBackground';
 // import TechnicalEventCard from '@/components/events/technical/TechnicalEventCard';
 
 // const images = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11];
