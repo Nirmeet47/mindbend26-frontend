@@ -13,12 +13,28 @@ function HeroScene() {
   useFrame((state) => {
     const { x, y } = state.mouse;
     if (modelRef.current) {
-      modelRef.current.rotation.y = THREE.MathUtils.lerp(modelRef.current.rotation.y, x * 0.4, 0.05);
-      modelRef.current.rotation.x = THREE.MathUtils.lerp(modelRef.current.rotation.x, -y * 0.1, 0.05);
+      modelRef.current.rotation.y = THREE.MathUtils.lerp(
+        modelRef.current.rotation.y,
+        x * 0.4,
+        0.05
+      );
+      modelRef.current.rotation.x = THREE.MathUtils.lerp(
+        modelRef.current.rotation.x,
+        -y * 0.1,
+        0.05
+      );
     }
     if (titleGroupRef.current) {
-      titleGroupRef.current.position.x = THREE.MathUtils.lerp(titleGroupRef.current.position.x, -x * 1.2, 0.05);
-      titleGroupRef.current.position.y = THREE.MathUtils.lerp(titleGroupRef.current.position.y, -y * 0.5, 0.05);
+      titleGroupRef.current.position.x = THREE.MathUtils.lerp(
+        titleGroupRef.current.position.x,
+        -x * 1.2,
+        0.05
+      );
+      titleGroupRef.current.position.y = THREE.MathUtils.lerp(
+        titleGroupRef.current.position.y,
+        -y * 0.5,
+        0.05
+      );
     }
   });
 
@@ -29,16 +45,30 @@ function HeroScene() {
           <group position={[0, 4, -10]}>
             <Text fontSize={5} color="#ffffff" textAlign="center">
               MINDBEND
-              <meshStandardMaterial emissive="#00ffff" emissiveIntensity={2} toneMapped={false} />
+              <meshStandardMaterial
+                emissive="#00ffff"
+                emissiveIntensity={2}
+                toneMapped={false}
+              />
             </Text>
-            <Text fontSize={1.5} color="#00ffff" position={[10, -3, 0.5]} fontStyle="italic">
+            <Text
+              fontSize={1.5}
+              color="#00ffff"
+              position={[10, -3, 0.5]}
+              fontStyle="italic"
+            >
               2026
             </Text>
           </group>
         </Float>
       </group>
 
-      <primitive ref={modelRef} object={scene} scale={6} position={[0, -14, 9]} />
+      <primitive
+        ref={modelRef}
+        object={scene}
+        scale={6}
+        position={[0, -14, 9]}
+      />
     </>
   );
 }
@@ -51,18 +81,25 @@ export default function Hero() {
     const handleScroll = () => {
       if (sectionRef.current) {
         const rect = sectionRef.current.getBoundingClientRect();
-        const scrollProgress = Math.max(0, Math.min(1, 1 - (-rect.top / window.innerHeight)));
+        const scrollProgress = Math.max(
+          0,
+          Math.min(1, 1 - -rect.top / window.innerHeight)
+        );
         setScrollOpacity(scrollProgress);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative h-screen w-full" style={{ opacity: scrollOpacity }}>
+    <section
+      ref={sectionRef}
+      className="relative h-screen w-full"
+      style={{ opacity: scrollOpacity }}
+    >
       <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1.5} color="#00ffff" />
@@ -71,7 +108,7 @@ export default function Hero() {
           <Environment preset="night" />
         </Suspense>
       </Canvas>
-      
+
       {/* SYMBIONT Overlay */}
       <div className="absolute inset-0 flex flex-col justify-between p-12 pointer-events-none z-20">
         <div className="self-end text-right text-white max-w-md mt-auto">
@@ -87,7 +124,7 @@ export default function Hero() {
           </p>
         </div>
       </div>
-      
+
       {/* Gradient overlay for smooth transition */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#020205] to-transparent pointer-events-none z-10" />
     </section>
