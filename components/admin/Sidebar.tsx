@@ -21,23 +21,25 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="sidebar">
-      <div className="logo">Mindbend Admin</div>
-      <div className="text-xs text-gray-400 mb-3">
-        Signed in as <b className="text-white">{user?.role || "Unknown"}</b>
+    <aside className="h-screen w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col py-8 px-6">
+      <div className="mb-8">
+        <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Mindbend Admin</div>
+        <div className="text-xs text-gray-500">Signed in as <span className="font-semibold text-gray-700 dark:text-gray-200">{user?.role || "Unknown"}</span></div>
       </div>
-      <Link className={`nav-link ${pathname === "/admin/dashboard" ? "active" : ""}`} href="/admin/dashboard">Dashboard</Link>
-      <Link className={`nav-link ${pathname?.startsWith("/admin/dashboard/events") ? "active" : ""}`} href="/admin/dashboard/events">Events</Link>
-      {canViewUsers && (
-        <Link className={`nav-link ${pathname?.startsWith("/admin/dashboard/users") ? "active" : ""}`} href="/admin/dashboard/users">Users</Link>
-      )}
-      {canViewTeams && (
-        <Link className={`nav-link ${pathname?.startsWith("/admin/dashboard/teams") ? "active" : ""}`} href="/admin/dashboard/teams">Teams</Link>
-      )}
-      {canViewSecurity && (
-        <Link className={`nav-link ${pathname?.startsWith("/admin/dashboard/security") ? "active" : ""}`} href="/admin/dashboard/security">Security</Link>
-      )}
-      <button onClick={doLogout} className="mt-6 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition">Logout</button>
+      <nav className="flex-1 flex flex-col gap-1">
+        <Link href="/admin/dashboard" className={`block px-4 py-2 rounded transition text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${pathname === "/admin/dashboard" ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""}`}>Dashboard</Link>
+        <Link href="/admin/dashboard/events" className={`block px-4 py-2 rounded transition text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${pathname?.startsWith("/admin/dashboard/events") ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""}`}>Events</Link>
+        {canViewUsers && (
+          <Link href="/admin/dashboard/users" className={`block px-4 py-2 rounded transition text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${pathname?.startsWith("/admin/dashboard/users") ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""}`}>Users</Link>
+        )}
+        {canViewTeams && (
+          <Link href="/admin/dashboard/teams" className={`block px-4 py-2 rounded transition text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${pathname?.startsWith("/admin/dashboard/teams") ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""}`}>Teams</Link>
+        )}
+        {canViewSecurity && (
+          <Link href="/admin/dashboard/security" className={`block px-4 py-2 rounded transition text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${pathname?.startsWith("/admin/dashboard/security") ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""}`}>Security</Link>
+        )}
+      </nav>
+      <button onClick={doLogout} className="mt-8 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition font-medium">Logout</button>
     </aside>
   );
 }

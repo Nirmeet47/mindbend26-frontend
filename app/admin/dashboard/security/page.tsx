@@ -17,14 +17,14 @@ export default function AdminSecurityPage() {
   }, []);
 
   return (
-    <div style={{ color: "white" }}>
+    <div className="px-8 py-10 bg-gray-50 dark:bg-gray-900 min-h-screen">
       <Header title="Security" />
       {loading ? (
-        <div>Loading...</div>
+        <div className="text-center text-base text-gray-500 py-12">Loading...</div>
       ) : error ? (
-        <div style={{ color: "red" }}>{error}</div>
+        <div className="text-center text-red-500 py-12">{error}</div>
       ) : (
-        <pre style={{ background: "#222", padding: 16, borderRadius: 8 }}>
+        <pre className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 text-sm text-gray-700 dark:text-gray-200 overflow-x-auto border border-gray-200 dark:border-gray-700">
           {JSON.stringify(status, null, 2)}
         </pre>
       )}
