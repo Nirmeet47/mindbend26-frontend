@@ -1,10 +1,10 @@
 'use client';
 
 // import ManagerialBackground from '@/components/managerial/ManagerialBackground';
-// import EventCard from '@/components/managerial/EventCard';
 // import { IMAGES } from '@/components/events/constants'; // Import real data
-// import Link from 'next/link';
 import ManagerialBackground from "@/components/events/ManagerialBackground";
+import EventCard from "@/components/EventCard";
+import Link from "next/link";
 
 // Helper to generate slug consistent with the detail page logic
 // const generateSlug = (item: any) => {
@@ -15,9 +15,14 @@ import ManagerialBackground from "@/components/events/ManagerialBackground";
 import { useEffect, useState } from 'react';
 
 interface Event {
-    _id: string;
-    name: string;
-    description?: string;
+  _id: string;
+  name: string;
+  description?: string;
+  slug: string,
+  prizeMoney: Number,
+  eventDate: Date,
+  eventPhoto: string
+  // Add other fields as needed
 }
 
 export default function ManagerialPage() {
@@ -42,6 +47,40 @@ export default function ManagerialPage() {
             }
         }
         fetchEvents();
+
+
+        // dummy data for testing
+        // setEvents([
+        //     {
+        //     _id: "1",
+        //     name: "Codewars",
+        //     description: "coding..",
+        //     slug: "codewars",
+        //     prizeMoney: 100,
+        //     eventDate: new Date(),
+        //     eventPhoto: "https://mindbend-main.vercel.app/mindbend.png"
+        //     },
+        //     {
+        //     _id: "2",
+        //     name: "Codewars",
+        //     description: "coding..",
+        //     slug: "codewars",
+        //     prizeMoney: 100,
+        //     eventDate: new Date(),
+        //     eventPhoto: "https://mindbend-main.vercel.app/mindbend.png"
+        //     },
+        //     {
+        //     _id: "3",
+        //     name: "Codewars",
+        //     description: "coding..",
+        //     slug: "codewars",
+        //     prizeMoney: 100,
+        //     eventDate: new Date(),
+        //     eventPhoto: "https://mindbend-main.vercel.app/mindbend.png"
+        //     },
+        // ])
+        // setLoading(false)
+
     }, []);
 
     return (
@@ -73,19 +112,30 @@ export default function ManagerialPage() {
                 {error && <p className="text-red-500">{error}</p>}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {events.map(event => (
-                        <div key={event._id} className="bg-[#222] rounded-lg p-6 shadow-md">
-                            <h2
-                                className="text-xl font-semibold mb-2"
-                                style={{
-                                    color: '#e0e4ea', // off-white
-                                    fontWeight: 800,
-                                    textShadow: '0 1px 6px rgba(0,0,0,0.18)'
-                                }}
-                            >
-                                {event.name}
-                            </h2>
-                            <p className="text-gray-300">{event.description}</p>
-                        </div>
+                        // <div key={event._id} className="bg-[#222] rounded-lg p-6 shadow-md">
+                        //     <h2
+                        //         className="text-xl font-semibold mb-2"
+                        //         style={{
+                        //             color: '#e0e4ea', // off-white
+                        //             fontWeight: 800,
+                        //             textShadow: '0 1px 6px rgba(0,0,0,0.18)'
+                        //         }}
+                        //     >
+                        //         {event.name}
+                        //     </h2>
+                        //     <p className="text-gray-300">{event.description}</p>
+                        // </div>
+                        
+                        <Link href={`/events/technical/${event.slug}`} key={event._id} className="block">
+                        <EventCard
+                            title={`${event.name}`}
+                            description={event.description?.substring(0, 100) + "..."}
+                            date={`${event.eventDate.toLocaleString('default', { month: 'short' })} ${event.eventDate.getDate()}th`}
+                            prize={`₹${event.prizeMoney}`}
+                            // delay={index * 0.05}
+                            image={event.eventPhoto}
+                        />
+                        </Link>
                     ))}
                 </div>
             </div>
