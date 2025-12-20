@@ -34,36 +34,36 @@ export default function Footer() {
         <nav className="flex flex-wrap items-center justify-center gap-8 md:gap-16 mb-12 px-4">
           <Link
             href="/about"
-            className="text-white text-lg md:text-xl font-bold uppercase tracking-wider hover:text-cyan-400 transition-colors duration-300"
-            style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+            className="text-white text-lg md:text-xl font-bold uppercase tracking-wider hover:scale-105 transition-colors duration-300"
+            style={{ fontFamily: "Space Grotesk, sans-serif" }}
           >
             About
           </Link>
           <Link
             href="/sponsors"
-            className="text-white text-lg md:text-xl font-bold uppercase tracking-wider hover:text-cyan-400 transition-colors duration-300"
-            style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+            className="text-white text-lg md:text-xl font-bold uppercase tracking-wider hover:scale-105 transition-colors duration-300"
+            style={{ fontFamily: "Space Grotesk, sans-serif" }}
           >
             Sponsors
           </Link>
           <Link
             href="/contact"
-            className="text-white text-lg md:text-xl font-bold uppercase tracking-wider hover:text-cyan-400 transition-colors duration-300"
-            style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+            className="text-white text-lg md:text-xl font-bold uppercase tracking-wider hover:scale-105 transition-colors duration-300"
+            style={{ fontFamily: "Space Grotesk, sans-serif" }}
           >
             Contact
           </Link>
           <Link
             href="/team"
-            className="text-white text-lg md:text-xl font-bold uppercase tracking-wider hover:text-cyan-400 transition-colors duration-300"
-            style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+            className="text-white text-lg md:text-xl font-bold uppercase tracking-wider hover:scale-105 transition-colors duration-300"
+            style={{ fontFamily: "Space Grotesk, sans-serif" }}
           >
             Team
           </Link>
           <Link
             href="/events"
-            className="text-white text-lg md:text-xl font-bold uppercase tracking-wider hover:text-cyan-400 transition-colors duration-300"
-            style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+            className="text-white text-lg md:text-xl font-bold uppercase tracking-wider hover:scale-105 transition-colors duration-300"
+            style={{ fontFamily: "Space Grotesk, sans-serif" }}
           >
             Events
           </Link>
@@ -75,7 +75,7 @@ export default function Footer() {
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white hover:text-cyan-400 transition-colors duration-300 transform hover:scale-110"
+            className="text-white transition-colors duration-300 transform hover:scale-110"
             aria-label="Instagram"
           >
             <Instagram size={32} strokeWidth={1.5} />
@@ -84,7 +84,7 @@ export default function Footer() {
             href="https://linkedin.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white hover:text-cyan-400 transition-colors duration-300 transform hover:scale-110"
+            className="text-white transition-colors duration-300 transform hover:scale-110"
             aria-label="LinkedIn"
           >
             <Linkedin size={32} strokeWidth={1.5} />
@@ -93,7 +93,7 @@ export default function Footer() {
             href="https://facebook.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white hover:text-cyan-400 transition-colors duration-300 transform hover:scale-110"
+            className="text-white transition-colors duration-300 transform hover:scale-110"
             aria-label="Facebook"
           >
             <Facebook size={32} strokeWidth={1.5} />
@@ -102,7 +102,7 @@ export default function Footer() {
             href="https://youtube.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white hover:text-cyan-400 transition-colors duration-300 transform hover:scale-110"
+            className="text-white transition-colors duration-300 transform hover:scale-110"
             aria-label="YouTube"
           >
             <Youtube size={32} strokeWidth={1.5} />
@@ -112,8 +112,8 @@ export default function Footer() {
         {/* Copyright */}
         <div className="text-center">
           <p
-            className="text-white text-xl md:text-2xl font-bold uppercase tracking-[0.3em]"
-            style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+            className="text-white text-xl md:text-3xl font-bold uppercase tracking-[0.2em]"
+            style={{ fontFamily: "Barlow Condensed, sans-serif" }}
           >
             © 2026 MINDBEND
           </p>
