@@ -1,0 +1,45 @@
+"use client";
+import React from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { logout, parseJWT } from "../../lib/auth";
+import { permissions } from "../../lib/permissions";
+
+export default function Sidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null;
+  const user = token ? parseJWT(token) : null;
+
+  const canViewUsers = user ? permissions.canViewUsers(user.role) : false;
+  const canViewTeams = user ? permissions.canViewTeams(user.role) : false;
+  const canViewSecurity = user ? permissions.canViewSecurity(user.role) : false;
+
+  function doLogout() {
+    logout();
+    router.push("/admin");
+  }
+
+  return (
+    <aside className="h-screen w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col py-8 px-6">
+      <div className="mb-8">
+        <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Mindbend Admin</div>
+        <div className="text-xs text-gray-500">Signed in as <span className="font-semibold text-gray-700 dark:text-gray-200">{user?.role || "Unknown"}</span></div>
+      </div>
+      <nav className="flex-1 flex flex-col gap-1">
+        <Link href="/admin/dashboard" className={`block px-4 py-2 rounded transition text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${pathname === "/admin/dashboard" ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""}`}>Dashboard</Link>
+        <Link href="/admin/dashboard/events" className={`block px-4 py-2 rounded transition text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${pathname?.startsWith("/admin/dashboard/events") ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""}`}>Events</Link>
+        {canViewUsers && (
+          <Link href="/admin/dashboard/users" className={`block px-4 py-2 rounded transition text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${pathname?.startsWith("/admin/dashboard/users") ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""}`}>Users</Link>
+        )}
+        {canViewTeams && (
+          <Link href="/admin/dashboard/teams" className={`block px-4 py-2 rounded transition text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${pathname?.startsWith("/admin/dashboard/teams") ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""}`}>Teams</Link>
+        )}
+        {canViewSecurity && (
+          <Link href="/admin/dashboard/security" className={`block px-4 py-2 rounded transition text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${pathname?.startsWith("/admin/dashboard/security") ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""}`}>Security</Link>
+        )}
+      </nav>
+      <button onClick={doLogout} className="mt-8 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition font-medium">Logout</button>
+    </aside>
+  );
+}

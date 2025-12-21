@@ -3,16 +3,18 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll } from "framer-motion";
 
-
 const paragraphs = [
   {
-    content: "The Cognitive Genesis marks the birth of a future where humans and artificial intelligence grow together as partners, blending human insight with machine precision.",
+    content:
+      "The Cognitive Genesis marks the birth of a future where humans and artificial intelligence grow together as partners, blending human insight with machine precision.",
   },
   {
-    content: "Rooted in India’s values and innovation, the theme envisions an indigenous, ethical intelligence shaped by purpose, responsibility, and self-reliance.",
+    content:
+      "Rooted in India’s values and innovation, the theme envisions an indigenous, ethical intelligence shaped by purpose, responsibility, and self-reliance.",
   },
   {
-    content: "It is not about machines replacing people, but about India redefining intelligence through collaboration, balance, and visionary progress.",
+    content:
+      "It is not about machines replacing people, but about India redefining intelligence through collaboration, balance, and visionary progress.",
   },
 ];
 
@@ -50,7 +52,6 @@ export default function Theme() {
         </div>
       </div>
 
-
       {/* VIDEO BACKGROUND */}
       <div className="absolute inset-0 z-0 top-70 overflow-hidden">
         <video
@@ -69,31 +70,36 @@ export default function Theme() {
       {/* CONTENT CONTAINER */}
       <div className="relative z-20 h-screen flex flex-col justify-between px-8 md:px-16">
         {/* HEADING - TOP */}
-              <motion.div
+        <motion.div
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="flex-shrink-0 px-20 pt-12 md:pt-16 z-1"
         >
-          <h2 className="text-4xl md:text-6xl font-bold text-white uppercase tracking-tight">
+          <h2
+            className="text-5xl md:text-7xl font-bold text-white uppercase tracking-wide"
+            style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+          >
             The Theme
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mt-4"></div>
-          <div className="pt-1 text-white max-w-md mt-auto">
-          <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)]">
-            SYMBIONT
-          </h2>
-          <p className="text-xl font-medium tracking-widest text-blue-200 mt-1 uppercase">
-            The Cognitive Genesis
-          </p>
-          
-        </div>
+          <div className="h-[2px] w-[30%] bg-linear-to-r from-cyan-500 to-transparent my-4 opacity-50"></div>
+
+          <div className="pt-1 text-white max-w-md mt-auto" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+            <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r tracking-widest from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)]"             style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+>
+              SYMBIONT
+            </h2>
+            <p className="text-xl font-medium tracking-widest text-blue-200 mt-1 uppercase">
+              The Cognitive Genesis
+            </p>
+          </div>
         </motion.div>
 
         {/* PARAGRAPHS - RIGHT SIDE WITH SCROLL-TRIGGERED CHANGES */}
         <div
           ref={contentRef}
           className="flex-1 flex items-start justify-end pr-0 md:pr-30 pt-6"
+          style={{ fontFamily: "Space Grotesk, sans-serif" }}
         >
           <div className="w-full md:w-[30vw] max-w-[40vw] relative min-h-96">
             {paragraphs.map((paragraph, index) => (
@@ -114,7 +120,6 @@ export default function Theme() {
             ))}
           </div>
         </div>
-
       </div>
 
       <div className="relative flex flex-col items-center justify-center mx-auto pt-20">
@@ -164,7 +169,7 @@ export default function Theme() {
             }
           `}</style>
         </div>
-        <div className="py-3 text-center tracking-wide">
+        <div className="py-3 text-center tracking-wide" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
           <h1 className="text-4xl">
             Artificial Intelligence
             <br />
@@ -174,7 +179,7 @@ export default function Theme() {
             Forging the Future of Indian Intelligence
           </p>
         </div>
-          <div className="divider ">
+        <div className="divider ">
           <div className="shine" />
 
           <style jsx>{`
@@ -220,8 +225,7 @@ export default function Theme() {
             }
           `}</style>
         </div>
-      </div>    
-      
+      </div>
     </section>
   );
 }

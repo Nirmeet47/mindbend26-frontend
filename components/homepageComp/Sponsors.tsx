@@ -42,10 +42,12 @@ export default function Sponsors() {
         transition={{ duration: 0.6 }}
         className="max-w-7xl mx-auto px-4 mb-12"
       >
-        <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-4">
-          Our Sponsors
+        <h2 className="text-5xl md:text-7xl font-extrabold text-white text-center mb-4 tracking-wide" style={{ fontFamily: "Barlow Condensed, sans-serif" }}>
+          OUR SPONSORS
         </h2>
-        <p className="text-cyan-200/70 text-center max-w-2xl mx-auto">
+        <div className="h-[3px] w-[25%] bg-linear-to-t from-cyan-500 to-transparent my-4 mx-auto opacity-50"></div>
+
+        <p className="text-cyan-200/70 text-center max-w-2xl mx-auto" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
           Powered by industry leaders who believe in innovation
         </p>
       </motion.div>
@@ -96,7 +98,7 @@ function SponsorBox({ name }: { name: string }) {
       {/* Sponsor name */}
       <h3
         className="relative z-10 text-xl font-bold text-white uppercase tracking-wider"
-        style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+        style={{ fontFamily: "Barlow Condensed, sans-serif" }}
       >
         {name}
       </h3>

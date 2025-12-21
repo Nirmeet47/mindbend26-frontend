@@ -66,10 +66,13 @@ export default function Events() {
           transition={{ duration: 0.6 }}
           className="flex-shrink-0 px-20 py-12 md:pb-16 z-1 flex flex-col items-center text-center"
         >
-          <h2 className="text-4xl md:text-6xl font-bold text-white uppercase tracking-tight">
+          <h2
+            className="text-4xl md:text-6xl font-bold text-white uppercase tracking-wider"
+            style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+          >
             Our Events
           </h2>
-          <div className="w-30 h-1 bg-gradient-to-r items-center from-cyan-400 to-blue-500 mt-4"></div>
+          <div className="h-[3px] w-[80%] bg-linear-to-t from-cyan-500 to-transparent my-4 mx-auto opacity-50"></div>
         </motion.div>
         {events.map((event) => (
           <EventCard key={event.id} event={event} />
@@ -237,13 +240,13 @@ function EventCard({ event }: { event: EventCard }) {
                   event.direction === "right" ? "text-left" : "text-right"
                 }`}
               >
-                <p className="text-sm text-cyan-400 uppercase tracking-wider mb-2">
+                <p className="text-sm text-cyan-400 uppercase tracking-wider mb-2" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
                   {event.subtitle}
                 </p>
                 <h2
-                  className="text-5xl font-bold text-white uppercase tracking-tight"
+                  className="text-7xl font-bold text-white uppercase tracking-widest"
                   style={{
-                    fontFamily: "system-ui, -apple-system, sans-serif",
+                    fontFamily: "Barlow Condensed, sans-serif",
                     fontStyle: "italic",
                     textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
                   }}

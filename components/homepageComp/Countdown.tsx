@@ -37,12 +37,15 @@ const Countdown = () => {
 
   return (
     <section className="countdown-section flex-col items-center justify-center">
-       <div className="text-center text-white text-3xl md:text-5xl font-black mb-20 tracking-wider"
-          >
-            EVENT STARTS IN
-        </div>
-      <div className="container">
+      <div
+        className="text-center text-white text-3xl md:text-7xl font-black mb-20 tracking-wider"
+        style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+      >
+        EVENT STARTS IN
+        <div className="h-[3px] w-[80%] bg-linear-to-t from-cyan-500 to-transparent my-4 mx-auto opacity-50"></div>
+      </div>
 
+      <div className="container">
         <TimeBox value={timeLeft.days} label="DAYS" />
         <Divider />
 
@@ -92,18 +95,20 @@ const TimeBox = ({ value, label }: { value: string; label: string }) => {
         }
 
         .number {
-          font-size: clamp(64px, 10vw, 120px);
-          font-weight: 600;
-          letter-spacing: 4px;
+          font-size: clamp(70px, 12vw, 150px);
+          font-weight: 500;
+          letter-spacing: 6px;
           display: block;
+          font-family: "Digital-7", "Space Grotesk", sans-serif;
         }
 
         .label {
           display: block;
           margin-top: 12px;
-          font-size: clamp(12px, 1.5vw, 16px);
+          font-size: clamp(12px, 1.5vw, 18px);
           letter-spacing: 4px;
           opacity: 0.7;
+          font-family: "Space Grotesk", sans-serif;
         }
       `}</style>
     </div>

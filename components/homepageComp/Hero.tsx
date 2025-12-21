@@ -112,14 +112,14 @@ export default function Hero() {
       {/* SYMBIONT Overlay */}
       <div className="absolute inset-0 flex flex-col justify-between p-12 pointer-events-none z-20">
         <div className="self-end text-right text-white max-w-md mt-auto">
-          <h2 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)]">
+          <h2 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)] tracking-wide" style={{ fontFamily: "Barlow Condensed, sans-serif" }}>
             SYMBIONT
           </h2>
-          <p className="text-xl font-medium tracking-widest text-blue-200 mt-1 uppercase">
+          <p className="text-xl font-medium tracking-widest text-blue-200 mt-1 uppercase" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
             The Cognitive Genesis
           </p>
           <div className="h-[1px] w-full bg-gradient-to-l from-cyan-500 to-transparent my-4 opacity-50"></div>
-          <p className="text-sm opacity-60 leading-relaxed italic">
+          <p className="text-sm opacity-60 leading-relaxed italic" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
             Forging the Future of Indian Intelligence
           </p>
         </div>
