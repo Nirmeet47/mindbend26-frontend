@@ -95,22 +95,22 @@ export default function ManagerialPage() {
                 />
             </div>
             <div className="container mx-auto py-8 relative z-10">
-                                <div className="flex flex-col items-center w-full animate-fade-in">
-                                    <h1
-                                        className="text-7xl sm:text-8xl md:text-9xl uppercase tracking-normal leading-[1.2] font-black mb-4"
-                                        style={{
-                                            fontFamily: 'Barlow Condensed, sans-serif',
-                                            color: '#e5e7eb', // off-white
-                                            fontWeight: 900,
-                                            textShadow: '0 2px 8px rgba(0,0,0,0.25)'
-                                        }}
-                                    >
-                                        MANAGERIAL
-                                    </h1>
-                                </div>
+                <div className="flex flex-col items-center w-full animate-fade-in">
+                    <h1
+                        className="text-7xl sm:text-8xl md:text-9xl uppercase tracking-normal leading-[1.2] font-black mb-4"
+                        style={{
+                            fontFamily: 'Barlow Condensed, sans-serif',
+                            color: '#e5e7eb', // off-white
+                            fontWeight: 900,
+                            textShadow: '0 2px 8px rgba(0,0,0,0.25)'
+                        }}
+                    >
+                        MANAGERIAL
+                    </h1>
+                </div>
                 {loading && <p>Loading...</p>}
                 {error && <p className="text-red-500">{error}</p>}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-6 md:px-12 lg:px-22 my-12">
                     {events.map(event => (
                         // <div key={event._id} className="bg-[#222] rounded-lg p-6 shadow-md">
                         //     <h2
@@ -126,16 +126,16 @@ export default function ManagerialPage() {
                         //     <p className="text-gray-300">{event.description}</p>
                         // </div>
                         
-                        <Link href={`/events/technical/${event.slug}`} key={event._id} className="block">
                         <EventCard
+                            key={event._id}
+                            slug={`/managerial/${event.slug}`}
                             title={`${event.name}`}
                             description={event.description?.substring(0, 100) + "..."}
-                            date={`${event.eventDate.toLocaleString('default', { month: 'short' })} ${event.eventDate.getDate()}th`}
+                            date={event.eventDate ? (() => { const d = new Date(event.eventDate); return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}th`; })() : 'Coming Soon'}
                             prize={`₹${event.prizeMoney}`}
                             // delay={index * 0.05}
                             image={event.eventPhoto}
                         />
-                        </Link>
                     ))}
                 </div>
             </div>

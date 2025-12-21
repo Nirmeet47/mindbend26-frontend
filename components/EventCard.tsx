@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 interface EventCardProps {
     title: string;
+    slug: string,
     description: string;
     date: string;
     prize: string;
@@ -55,7 +57,7 @@ const TechDecorationBottomLeft = () => (
 )
 
 
-const EventCard: React.FC<EventCardProps> = ({ title, date, prize, delay = 0, image }) => {
+const EventCard: React.FC<EventCardProps> = ({ title, slug, date, prize, delay = 0, image }) => {
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -125,10 +127,12 @@ const EventCard: React.FC<EventCardProps> = ({ title, date, prize, delay = 0, im
                         <span className="text-lg font-bold text-[#E8823A] font-mono">{prize}</span>
                     </div>
 
-                    <button className="group/btn relative px-5 py-2 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-xs font-bold tracking-wider uppercase transition-all overflow-hidden">
-                        <span className="relative z-10">Execute</span>
-                        <div className="absolute inset-0 bg-[#33ABB9]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
-                    </button>
+                    <Link href={slug} className="block">
+                        <button className="group/btn relative px-5 py-2 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-xs font-bold tracking-wider uppercase transition-all overflow-hidden cursor-pointer">
+                            <span className="relative z-10">Explore</span>
+                            <div className="absolute inset-0 bg-[#33ABB9]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
+                        </button>
+                    </Link>
                 </div>
             </div>
         </motion.div>

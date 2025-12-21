@@ -109,7 +109,7 @@ function Technical() {
         </div>
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-6 md:px-12 lg:px-22 my-12">
           {events.map(event => (
             // <div key={event._id} className="bg-[#222] rounded-lg p-6 shadow-md">
             //   <h2
@@ -124,17 +124,17 @@ function Technical() {
             //   </h2>
             //   <p className="text-gray-300">{event.description}</p>
             // </div>
-
-              <Link href={`/events/technical/${event.slug}`} key={event._id} className="block">
-                  <EventCard
-                    title={`${event.name}`}
-                    description={event.description?.substring(0, 100) + "..."}
-                    date={`${event.eventDate.toLocaleString('default', { month: 'short' })} ${event.eventDate.getDate()}th`}
-                    prize={`₹${event.prizeMoney}`}
-                    // delay={index * 0.05}
-                    image={event.eventPhoto}
-                  />
-                </Link>
+            
+                <EventCard
+                  key={event._id}
+                  slug={`/technical/${event.slug}`}
+                  title={`${event.name}`}
+                  description={event.description?.substring(0, 100) + "..."}
+                  date={event.eventDate ? (() => { const d = new Date(event.eventDate); return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}th`; })() : 'Coming Soon'}
+                  prize={`₹${event.prizeMoney}`}
+                  // delay={index * 0.05}
+                  image={event.eventPhoto}
+                />
           ))}
         </div>
       </div>

@@ -21,7 +21,7 @@ const events: EventCard[] = [
     title: "TECHNICAL",
     subtitle: "INNOVATE - BUILD - LEARN",
     image: "/images/tech_img.jpg",
-    link: "/events/technical",
+    link: "/technical",
     direction: "left",
   },
   {
@@ -29,7 +29,7 @@ const events: EventCard[] = [
     title: "MANAGERIAL",
     subtitle: "INNOVATE - COMPETE - CONQUER",
     image: "/images/mng_img.avif",
-    link: "/events/managerial",
+    link: "/managerial",
     direction: "right",
   },
   {
@@ -37,7 +37,7 @@ const events: EventCard[] = [
     title: "WORKSHOPS",
     subtitle: "INNOVATE - BUILD - LEARN",
     image: "/images/workshop_img.png",
-    link: "/events/workshops",
+    link: "/workshops",
     direction: "left",
   },
   {
@@ -45,7 +45,7 @@ const events: EventCard[] = [
     title: "GUEST LECTURES",
     subtitle: "INNOVATE - INSPIRE - TRANSFORM",
     image: "/images/gl_img.png",
-    link: "/events/guest-lectures",
+    link: "/guest-lectures",
     direction: "right",
   },
 ];
