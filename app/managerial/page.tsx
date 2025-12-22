@@ -13,11 +13,12 @@ import Link from "next/link";
 
 
 import { useEffect, useState } from 'react';
+import { publicEventsApi } from "@/lib/events";
 
 interface Event {
   _id: string;
   name: string;
-  description?: string;
+  aboutEvent?: string;
   slug: string,
   prizeMoney: Number,
   eventDate: Date,
@@ -32,19 +33,12 @@ export default function ManagerialPage() {
 
     useEffect(() => {
         async function fetchEvents() {
-            try {
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6969';
-                const res = await fetch(`${apiUrl}/api/events/public/type/managerial`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                });
-                const data = await res.json();
-                setEvents(data.data?.events || []);
-            } catch (err) {
-                setError('Failed to load events');
-            } finally {
-                setLoading(false);
-            }
+
+            publicEventsApi
+                .listByType("managerial")
+                .then((res) => {setEvents(res.data?.data?.events || [])})
+                .catch(() => {setError('Failed to load events')})
+                .finally(() => setLoading(false))
         }
         fetchEvents();
 
@@ -54,7 +48,7 @@ export default function ManagerialPage() {
         //     {
         //     _id: "1",
         //     name: "Codewars",
-        //     description: "coding..",
+        //     aboutEvent: "coding..",
         //     slug: "codewars",
         //     prizeMoney: 100,
         //     eventDate: new Date(),
@@ -63,7 +57,7 @@ export default function ManagerialPage() {
         //     {
         //     _id: "2",
         //     name: "Codewars",
-        //     description: "coding..",
+        //     aboutEvent: "coding..",
         //     slug: "codewars",
         //     prizeMoney: 100,
         //     eventDate: new Date(),
@@ -72,7 +66,7 @@ export default function ManagerialPage() {
         //     {
         //     _id: "3",
         //     name: "Codewars",
-        //     description: "coding..",
+        //     aboutEvent: "coding..",
         //     slug: "codewars",
         //     prizeMoney: 100,
         //     eventDate: new Date(),
@@ -123,14 +117,14 @@ export default function ManagerialPage() {
                         //     >
                         //         {event.name}
                         //     </h2>
-                        //     <p className="text-gray-300">{event.description}</p>
+                        //     <p className="text-gray-300">{event.aboutEvent}</p>
                         // </div>
                         
                         <EventCard
                             key={event._id}
                             slug={`/managerial/${event.slug}`}
                             title={`${event.name}`}
-                            description={event.description?.substring(0, 100) + "..."}
+                            aboutEvent={event.aboutEvent?.substring(0, 100) + "..."}
                             date={event.eventDate ? (() => { const d = new Date(event.eventDate); return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}th`; })() : 'Coming Soon'}
                             prize={`₹${event.prizeMoney}`}
                             // delay={index * 0.05}

@@ -7,7 +7,8 @@ import Link from 'next/link';
 interface EventCardProps {
     title: string;
     slug: string,
-    description: string;
+    aboutEvent: string;
+    showExploreButton?: boolean;
     date: string;
     prize: string;
     delay?: number;
@@ -57,7 +58,7 @@ const TechDecorationBottomLeft = () => (
 )
 
 
-const EventCard: React.FC<EventCardProps> = ({ title, slug, date, prize, delay = 0, image }) => {
+const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, slug, date, prize, delay = 0, image }) => {
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -123,16 +124,18 @@ const EventCard: React.FC<EventCardProps> = ({ title, slug, date, prize, delay =
                 {/* Footer */}
                 <div className="flex items-end justify-between mt-auto">
                     <div className="flex flex-col">
-                        <span className="text-[9px] uppercase tracking-widest text-[#33ABB9] mb-1">Bounty</span>
+                        <span className="text-[9px] uppercase tracking-widest text-[#33ABB9] mb-1">Prize Money</span>
                         <span className="text-lg font-bold text-[#E8823A] font-mono">{prize}</span>
                     </div>
 
+                    {showExploreButton &&
                     <Link href={slug} className="block">
                         <button className="group/btn relative px-5 py-2 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-xs font-bold tracking-wider uppercase transition-all overflow-hidden cursor-pointer">
                             <span className="relative z-10">Explore</span>
                             <div className="absolute inset-0 bg-[#33ABB9]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
                         </button>
                     </Link>
+                    }
                 </div>
             </div>
         </motion.div>

@@ -1,8 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { eventsApi } from "../../lib/dashboardApi";
+import { Event } from "@/types";
 
-export default function EditEventModal({ event, onClose, onSuccess }: { event: any; onClose: () => void; onSuccess: () => void }) {
+export default function EditEventModal({ event, onClose, onSuccess }: { event: Event; onClose: () => void; onSuccess: () => void }) {
   const [form, setForm] = useState({
     name: event.name || "",
     type: event.type || "technical",
@@ -13,7 +14,10 @@ export default function EditEventModal({ event, onClose, onSuccess }: { event: a
     aboutEvent: event.aboutEvent || "",
     eventDate: event.eventDate || "",
     venue: event.venue || "",
+    eventPhoto: event.eventPhoto || "",
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>(event.eventPhoto || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,12 +33,39 @@ export default function EditEventModal({ event, onClose, onSuccess }: { event: a
     }));
   }
 
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
     try {
-      await eventsApi.update(event._id, form);
+      if (imageFile) {
+        const formData = new FormData();
+        console.log(form)
+        Object.entries(form).forEach(([key, value]) => {
+          if (key !== 'eventPhoto') {
+            formData.append(key, String(value));
+          }
+          else{
+            formData.append(key, imageFile)
+          }
+        });
+        console.log(formData)
+        await eventsApi.update(event._id, formData);
+      } else {
+        await eventsApi.update(event._id, form);
+      }
       onSuccess();
       onClose();
     } catch (err: any) {
@@ -45,8 +76,8 @@ export default function EditEventModal({ event, onClose, onSuccess }: { event: a
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 w-full max-w-lg relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4">
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 w-full max-w-lg relative max-h-[90vh] overflow-y-auto">
         <button onClick={onClose} className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">&times;</button>
         <h2 className="text-xl font-semibold mb-4">Edit Event</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -92,6 +123,28 @@ export default function EditEventModal({ event, onClose, onSuccess }: { event: a
               <label className="block text-sm font-medium mb-1">Venue</label>
               <input name="venue" value={form.venue} onChange={handleChange} className="w-full border rounded px-3 py-2 bg-gray-50 dark:bg-gray-800" />
             </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Event Photo</label>
+            {imagePreview && (
+              <div className="mb-2">
+                <img
+                  src={imagePreview}
+                  alt="Event Preview"
+                  className="w-full h-40 object-cover rounded border border-gray-300 dark:border-gray-700"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full border rounded px-3 py-2 bg-gray-50 dark:bg-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-gray-700 dark:file:text-gray-200"
+            />
+            <p className="text-xs text-gray-500 mt-1">Upload a new image or leave empty to keep current image</p>
           </div>
           {error && <div className="text-red-500 text-sm">{error}</div>}
           <div className="flex justify-end gap-2 pt-2">

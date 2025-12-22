@@ -11,7 +11,7 @@ import EventCard from '@/components/EventCard';
 // const TECHNICAL_EVENTS = Array.from({ length: 20 }).map((_, i) => ({
 //   id: i,
 //   title: `Tech Event ${i + 1}`,
-//   description: "Dive into the world of algorithms, coding errors and hardware hacks.",
+//   aboutEvent: "Dive into the world of algorithms, coding errors and hardware hacks.",
 //   date: `March ${15 + (i % 5)}th`,
 //   prize: `₹${(15 + (i % 5)) * 1000}`,
 //   image: images[i % images.length].src
@@ -20,11 +20,12 @@ import EventCard from '@/components/EventCard';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { publicEventsApi } from '@/lib/events';
 
 interface Event {
   _id: string;
   name: string;
-  description?: string;
+  aboutEvent?: string;
   slug: string,
   prizeMoney: Number,
   eventDate: Date,
@@ -39,27 +40,21 @@ function Technical() {
 
   useEffect(() => {
     async function fetchEvents() {
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6969';
-        const res = await fetch(`${apiUrl}/api/events/public/type/technical`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const data = await res.json();
-        setEvents(data.data?.events || []);
-      } catch (err) {
-        setError('Failed to load events');
-      } finally {
-        setLoading(false);
-      }
 
+        publicEventsApi
+          .listByType('technical')
+          .then((res) => { setEvents(res.data?.data?.events || []) })
+          .catch(() => setError('Failed to load events'))
+          .finally(() => setLoading(false));
+
+          console.log("Fetched Technical Events:", events);
 
       // dummy data for testing
     //   setEvents([
     //     {
     //       _id: "1",
     //       name: "Codewars",
-    //       description: "coding..",
+    //       aboutEvent: "coding..",
     //       slug: "codewars",
     //       prizeMoney: 100,
     //       eventDate: new Date(),
@@ -68,7 +63,7 @@ function Technical() {
     //     {
     //       _id: "2",
     //       name: "Codewars",
-    //       description: "coding..",
+    //       aboutEvent: "coding..",
     //       slug: "codewars",
     //       prizeMoney: 100,
     //       eventDate: new Date(),
@@ -77,7 +72,7 @@ function Technical() {
     //     {
     //       _id: "3",
     //       name: "Codewars",
-    //       description: "coding..",
+    //       aboutEvent: "coding..",
     //       slug: "codewars",
     //       prizeMoney: 100,
     //       eventDate: new Date(),
@@ -110,26 +105,12 @@ function Technical() {
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-6 md:px-12 lg:px-22 my-12">
-          {events.map(event => (
-            // <div key={event._id} className="bg-[#222] rounded-lg p-6 shadow-md">
-            //   <h2
-            //     className="text-xl font-semibold mb-2"
-            //     style={{
-            //       color: '#e0e4ea', // off-white
-            //       fontWeight: 800,
-            //       textShadow: '0 1px 6px rgba(0,0,0,0.18)'
-            //     }}
-            //   >
-            //     {event.name}
-            //   </h2>
-            //   <p className="text-gray-300">{event.description}</p>
-            // </div>
-            
+          {events.map(event => (            
                 <EventCard
                   key={event._id}
                   slug={`/technical/${event.slug}`}
                   title={`${event.name}`}
-                  description={event.description?.substring(0, 100) + "..."}
+                  aboutEvent={event.aboutEvent?.substring(0, 100) + "..."}
                   date={event.eventDate ? (() => { const d = new Date(event.eventDate); return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}th`; })() : 'Coming Soon'}
                   prize={`₹${event.prizeMoney}`}
                   // delay={index * 0.05}

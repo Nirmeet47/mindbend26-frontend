@@ -15,7 +15,9 @@ export const eventsApi = {
     api.post("/events/admin/all", payload),
   getAdmin: (id: string) => api.get(`/events/admin/${id}`),
   create: (body: any) => api.post("/events/create", body),
-  update: (id: string, body: any) => api.put(`/events/update/${id}`, body),
+  update: (id: string, body: any) => api.put(`/events/update/${id}`, body, {
+    headers: { "Content-Type": "multipart/form-data" },
+  }),
   toggleVisibility: (id: string) =>
     api.patch(`/events/toggle-visibility/${id}`),
   toggleRegistration: (id: string) =>
