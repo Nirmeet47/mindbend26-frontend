@@ -159,17 +159,24 @@ export default function NeuralNavbar() {
 
         {/* Right Side Controls */}
         <div className="flex items-center gap-6">
-          <Link
-            href="/login"
+
+          {/* User Icon: Go to dashboard if logged in, else login */}
+          <button
+            onClick={() => {
+              // TODO: Replace with real auth check
+              const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('token');
+              window.location.href = isLoggedIn ? '/user/dashboard' : '/login';
+            }}
             className="hidden md:flex items-center gap-2 group"
+            aria-label="User Dashboard"
           >
             <span className="text-gray-400 font-mono text-sm group-hover:text-cyan-400 transition-colors">
-              /LOGIN
+              /USER
             </span>
             <div className="p-2 border border-white/20 rounded bg-white/5 group-hover:border-cyan-500/50 transition-colors">
               <User size={18} className="text-white" />
             </div>
-          </Link>
+          </button>
 
           <button
             onClick={() => setIsOpen(!isOpen)}
