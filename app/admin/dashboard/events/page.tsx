@@ -4,13 +4,14 @@ import { eventsApi } from "../../../../lib/dashboardApi";
 import Table from "../../../../components/admin/Table";
 import Header from "../../../../components/Header";
 import EditEventModal from "../../../../components/admin/EditEventModal";
+import { Event } from "@/types";
 
 export default function EventsPage() {
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState<string>("all");
-  const [editEvent, setEditEvent] = useState<any | null>(null);
+  const [editEvent, setEditEvent] = useState<Event | null>(null);
 
   const fetchEvents = () => {
     setLoading(true);
