@@ -46,9 +46,9 @@ export default function LoginPage() {
       const token = res.data?.data?.token;
       if (token) {
         localStorage.setItem("mb_admin_token", token);
-        setSuccess("Login successful!");
+        setSuccess("Login successful! Redirecting to homepage...");
         setTimeout(() => {
-          router.push("/profile");
+          router.push("/");
         }, 1000);
       }
     } catch (err: any) {
