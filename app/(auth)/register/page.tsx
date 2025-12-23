@@ -66,9 +66,9 @@ export default function SignupPage() {
         password,
         otp,
       });
-      setSuccess("Registration successful! Redirecting to home...");
+      setSuccess("Registration successful! Redirecting to login...");
       setTimeout(() => {
-        router.push("/");
+        router.push("/login");
       }, 1500);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
@@ -350,7 +350,7 @@ export default function SignupPage() {
               Already have an account?
             </p>
             <Link
-              href="/auth/login"
+              href="/login"
               className="text-cyan-400 hover:text-cyan-300 text-xs uppercase tracking-[0.2em] font-semibold"
             >
               Login Here

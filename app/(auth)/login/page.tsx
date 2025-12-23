@@ -46,9 +46,9 @@ export default function LoginPage() {
       const token = res.data?.data?.token;
       if (token) {
         localStorage.setItem("mb_admin_token", token);
-        setSuccess("Login successful!");
+        setSuccess("Login successful! Redirecting to homepage...");
         setTimeout(() => {
-          router.push("/profile");
+          router.push("/");
         }, 1000);
       }
     } catch (err: any) {
@@ -418,7 +418,7 @@ export default function LoginPage() {
 
           {/* Sign Up Link */}
           <Link
-            href="/auth/signup"
+            href="/register"
             className="block w-full py-3 text-center border-2 border-cyan-500/60 text-cyan-300 font-bold uppercase tracking-[0.15em] transition-all duration-300 hover:bg-cyan-600/10 hover:border-cyan-400 hover:text-cyan-200"
           >
             Create Account

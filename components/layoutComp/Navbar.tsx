@@ -163,8 +163,8 @@ export default function NeuralNavbar() {
           {/* User Icon: Go to dashboard if logged in, else login */}
           <button
             onClick={() => {
-              // TODO: Replace with real auth check
-              const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('token');
+              // Check for login token (use correct key)
+              const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('mb_admin_token');
               window.location.href = isLoggedIn ? '/user/dashboard' : '/login';
             }}
             className="hidden md:flex items-center gap-2 group"
