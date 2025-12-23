@@ -8,14 +8,14 @@ import { EventStatus } from '@/types';
 interface EventsHeaderProps {
   eventName: string;
   eventType: string;
-  isTeamEvent: boolean;
+  isTeamEvent?: boolean;
   eventStatus: EventStatus;
-  breadcrumbType: 'TECHNICAL' | 'MANAGERIAL';
+  breadcrumbType: 'TECHNICAL' | 'MANAGERIAL' | 'WORKSHOPS';
 }
 
 function EventsHeader({ eventName, eventType, isTeamEvent, eventStatus, breadcrumbType }: EventsHeaderProps) {
   const router = useRouter();
-
+  
   // Handle back navigation
   const goHome = () => {
     router.push('/');
@@ -47,14 +47,19 @@ function EventsHeader({ eventName, eventType, isTeamEvent, eventStatus, breadcru
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10">
             <div>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-orbitron uppercase tracking-tighter leading-none text-white mb-4"
+              <h1 className="text-5xl md:text-5xl lg:text-7xl font-black font-orbitron uppercase tracking-tighter leading-none text-white mb-4"
                 style={{ textShadow: '0 0 20px rgba(255, 77, 0, 0.3)' }}>
                 {eventName}
               </h1>
-              <p className="text-xl md:text-2xl text-gray-400 font-rajdhani uppercase tracking-widest flex items-center gap-3">
-                <span className="w-8 h-[2px] bg-[#00F0FF]" />
-                {eventType} Event <span className="text-[#00F0FF]">•</span> {isTeamEvent ? 'Team_Squad' : 'Solo_Operative'}
-              </p>
+                <p className="text-lg md:text-xl text-gray-400 font-rajdhani uppercase tracking-widest flex items-center gap-3">
+                <span className="w-8 h-0.5 bg-[#00F0FF]" />
+                {eventType} Event
+                {isTeamEvent !== null && isTeamEvent !== undefined && (
+                  <>
+                  <span className="text-[#00F0FF]">•</span> {isTeamEvent ? 'Team_Squad' : 'Solo_Operative'}
+                  </>
+                )}
+                </p>
             </div>
 
             {/* Status Badge - Cyberpunk Style */}

@@ -1,25 +1,23 @@
 'use client';
 
-import React from 'react';
-import TechnicalBackground from '@/components/events/TechnicalBackground';
-import EventCard from '@/components/EventCard';
-
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { publicEventsApi } from '@/lib/events';
+import WorkshopBackground from '@/components/events/WorkshopBackground';
+import WorkshopEventCard from '@/components/WorkshopEventCard';
 
 interface Event {
   _id: string;
   name: string;
   aboutEvent?: string;
   slug: string,
-  prizeMoney: Number,
+  entryFee: Number,
   eventDate: Date,
   eventPhoto: string
   // Add other fields as needed
 }
 
-function Technical() {
+function Workshop() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,42 +26,42 @@ function Technical() {
     async function fetchEvents() {
 
         publicEventsApi
-          .listByType('technical')
+          .listByType('workshops')
           .then((res) => { setEvents(res.data?.data?.events || []) })
           .catch(() => setError('Failed to load events'))
           .finally(() => setLoading(false));
 
       // dummy data for testing
-    //   setEvents([
-    //     {
-    //       _id: "1",
-    //       name: "Codewars",
-    //       aboutEvent: "coding..",
-    //       slug: "codewars",
-    //       prizeMoney: 100,
-    //       eventDate: new Date(),
-    //       eventPhoto: "https://mindbend-main.vercel.app/mindbend.png"
-    //     },
-    //     {
-    //       _id: "2",
-    //       name: "Codewars",
-    //       aboutEvent: "coding..",
-    //       slug: "codewars",
-    //       prizeMoney: 100,
-    //       eventDate: new Date(),
-    //       eventPhoto: "https://mindbend-main.vercel.app/mindbend.png"
-    //     },
-    //     {
-    //       _id: "3",
-    //       name: "Codewars",
-    //       aboutEvent: "coding..",
-    //       slug: "codewars",
-    //       prizeMoney: 100,
-    //       eventDate: new Date(),
-    //       eventPhoto: "https://mindbend-main.vercel.app/mindbend.png"
-    //     },
-    // ])
-    // setLoading(false)
+      setEvents([
+        {
+          _id: "1",
+          name: "Codewars",
+          aboutEvent: "coding..",
+          slug: "codewars",
+          entryFee: 100,
+          eventDate: new Date(),
+          eventPhoto: "https://res.cloudinary.com/dfbupup5c/image/upload/v1766389529/uac32yi7jxvdyl0sqf74.png"
+        },
+        {
+          _id: "2",
+          name: "Codewars",
+          aboutEvent: "coding..",
+          slug: "codewars",
+          entryFee: 100,
+          eventDate: new Date(),
+          eventPhoto: "https://res.cloudinary.com/dfbupup5c/image/upload/v1766389529/uac32yi7jxvdyl0sqf74.png"
+        },
+        {
+          _id: "3",
+          name: "Codewars",
+          aboutEvent: "coding..",
+          slug: "codewars",
+          entryFee: 100,
+          eventDate: new Date(),
+          eventPhoto: "https://res.cloudinary.com/dfbupup5c/image/upload/v1766389529/uac32yi7jxvdyl0sqf74.png"
+        },
+    ])
+    setLoading(false)
    
     }
     fetchEvents();
@@ -71,11 +69,11 @@ function Technical() {
 
   return (
     <div className="relative w-full min-h-screen text-white overflow-x-hidden selection:bg-[#33ABB9]/30">
-      <TechnicalBackground />
-      <div className="container mx-auto py-8">
+      <WorkshopBackground />
+      <div className="container mx-auto py-8 z-5 relative">
         <div className="flex flex-col items-center w-full animate-fade-in">
           <h1
-            className="text-5xl sm:text-7xl md:text-8xl uppercase tracking-normal leading-[1.1] font-black mb-4"
+            className="text-7xl sm:text-8xl md:text-9xl uppercase tracking-normal leading-[1.1] font-black mb-4"
             style={{
               fontFamily: 'Barlow Condensed, sans-serif',
               color: '#e5e7eb', // off-white
@@ -83,7 +81,7 @@ function Technical() {
               textShadow: '0 2px 8px rgba(0,0,0,0.25)'
             }}
           >
-            TECHNICAL EVENTS
+            WORKSHOPS
           </h1>
         </div>
         {error && <p className="text-red-500 text-center">{error}</p>}
@@ -96,12 +94,8 @@ function Technical() {
                   <div className="w-full h-48 bg-gray-700/30"></div>
                   <div className="p-6 space-y-4">
                     <div className="h-6 bg-gray-700/30 rounded w-3/4"></div>
-                    <div className="h-4 bg-gray-700/30 rounded w-full"></div>
-                    <div className="h-4 bg-gray-700/30 rounded w-5/6"></div>
-                    <div className="flex justify-between items-center mt-4">
-                      <div className="h-4 bg-gray-700/30 rounded w-1/3"></div>
-                      <div className="h-4 bg-gray-700/30 rounded w-1/4"></div>
-                    </div>
+                    <div className="h-4 bg-gray-700/30 rounded w-1/2"></div>
+                    <div className="h-4 bg-gray-700/30 rounded w-1/3"></div>
                   </div>
                 </div>
               </div>
@@ -110,13 +104,12 @@ function Technical() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 px-8 md:px-12 lg:px-22 my-12">
           {events.map(event => (            
-                <EventCard
+                <WorkshopEventCard
                   key={event._id}
-                  slug={`/technical/${event.slug}`}
+                  slug={`/workshops/${event.slug}`}
                   title={`${event.name}`}
-                  aboutEvent={event.aboutEvent?.substring(0, 100) + "..."}
-                  date={event.eventDate ? (() => { const d = new Date(event.eventDate); return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}th`; })() : 'Coming Soon'}
-                  prize={`₹${event.prizeMoney}`}
+                  date={event.eventDate ? (() => { const d = new Date(event.eventDate); return `${d.getDate()}th ${d.toLocaleString('default', { month: 'short' })}`; })() : 'Coming Soon'}
+                  entryFee={`₹${event.entryFee || 0}`}
                   // delay={index * 0.05}
                   image={event.eventPhoto}
                 />
@@ -128,4 +121,4 @@ function Technical() {
   );
 }
 
-export default Technical
+export default Workshop

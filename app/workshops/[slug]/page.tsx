@@ -16,6 +16,7 @@ import { Event } from '@/types';
 
 import { formatDate, getDaysRemaining, getEventStatus } from '@/utils/eventsUtils';
 import { publicEventsApi } from '@/lib/events';
+import WorkshopEventCard from '@/components/WorkshopEventCard';
 
 // Lazy load the background scene
 const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScene'), {
@@ -73,9 +74,7 @@ export default function EventDetailPage() {
                 <div className="w-full h-96 bg-gray-700/30"></div>
                 <div className="p-6 space-y-4">
                   <div className="h-8 bg-gray-700/30 rounded w-2/3"></div>
-                  <div className="h-5 bg-gray-700/30 rounded w-full"></div>
-                  <div className="h-5 bg-gray-700/30 rounded w-4/5"></div>
-                  <div className="flex justify-between items-center mt-4">
+                  <div className="flex justify-between items-center">
                     <div className="h-5 bg-gray-700/30 rounded w-32"></div>
                     <div className="h-5 bg-gray-700/30 rounded w-24"></div>
                   </div>
@@ -94,21 +93,6 @@ export default function EventDetailPage() {
                   <div className="h-6 bg-gray-700/40 rounded w-full"></div>
                 </div>
               ))}
-            </div>
-          </section>
-
-          {/* Prize Pool Skeleton */}
-          <section className="max-w-7xl mx-auto px-4 pb-16">
-            <div className="animate-pulse bg-gradient-to-br from-gray-800/30 to-gray-900/30 border border-gray-700/30 rounded-lg p-8 space-y-6">
-              <div className="h-10 bg-gray-700/40 rounded w-64 mx-auto"></div>
-              <div className="grid grid-cols-3 gap-6">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="space-y-3">
-                    <div className="h-8 bg-gray-700/40 rounded w-full"></div>
-                    <div className="h-6 bg-gray-700/40 rounded w-3/4 mx-auto"></div>
-                  </div>
-                ))}
-              </div>
             </div>
           </section>
 
@@ -195,23 +179,21 @@ export default function EventDetailPage() {
           <EventsHeader
             eventName={event.name}
             eventType={event.type}
-            isTeamEvent={event.isTeamEvent}
             eventStatus={eventStatus}
-            breadcrumbType="MANAGERIAL"
+            breadcrumbType="WORKSHOPS"
           />
           {/* Event Image - Holographic Border */}
             {event.eventPhoto && (
               <div className="relative w-full mb-12">
-                <EventCard
+                <WorkshopEventCard
                   showExploreButton={false}
                   slug="#"
                   title={event.name}
-                  aboutEvent={event.aboutEvent?.substring(0, 150) + "..." || ""}
                   date={event.eventDate ? (() => { 
                     const d = new Date(event.eventDate); 
                     return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}${d.getDate() % 10 === 1 && d.getDate() !== 11 ? 'st' : d.getDate() % 10 === 2 && d.getDate() !== 12 ? 'nd' : d.getDate() % 10 === 3 && d.getDate() !== 13 ? 'rd' : 'th'}`; 
                   })() : 'Coming Soon'}
-                  prize={event.prizeMoney > 0 ? `₹${event.prizeMoney.toLocaleString()}` : 'TBA'}
+                  entryFee={`₹${event.entryFee.toLocaleString()}`}
                   image={event.eventPhoto}
                 />
               </div>
@@ -237,41 +219,26 @@ export default function EventDetailPage() {
               delay={0.4}
             />
             <InfoCard
-              icon={Users}
-              label={event.isTeamEvent ? 'TEAM SIZE' : 'PARTICIPATION'}
-              value={event.isTeamEvent
-                ? (event.minTeamSize === event.maxTeamSize
-                  ? `${event.minTeamSize} ${event.minTeamSize === 1 ? 'MEMBER' : 'MEMBERS'}`
-                  : `${event.minTeamSize} - ${event.maxTeamSize} MEMBERS`)
-                : 'SOLO'}
-              color="text-[#00F0FF]"
-              delay={0.5}
-            />
-            <InfoCard
               icon={Trophy}
               label="FEES"
               value={event.entryFee === 0 ? 'FREE_ENTRY' : `₹${event.entryFee}`}
               color="text-[#FF4D00]"
               delay={0.6}
             />
+            <InfoCard
+              icon={Users}
+              label="CERTIFICATES"
+              value="FOR ALL PARTICIPANTS"
+              color="text-[#00F0FF]"
+              delay={0.7}
+            />
+            
           </div>
         </section>
-
-        {/* Prize Pool Section - Cyber VAULT Style */}
-        {event.prizeMoney > 0 && (
-          <PrizePoolSection
-            prizeMoney={event.prizeMoney}
-            prizeDistribution={event.prizeDistribution}
-          />
-        )}
 
         {/* Tabbed Navigation - Terminal Style */}
         <EventTabs
           aboutEvent={event.aboutEvent}
-          isTeamEvent={event.isTeamEvent}
-          minTeamSize={event.minTeamSize}
-          maxTeamSize={event.maxTeamSize}
-          rules={event.rules}
           contact={event.contact}
           whatsappGrpLink={event.whatsappGrpLink}
         />
@@ -281,7 +248,6 @@ export default function EventDetailPage() {
           eventStatus={eventStatus}
           registrationDeadline={event.registrationDeadline}
           unstopLink={event.unstopLink}
-          psLink={event.psLink}
           formatDate={formatDate}
         />
       </div>

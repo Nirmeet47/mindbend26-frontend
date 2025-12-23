@@ -91,7 +91,7 @@ export default function ManagerialPage() {
             <div className="container mx-auto py-8 relative z-10">
                 <div className="flex flex-col items-center w-full animate-fade-in">
                     <h1
-                        className="text-7xl sm:text-8xl md:text-9xl uppercase tracking-normal leading-[1.2] font-black mb-4"
+                        className="text-5xl sm:text-7xl md:text-8xl uppercase tracking-normal leading-[1.1] font-black mb-4"
                         style={{
                             fontFamily: 'Barlow Condensed, sans-serif',
                             color: '#e5e7eb', // off-white
@@ -99,26 +99,33 @@ export default function ManagerialPage() {
                             textShadow: '0 2px 8px rgba(0,0,0,0.25)'
                         }}
                     >
-                        MANAGERIAL
+                        MANAGERIAL EVENTS
                     </h1>
                 </div>
-                {loading && <p>Loading...</p>}
-                {error && <p className="text-red-500">{error}</p>}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-6 md:px-12 lg:px-22 my-12">
+                {error && <p className="text-red-500 text-center">{error}</p>}
+                
+                {loading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 px-8 md:px-12 lg:px-22 my-12">
+                        {[1, 2, 3, 4, 5, 6].map((i) => (
+                            <div key={i} className="animate-pulse">
+                                <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-lg overflow-hidden border border-gray-700/30">
+                                    <div className="w-full h-48 bg-gray-700/30"></div>
+                                    <div className="p-6 space-y-4">
+                                        <div className="h-6 bg-gray-700/30 rounded w-3/4"></div>
+                                        <div className="h-4 bg-gray-700/30 rounded w-full"></div>
+                                        <div className="h-4 bg-gray-700/30 rounded w-5/6"></div>
+                                        <div className="flex justify-between items-center mt-4">
+                                            <div className="h-4 bg-gray-700/30 rounded w-1/3"></div>
+                                            <div className="h-4 bg-gray-700/30 rounded w-1/4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 px-8 md:px-12 lg:px-22 my-12">
                     {events.map(event => (
-                        // <div key={event._id} className="bg-[#222] rounded-lg p-6 shadow-md">
-                        //     <h2
-                        //         className="text-xl font-semibold mb-2"
-                        //         style={{
-                        //             color: '#e0e4ea', // off-white
-                        //             fontWeight: 800,
-                        //             textShadow: '0 1px 6px rgba(0,0,0,0.18)'
-                        //         }}
-                        //     >
-                        //         {event.name}
-                        //     </h2>
-                        //     <p className="text-gray-300">{event.aboutEvent}</p>
-                        // </div>
                         
                         <EventCard
                             key={event._id}
@@ -132,6 +139,7 @@ export default function ManagerialPage() {
                         />
                     ))}
                 </div>
+                )}
             </div>
         </div>
     );
