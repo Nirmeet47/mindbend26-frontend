@@ -11,10 +11,11 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem("mb_admin_token")
-      : null;
+  let token: string | null = null;
+  if (typeof window !== "undefined") {
+    // Prefer general user token, fallback to admin token
+    token = localStorage.getItem("token") || localStorage.getItem("mb_admin_token");
+  }
   if (token) {
     config.headers = config.headers || {};
     config.headers["Authorization"] = `Bearer ${token}`;
