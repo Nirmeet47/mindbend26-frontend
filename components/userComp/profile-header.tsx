@@ -66,7 +66,7 @@ export default function ProfileHeader({
               <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-2">{userData.fullName}</h2>
               <p className="text-cyan-300 text-sm mb-1">{userData.email}</p>
               <p className="text-cyan-400/70 text-xs uppercase tracking-[0.15em]">
-                {userData.collegeName} • {userData.degree} • {userData.yearOfStudy}
+                {userData.collegeName} {userData.yearOfStudy && `• ${userData.yearOfStudy}`}
               </p>
               <p className="text-cyan-300/60 text-xs mt-2">Joined {userData.joinedDate}</p>
             </div>
@@ -104,12 +104,13 @@ export default function ProfileHeader({
                 placeholder="Full Name"
                 className="w-full px-4 py-2 bg-slate-900/60 border border-cyan-500/40 text-white placeholder-cyan-300/50 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all text-sm"
               />
+              {/* Email is not editable */}
               <input
                 type="email"
                 value={editData.email}
-                onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+                disabled
                 placeholder="Email"
-                className="w-full px-4 py-2 bg-slate-900/60 border border-cyan-500/40 text-white placeholder-cyan-300/50 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all text-sm"
+                className="w-full px-4 py-2 bg-slate-900/60 border border-cyan-500/40 text-white placeholder-cyan-300/50 opacity-60 cursor-not-allowed text-sm"
               />
               <input
                 type="text"
@@ -118,6 +119,22 @@ export default function ProfileHeader({
                 placeholder="College Name"
                 className="w-full px-4 py-2 bg-slate-900/60 border border-cyan-500/40 text-white placeholder-cyan-300/50 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all text-sm"
               />
+              <div className="relative">
+                <select
+                  value={editData.yearOfStudy}
+                  onChange={(e) => setEditData({ ...editData, yearOfStudy: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-900/80 border-2 border-cyan-500/60 text-cyan-200 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all text-sm rounded appearance-none pr-8"
+                  style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none' }}
+                >
+                  <option value="" className="bg-slate-900 text-cyan-400">Select Year of Study</option>
+                  {[1, 2, 3, 4, 5].map((year) => (
+                    <option key={year} value={year} className="bg-slate-900 text-cyan-400">{year}</option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-cyan-400">
+                  ▼
+                </span>
+              </div>
               <input
                 type="text"
                 value={editData.contactNumber}

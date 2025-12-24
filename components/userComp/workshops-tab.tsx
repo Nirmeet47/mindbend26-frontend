@@ -15,6 +15,9 @@ type WorkshopsTabProps = {
 }
 
 export default function WorkshopsTab({ workshops }: WorkshopsTabProps) {
+  if (workshops.length === 0) {
+    return <div className="text-cyan-300/60 text-center py-8">You haven't registered for any workshops yet.</div>;
+  }
   return (
     <div className="space-y-4">
       {workshops.map((workshop) => (
