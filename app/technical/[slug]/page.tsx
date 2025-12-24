@@ -14,6 +14,7 @@ import { publicEventsApi } from '@/lib/events';
 import EventCard from '@/components/EventCard';
 import EventsHeader from '@/components/events/EventsHeader';
 import { Event } from '@/types';
+import { is } from '@react-three/fiber/dist/declarations/src/core/utils';
 
 // Lazy load the background scene
 const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScene'), {
@@ -54,10 +55,77 @@ export default function EventDetailPage() {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#050505] text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#FF4D00] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading event details...</p>
+      <div className="min-h-screen bg-[#030303] text-white overflow-x-hidden">
+        <div className="relative z-10">
+          {/* Header Skeleton */}
+          <section className="max-w-7xl mx-auto px-4 pt-16 pb-12">
+            <div className="animate-pulse space-y-8">
+              {/* Breadcrumb and title skeleton */}
+              <div className="space-y-4">
+                <div className="h-4 bg-gray-800/50 rounded w-48"></div>
+                <div className="h-16 bg-gradient-to-r from-gray-800/50 to-gray-700/50 rounded w-3/4"></div>
+                <div className="h-6 bg-gray-800/50 rounded w-32"></div>
+              </div>
+              
+              {/* Event Card Skeleton */}
+              <div className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-lg overflow-hidden border border-gray-700/30">
+                <div className="w-full h-96 bg-gray-700/30"></div>
+                <div className="p-6 space-y-4">
+                  <div className="h-8 bg-gray-700/30 rounded w-2/3"></div>
+                  <div className="h-5 bg-gray-700/30 rounded w-full"></div>
+                  <div className="h-5 bg-gray-700/30 rounded w-4/5"></div>
+                  <div className="flex justify-between items-center mt-4">
+                    <div className="h-5 bg-gray-700/30 rounded w-32"></div>
+                    <div className="h-5 bg-gray-700/30 rounded w-24"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Info Cards Skeleton */}
+          <section className="max-w-7xl mx-auto px-4 pb-16">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 animate-pulse">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-gray-800/30 border border-gray-700/30 rounded-lg p-6 space-y-3">
+                  <div className="h-8 w-8 bg-gray-700/40 rounded"></div>
+                  <div className="h-4 bg-gray-700/40 rounded w-20"></div>
+                  <div className="h-6 bg-gray-700/40 rounded w-full"></div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Prize Pool Skeleton */}
+          <section className="max-w-7xl mx-auto px-4 pb-16">
+            <div className="animate-pulse bg-gradient-to-br from-gray-800/30 to-gray-900/30 border border-gray-700/30 rounded-lg p-8 space-y-6">
+              <div className="h-10 bg-gray-700/40 rounded w-64 mx-auto"></div>
+              <div className="grid grid-cols-3 gap-6">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="space-y-3">
+                    <div className="h-8 bg-gray-700/40 rounded w-full"></div>
+                    <div className="h-6 bg-gray-700/40 rounded w-3/4 mx-auto"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Tabs Skeleton */}
+          <section className="max-w-7xl mx-auto px-4 pb-16">
+            <div className="animate-pulse space-y-6">
+              <div className="flex gap-4 border-b border-gray-800">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-12 bg-gray-800/30 rounded-t w-32"></div>
+                ))}
+              </div>
+              <div className="space-y-4">
+                <div className="h-6 bg-gray-800/30 rounded w-full"></div>
+                <div className="h-6 bg-gray-800/30 rounded w-5/6"></div>
+                <div className="h-6 bg-gray-800/30 rounded w-4/5"></div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     );
@@ -66,13 +134,24 @@ export default function EventDetailPage() {
   // Error state
   if (error || !event) {
     return (
-      <div className="min-h-screen bg-[#050505] text-white flex items-center justify-center">
-        <div className="text-center max-w-md px-4">
-          <h1 className="text-4xl font-bold mb-4">Event Not Found</h1>
-          <p className="text-gray-400 mb-8">{error || 'The event you are looking for does not exist.'}</p>
+      <div className="min-h-screen bg-[#030303] text-white flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <div className="mb-8 relative">
+            <div className="w-24 h-24 mx-auto border-4 border-[#FF4D00]/30 rounded-full flex items-center justify-center">
+              <svg className="w-12 h-12 text-[#FF4D00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+          </div>
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+            Event Not Found
+          </h1>
+          <p className="text-gray-400 mb-8 leading-relaxed">
+            {error || 'The event you are looking for does not exist or has been removed.'}
+          </p>
           <button
             onClick={handleBack}
-            className="px-6 py-3 bg-[#FF4D00] text-white font-bold rounded hover:bg-[#FF6020] transition-colors"
+            className="px-8 py-4 bg-gradient-to-r from-[#FF4D00] to-[#FF6020] text-white font-bold rounded-lg hover:shadow-lg hover:shadow-[#FF4D00]/50 transition-all duration-300 transform hover:scale-105"
           >
             Back to Events
           </button>
@@ -144,7 +223,7 @@ export default function EventDetailPage() {
             <InfoCard
               icon={Calendar}
               label="DEADLINE"
-              value={formatDate(event.registrationDeadline)}
+              value={event.registrationDeadline ? formatDate(event.registrationDeadline ) : 'TBA'}
               sub={daysRemaining > 0 ? `${daysRemaining} DAYS LEFT` : null}
               color="text-[#00F0FF]"
               delay={0.3}
@@ -158,10 +237,12 @@ export default function EventDetailPage() {
             />
             <InfoCard
               icon={Users}
-              label="TEAM SIZE"
-              value={event.minTeamSize === event.maxTeamSize
-                ? `${event.minTeamSize} ${event.minTeamSize === 1 ? 'MEMBER' : 'MEMBERS'}`
-                : `${event.minTeamSize} - ${event.maxTeamSize} MEMBERS`}
+              label={event.isTeamEvent ? 'TEAM SIZE' : 'PARTICIPATION'}
+              value={event.isTeamEvent
+                ? (event.minTeamSize === event.maxTeamSize
+                  ? `${event.minTeamSize} ${event.minTeamSize === 1 ? 'MEMBER' : 'MEMBERS'}`
+                  : `${event.minTeamSize} - ${event.maxTeamSize} MEMBERS`)
+                : 'SOLO'}
               color="text-[#00F0FF]"
               delay={0.5}
             />
@@ -190,7 +271,7 @@ export default function EventDetailPage() {
           minTeamSize={event.minTeamSize}
           maxTeamSize={event.maxTeamSize}
           rules={event.rules}
-          whatsappNo={event.whatsappNo}
+          contact={event.contact}
           whatsappGrpLink={event.whatsappGrpLink}
         />
 

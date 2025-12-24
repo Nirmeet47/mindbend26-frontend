@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface EventCardProps {
     title: string;
@@ -109,7 +110,11 @@ const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, 
                 <div className="relative w-full h-60 mb-3 rounded-sm overflow-hidden border border-white/10 bg-black/50 group-hover:border-[#33ABB9]/30 transition-colors">
                     {image ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={image} alt={title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                        <Image
+                            src={image}
+                            alt={title}
+                            fill
+                            className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center text-[#33ABB9]/20 font-mono text-xs uppercase tracking-widest">
                             [ NO SIGNAL ]
