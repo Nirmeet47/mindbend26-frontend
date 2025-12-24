@@ -1,11 +1,10 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import Link from "next/link";
 import axios, { AxiosError } from "axios";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import api from "../../../lib/api";
 import { useRouter } from "next/navigation";
 
@@ -21,7 +20,7 @@ export default function LoginPage() {
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotSuccess, setForgotSuccess] = useState("");
   const [forgotError, setForgotError] = useState("");
-  // Reset password states
+
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [resetOTP, setResetOTP] = useState("");
   const [resetNewPassword, setResetNewPassword] = useState("");
@@ -33,20 +32,18 @@ export default function LoginPage() {
   const [showResetConfirmField, setShowResetConfirmField] = useState(false);
   const router = useRouter();
 
+  // --- LOGIC PRESERVED FROM ORIGINAL ---
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
     setLoading(true);
     try {
-      const res = await api.post("/auth/login", {
-        email,
-        password,
-      });
+      const res = await api.post("/auth/login", { email, password });
       const token = res.data?.data?.token;
       if (token) {
         localStorage.setItem("mb_admin_token", token);
-        setSuccess("Login successful! Redirecting to homepage...");
+        setSuccess("Login successful! Redirecting...");
         setTimeout(() => {
           router.push("/");
         }, 1000);
@@ -75,10 +72,11 @@ export default function LoginPage() {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const axErr = err as AxiosError<{ message?: string }>;
-        const msg = axErr.response?.data?.message;
-        setForgotError(msg || "Failed to send reset link. Please try again.");
+        setForgotError(
+          axErr.response?.data?.message || "Failed to send reset link."
+        );
       } else {
-        setForgotError("Failed to send reset link. Please try again.");
+        setForgotError("Failed to send reset link.");
       }
     } finally {
       setForgotLoading(false);
@@ -89,17 +87,14 @@ export default function LoginPage() {
     e.preventDefault();
     setResetError("");
     setResetSuccess("");
-
     if (resetNewPassword !== resetConfirmPassword) {
       setResetError("Passwords do not match");
       return;
     }
-
     if (resetNewPassword.length < 6) {
       setResetError("Password must be at least 6 characters long");
       return;
     }
-
     setResetLoading(true);
     try {
       await api.post("/auth/reset-password", {
@@ -118,10 +113,11 @@ export default function LoginPage() {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const axErr = err as AxiosError<{ message?: string }>;
-        const msg = axErr.response?.data?.message;
-        setResetError(msg || "Failed to reset password. Please try again.");
+        setResetError(
+          axErr.response?.data?.message || "Failed to reset password."
+        );
       } else {
-        setResetError("Failed to reset password. Please try again.");
+        setResetError("Failed to reset password.");
       }
     } finally {
       setResetLoading(false);
@@ -129,310 +125,228 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4 py-20">
-      <div className="w-full max-w-md">
-        {/* Futuristic Header */}
-        <div className="mb-12 text-center">
-          <h1
-            className="text-4xl md:text-5xl font-black text-white mb-3 uppercase tracking-tighter"
-            style={{
-              fontStyle: "italic",
-              textShadow: "0 0 40px rgba(6, 182, 212, 0.3)",
-            }}
-          >
-            TechFest
-          </h1>
-          <p className="text-cyan-300 text-sm uppercase tracking-[0.2em] font-light">
-            Enter the Arena
-          </p>
-        </div>
+    <div className="relative min-h-screen bg-black flex items-center justify-center px-4 py-20 font-sans">
+      <video
+        className="absolute inset-0 w-full h-full object-cover scale-95"
+        src="/videos/auth.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden="true"
+      />
+      <div className="absolute inset-0 bg-black/50" />
+      <div className="relative z-10 w-full max-w-[440px]">
+        {/* Mirror Reflective Card */}
+        <div className="relative p-[1.5px] rounded-[40px] bg-black shadow-2xl overflow-hidden">
+          <div className="relative bg-[#0d0d12]/50 backdrop-blur-xl rounded-[39px] p-10 overflow-hidden">
+            {/* RADIUM BLUE TOP-LEFT FLARE */}
+            <div className="absolute -top-20 -left-20 w-75 h-75 bg-blue-800/20 rounded-full blur-[70px] pointer-events-none" />
 
-        {/* Login Form Card */}
-        <div
-          className="relative p-8 overflow-hidden backdrop-blur-sm transition-all duration-500 border-2 border-cyan-500/60 bg-slate-950/80 hover:border-cyan-400 hover:shadow-[0_0_40px_rgba(6,182,212,0.5)]"
-          style={{
-            clipPath:
-              "polygon(0 0, 98% 0, 100% 2%, 100% 98%, 98% 100%, 0 100%, 0 98%, 0 2%)",
-          }}
-        >
-          {/* Form Content */}
-          {!showForgotPassword ? (
-            <form onSubmit={handleLogin} className="space-y-6 relative z-10">
-              {/* Email Field */}
-              <div>
-                <label className="block text-cyan-300 text-sm uppercase tracking-[0.15em] font-light mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-900/60 border border-cyan-500/40 text-white placeholder-cyan-300/50 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all"
-                  placeholder="your@email.com"
-                  required
-                />
-              </div>
+            {/* REFLECTIVE DOT GRID */}
+            <div
+              className="absolute top-8 right-8 w-24 h-24 opacity-30 pointer-events-none"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle, white 1.5px, transparent 1.5px)",
+                backgroundSize: "12px 12px",
+                maskImage: "radial-gradient(circle, black, transparent 70%)",
+                WebkitMaskImage:
+                  "radial-gradient(circle, black, transparent 70%)",
+              }}
+            />
 
-              {/* Password Field */}
-              <div>
-                <label className="block text-cyan-300 text-sm uppercase tracking-[0.15em] font-light mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900/60 border border-cyan-500/40 text-white placeholder-cyan-300/50 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all"
-                    placeholder="••••••••"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition-colors"
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Error Message */}
-              {error && (
-                <div className="text-red-400 text-sm mb-4 p-2 bg-red-950/30 border border-red-500/40 rounded">
-                  {error}
-                </div>
-              )}
-
-              {/* Success Message */}
-              {success && (
-                <div className="text-green-400 text-sm mb-4 p-2 bg-green-950/30 border border-green-500/40 rounded">
-                  {success}
-                </div>
-              )}
-
-              {/* Forgot Password Link */}
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setShowForgotPassword(true)}
-                  className="text-cyan-300 hover:text-cyan-200 text-sm uppercase tracking-[0.1em] transition-colors"
-                >
-                  Forgot Password?
-                </button>
-              </div>
-
-              {/* Login Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3 mt-8 bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold uppercase tracking-[0.15em] transition-all duration-300 hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:from-cyan-500 hover:to-blue-500 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span className="relative z-10">
-                  {loading ? "Logging in..." : "Login"}
-                </span>
-                {/* Shimmer Effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-700" />
-              </button>
-            </form>
-          ) : (
-            <form
-              onSubmit={handleForgotPassword}
-              className="space-y-6 relative z-10"
-            >
-              <div>
-                <label className="block text-cyan-300 text-sm uppercase tracking-[0.15em] font-light mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  value={forgotEmail}
-                  onChange={(e) => setForgotEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-900/60 border border-cyan-500/40 text-white placeholder-cyan-300/50 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all"
-                  placeholder="your@email.com"
-                  required
-                />
-                <p className="text-cyan-300/60 text-xs mt-2">
-                  Enter your email and we'll send you a password reset link
+            <div className="relative z-10">
+              <header className="mb-10">
+                <h1 className="text-4xl font-semibold text-white tracking-wide" style={{ fontFamily: "Barlow Condensed, sans-serif" }}>
+                  Welcome back:
+                </h1>
+                <p className="text-gray-400 font-medium mt-1" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+                  Sign in to your account
                 </p>
-              </div>
+              </header>
 
-              {forgotError && (
-                <div className="text-red-400 text-sm p-2 bg-red-950/30 border border-red-500/40 rounded">
-                  {forgotError}
-                </div>
+              {/* VIEW 1: LOGIN FORM */}
+              {!showForgotPassword && !showResetPassword && (
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="relative group" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+                    <Mail
+                      className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors"
+                      size={18}
+                    />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="megamindbend@gmail.com"
+                      className="w-full pl-14 pr-6 py-4 bg-[#16161c] border border-white/5 rounded-full text-white placeholder-gray-600 outline-none focus:border-blue-500/50 transition-all shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)]"
+                      required
+                    />
+                  </div>
+                  <div className="relative group" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+                    <Lock
+                      className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors"
+                      size={18}
+                    />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Password"
+                      className="w-full pl-14 pr-14 py-4 bg-[#16161c] border border-white/5 rounded-full text-white placeholder-gray-600 outline-none focus:border-blue-500/50 transition-all shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)]"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
+
+                  {error && (
+                    <p className="text-red-400 text-xs px-6">{error}</p>
+                  )}
+                  {success && (
+                    <p className="text-blue-400 text-xs px-6">{success}</p>
+                  )}
+
+                  <div className="flex justify-end px-2" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+                    <button
+                      type="button"
+                      onClick={() => setShowForgotPassword(true)}
+                      className="text-xs text-gray-500 hover:text-blue-400 transition-colors"
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-4 bg-blue-500 hover:bg-blue-400 text-black font-bold rounded-full transition-all shadow-[0_0_20px_rgba(59,130,246,0.2)] active:scale-95"
+                    style={{ fontFamily: "Space Grotesk, sans-serif" }}
+                  >
+                    {loading ? "Logging in..." : "Login"}
+                  </button>
+                </form>
               )}
-              {forgotSuccess && (
-                <div className="text-green-400 text-sm p-2 bg-green-950/30 border border-green-500/40 rounded">
-                  {forgotSuccess}
-                </div>
-              )}
 
-              <div className="flex gap-3">
-                <button
-                  type="submit"
-                  disabled={forgotLoading}
-                  className="flex-1 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold uppercase tracking-[0.15em] transition-all duration-300 hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {forgotLoading ? "Sending..." : "Send Reset Link"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowForgotPassword(false)}
-                  className="flex-1 py-3 border-2 border-cyan-500/60 text-cyan-300 font-bold uppercase tracking-[0.15em] transition-all duration-300 hover:bg-cyan-600/10 hover:border-cyan-400"
-                >
-                  Back to Login
-                </button>
-              </div>
-            </form>
-          )}
-
-          {/* Reset Password Form */}
-          {showResetPassword && (
-            <form
-              onSubmit={handleResetPassword}
-              className="space-y-6 relative z-10"
-            >
-              <h3 className="text-cyan-300 text-lg font-bold uppercase tracking-[0.15em] text-center mb-4">
-                Reset Your Password
-              </h3>
-
-              {/* OTP Field */}
-              <div>
-                <label className="block text-cyan-300 text-sm uppercase tracking-[0.15em] font-light mb-2">
-                  Enter OTP from Email
-                </label>
-                <input
-                  type="text"
-                  value={resetOTP}
-                  onChange={(e) => setResetOTP(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-900/60 border border-cyan-500/40 text-white placeholder-cyan-300/50 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all"
-                  placeholder="6-digit OTP"
-                  maxLength={6}
-                  required
-                />
-              </div>
-
-              {/* New Password Field */}
-              <div>
-                <label className="block text-cyan-300 text-sm uppercase tracking-[0.15em] font-light mb-2">
-                  New Password
-                </label>
-                <div className="relative">
+              {/* VIEW 2: FORGOT PASSWORD */}
+              {showForgotPassword && (
+                <form onSubmit={handleForgotPassword} className="space-y-4" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
                   <input
-                    type={showResetPasswordField ? "text" : "password"}
-                    value={resetNewPassword}
-                    onChange={(e) => setResetNewPassword(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900/60 border border-cyan-500/40 text-white placeholder-cyan-300/50 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all"
-                    placeholder="••••••••"
+                    type="email"
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full px-8 py-4 bg-[#16161c] border border-white/5 rounded-full text-white outline-none"
                     required
                   />
+                  {forgotError && (
+                    <p className="text-red-400 text-xs px-6">{forgotError}</p>
+                  )}
+                  {forgotSuccess && (
+                    <p className="text-blue-400 text-xs px-6">
+                      {forgotSuccess}
+                    </p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={forgotLoading}
+                    className="w-full py-4 bg-blue-500 text-black font-bold rounded-full"
+                  >
+                    {forgotLoading ? "Sending..." : "Send Reset Link"}
+                  </button>
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowResetPasswordField(!showResetPasswordField)
-                    }
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition-colors"
+                    onClick={() => setShowForgotPassword(false)}
+                    className="w-full text-gray-500 text-sm"
                   >
-                    {showResetPasswordField ? (
-                      <EyeOff size={20} />
-                    ) : (
-                      <Eye size={20} />
-                    )}
+                    Back to Login
                   </button>
-                </div>
-              </div>
+                </form>
+              )}
 
-              {/* Confirm Password Field */}
-              <div>
-                <label className="block text-cyan-300 text-sm uppercase tracking-[0.15em] font-light mb-2">
-                  Confirm Password
-                </label>
-                <div className="relative">
+              {/* VIEW 3: RESET PASSWORD */}
+              {showResetPassword && (
+                <form onSubmit={handleResetPassword} className="space-y-4" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
                   <input
-                    type={showResetConfirmField ? "text" : "password"}
-                    value={resetConfirmPassword}
-                    onChange={(e) => setResetConfirmPassword(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-900/60 border border-cyan-500/40 text-white placeholder-cyan-300/50 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all"
-                    placeholder="••••••••"
+                    type="text"
+                    value={resetOTP}
+                    onChange={(e) => setResetOTP(e.target.value)}
+                    placeholder="6-digit OTP"
+                    className="w-full px-8 py-4 bg-[#16161c] border border-blue-500/20 rounded-full text-white outline-none text-center font-bold tracking-[0.4em]"
                     required
                   />
+                  <div className="relative">
+                    <input
+                      type={showResetPasswordField ? "text" : "password"}
+                      value={resetNewPassword}
+                      onChange={(e) => setResetNewPassword(e.target.value)}
+                      placeholder="New Password"
+                      className="w-full px-8 py-4 bg-[#16161c] border border-white/5 rounded-full text-white outline-none"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowResetPasswordField(!showResetPasswordField)
+                      }
+                      className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-500"
+                    >
+                      <Eye size={18} />
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <input
+                      type={showResetConfirmField ? "text" : "password"}
+                      value={resetConfirmPassword}
+                      onChange={(e) => setResetConfirmPassword(e.target.value)}
+                      placeholder="Confirm Password"
+                      className="w-full px-8 py-4 bg-[#16161c] border border-white/5 rounded-full text-white outline-none"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowResetConfirmField(!showResetConfirmField)
+                      }
+                      className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-500"
+                    >
+                      <Eye size={18} />
+                    </button>
+                  </div>
+                  {resetError && (
+                    <p className="text-red-400 text-xs px-6">{resetError}</p>
+                  )}
                   <button
-                    type="button"
-                    onClick={() =>
-                      setShowResetConfirmField(!showResetConfirmField)
-                    }
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition-colors"
+                    type="submit"
+                    disabled={resetLoading}
+                    className="w-full py-4 bg-blue-500 text-black font-bold rounded-full"
                   >
-                    {showResetConfirmField ? (
-                      <EyeOff size={20} />
-                    ) : (
-                      <Eye size={20} />
-                    )}
+                    {resetLoading ? "Resetting..." : "Reset Password"}
                   </button>
-                </div>
-              </div>
-
-              {resetError && (
-                <div className="text-red-400 text-sm p-2 bg-red-950/30 border border-red-500/40 rounded">
-                  {resetError}
-                </div>
-              )}
-              {resetSuccess && (
-                <div className="text-green-400 text-sm p-2 bg-green-950/30 border border-green-500/40 rounded">
-                  {resetSuccess}
-                </div>
+                </form>
               )}
 
-              <div className="flex gap-3">
-                <button
-                  type="submit"
-                  disabled={resetLoading}
-                  className="flex-1 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold uppercase tracking-[0.15em] transition-all duration-300 hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {resetLoading ? "Resetting..." : "Reset Password"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowResetPassword(false);
-                    setResetOTP("");
-                    setResetNewPassword("");
-                    setResetConfirmPassword("");
-                  }}
-                  className="flex-1 py-3 border-2 border-cyan-500/60 text-cyan-300 font-bold uppercase tracking-[0.15em] transition-all duration-300 hover:bg-cyan-600/10 hover:border-cyan-400"
-                >
-                  Back
-                </button>
-              </div>
-            </form>
-          )}
-
-          {/* Divider */}
-          <div className="relative my-8 flex items-center justify-center">
-            <div className="absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
-            <span className="relative px-4 text-cyan-400 text-xs uppercase tracking-[0.2em]">
-              New User?
-            </span>
+              <footer className="mt-10 text-center" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+                <p className="text-gray-500 text-sm">
+                  Don't have an account?{" "}
+                  <Link
+                    href="/register"
+                    className="text-blue-500 font-bold hover:underline decoration-2 underline-offset-4"
+                  >
+                    Sign Up
+                  </Link>
+                </p>
+              </footer>
+            </div>
           </div>
 
-          {/* Sign Up Link */}
-          <Link
-            href="/register"
-            className="block w-full py-3 text-center border-2 border-cyan-500/60 text-cyan-300 font-bold uppercase tracking-[0.15em] transition-all duration-300 hover:bg-cyan-600/10 hover:border-cyan-400 hover:text-cyan-200"
-          >
-            Create Account
-          </Link>
-
-          {/* Background Glow */}
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-        </div>
-
-        {/* Footer Text */}
-        <div className="text-center mt-8">
-          <p className="text-cyan-300/60 text-xs uppercase tracking-[0.2em]">
-            Secure • Verified • TechFest 2025
-          </p>
+          {/* HIGH-END BORDER HIGHLIGHT REFRACTION */}
+          <div className="absolute inset-0 rounded-[40px] pointer-events-none border border-white/10 shadow-[inset_0_1.5px_0_rgba(255,255,255,0.15)]" />
         </div>
       </div>
     </div>

@@ -1,346 +1,200 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Menu,
-  X,
-  User,
-  Zap,
-  Calendar,
-  Trophy,
-  Mic2,
-  Hexagon,
-  Mail,
-  Box,
-} from "lucide-react";
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { User } from "lucide-react";
+import Link from "next/link";
 
-// --- Utils ---
-function cn(...inputs: (string | undefined | null | false)[]) {
-  return twMerge(clsx(inputs));
-}
+// Expanded character set including alphabets
+const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!<>-_\\/[]{}—=+*^?#________";
 
-// --- Types & Data ---
-type NavItem = {
-  label: string;
-  href: string;
-  icon: React.ReactNode;
-  color: string;
-};
+const ScrambleText = ({ text, className = "", triggerOnMount = true }: { text: string; className?: string, triggerOnMount?: boolean }) => {
+  const [displayText, setDisplayText] = useState(text);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-const NAV_ITEMS: NavItem[] = [
-  { label: "EVENTS", href: "/events", icon: <Calendar />, color: "#06b6d4" }, // Cyan
-  { label: "WORKSHOPS", href: "/workshops", icon: <Zap />, color: "#8b5cf6" }, // Violet
-  { label: "SPEAKERS", href: "/speakers", icon: <Mic2 />, color: "#ec4899" }, // Pink
-  { label: "EXHIBITS", href: "/exhibits", icon: <Box />, color: "#10b981" }, // Emerald
-  {
-    label: "COMPETITIONS",
-    href: "/competitions",
-    icon: <Trophy />,
-    color: "#f59e0b",
-  }, // Amber
-  { label: "CONTACT", href: "/contact", icon: <Mail />, color: "#3b82f6" }, // Blue
-];
+  const scramble = useCallback(() => {
+    let iteration = 0;
+    const stepIncrement = text.length / 25; 
 
-// --- Background Particle Component ---
-type ParticleConfig = {
-  x: string;
-  y: string;
-  scale: number;
-  targetY: string;
-  duration: number;
-  size: number;
-};
+    if (intervalRef.current) clearInterval(intervalRef.current);
 
-const ParticleBackground = () => {
-  // Precompute random values once to keep render idempotent
-  const [particles] = useState<ParticleConfig[]>(() =>
-    Array.from({ length: 20 }, () => ({
-      x: `${Math.floor(Math.random() * 100)}vw`,
-      y: `${Math.floor(Math.random() * 100)}vh`,
-      scale: Math.random() * 0.5 + 0.5,
-      targetY: `${-Math.floor(Math.random() * 100)}vh`,
-      duration: Math.random() * 10 + 10,
-      size: Math.random() * 4 + 1,
-    }))
-  );
+    intervalRef.current = setInterval(() => {
+      setDisplayText(
+        text.split("").map((char, index) => {
+          if (index < iteration) return text[index];
+          return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+        }).join("")
+      );
+
+      if (iteration >= text.length) clearInterval(intervalRef.current!);
+      iteration += stepIncrement;
+    }, 30);
+  }, [text]);
+
+  useEffect(() => {
+    if (triggerOnMount) scramble();
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [triggerOnMount, scramble]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map((p, i) => (
-        <motion.div
-          key={i}
-          className="absolute bg-cyan-500/20 rounded-full"
-          initial={{ x: p.x, y: p.y, scale: p.scale }}
-          animate={{ y: [null, p.targetY], opacity: [0, 0.8, 0] }}
-          transition={{
-            duration: p.duration,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{ width: `${p.size}px`, height: `${p.size}px` }}
-        />
-      ))}
-    </div>
+    <span onMouseEnter={scramble} className={className}>
+      {displayText}
+    </span>
   );
 };
 
-export default function NeuralNavbar() {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const pathname = usePathname();
 
-  // Update dimensions for centering logic
-  useEffect(() => {
-    const handleResize = () => {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
-
-    // Initial set
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Lock body scroll when menu is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-  }, [isOpen]);
-
-  const centerX = dimensions.width / 2;
-  const centerY = dimensions.height / 2;
-
-  // Responsive radius calculation
-  const radius = dimensions.width < 768 ? 140 : 250;
+  const menuData = [
+    {
+      title: "About",
+      isHyperlink: false,
+      items: [
+        { label: "HISTORY", id: "1.1", href: "/history" },
+        { label: "THEME", id: "1.2", href: "/theme" },
+        { label: "COMMITTEE", id: "1.3", href: "/committee" },
+        { label: "MEDIA", id: "1.4", href: "/media" },
+        { label: "TESTIMONIALS", id: "1.5", href: "/testimonials" },
+      ],
+    },
+    {
+      title: "Events",
+      isHyperlink: false,
+      items: [
+        { label: "TECHNICAL", id: "2.1", href: "/technical" },
+        { label: "MANAGERIAL", id: "2.2", href: "/managerial" },
+        { label: "WORKSHOPS", id: "2.3", href: "/workshops" },
+        { label: "GUEST LECTURES", id: "2.4", href: "/guest-lectures" },
+        { label: "HACKATHON", id: "2.5", href: "/hackathon" },
+        { label: "MUN", id: "2.6", href: "/mun" },
+        { label: "ESPORTS", id: "2.7", href: "/esports" },
+        { label: "CONFERENCE", id: "2.8", href: "/conference" },
+      ],
+    },
+    { title: "Sponsors", isHyperlink: true, href: "/sponsors", items: [] },
+    { title: "Accommodation", isHyperlink: true, href: "/accommodation", items: [] },
+    { title: "Campus Ambassador", isHyperlink: true, href: "/ambassador", items: [] },
+  ];
 
   return (
     <>
-      {/* =======================
-          1. TOP NAVIGATION BAR 
-         ======================= */}
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="fixed top-0 left-0 w-full z-50 h-20 px-6 flex items-center justify-between bg-black/40 backdrop-blur-md border-b border-white/10"
-      >
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-10 h-10 flex items-center justify-center">
-            <div className="absolute inset-0 bg-cyan-500 blur-lg opacity-40 group-hover:opacity-80 transition-opacity duration-500" />
-            <Hexagon
-              className="text-cyan-400 relative z-10 w-full h-full"
-              strokeWidth={1.5}
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <span className="font-mono text-xl font-bold text-white tracking-[0.2em]">
-              TECHFEST
-            </span>
-            <span className="text-[10px] text-cyan-400 font-mono tracking-widest uppercase">
-              Neural Interface v2.0
-            </span>
-          </div>
+      {/* 1. Main Navbar */}
+      <nav className="fixed top-0 left-0 w-full z-[100] px-10 py-6 flex justify-between items-center mix-blend-difference text-white" style={{ fontFamily: "Barlow Condensed, sans-serif" }}>
+        <Link href="/" className="text-3xl font-black tracking-wider hover:scale-110 transition-transform duration-300">
+          MINDBEND
         </Link>
-
-        {/* Right Side Controls */}
-        <div className="flex items-center gap-6">
-
-          {/* User Icon: Go to dashboard if logged in, else login */}
-          <button
-            onClick={() => {
-              // Check for login token (use correct key)
-              const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('mb_admin_token');
-              window.location.href = isLoggedIn ? '/user/dashboard' : '/login';
-            }}
-            className="hidden md:flex items-center gap-2 group"
-            aria-label="User Dashboard"
+        <div className="flex items-center gap-10">
+          <Link 
+            href="/login" 
+            className="hidden md:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
           >
-            <span className="text-gray-400 font-mono text-sm group-hover:text-cyan-400 transition-colors">
-              /USER
-            </span>
-            <div className="p-2 border border-white/20 rounded bg-white/5 group-hover:border-cyan-500/50 transition-colors">
-              <User size={18} className="text-white" />
-            </div>
-          </button>
-
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="relative group w-12 h-12 flex items-center justify-center z-50"
+            LOGIN 
+          </Link>
+          <Link 
+            href="/user/dashboard" 
+            className="hidden md:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
           >
-            <div
-              className={cn(
-                "absolute inset-0 rounded-full border border-white/10 group-hover:border-cyan-500/50 transition-colors duration-300",
-                isOpen &&
-                  "border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]"
-              )}
-            />
-            {isOpen ? (
-              <X className="text-white" />
-            ) : (
-              <Menu className="text-white" />
-            )}
+            PROFILE
+          </Link>
+          <button 
+            onClick={() => setIsOpen(true)} 
+            className="text-[15px] font-bold tracking-[0.2em] uppercase hover:scale-110 hover:text-zinc-400 transition-all duration-300 cursor-pointer"
+          >
+            MENU [+]
           </button>
         </div>
-      </motion.nav>
+      </nav>
 
-      {/* =======================
-          2. FULL SCREEN OVERLAY 
-         ======================= */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { delay: 0.3 } }}
-            className="fixed inset-0 z-40 bg-black flex items-center justify-center overflow-hidden"
-          >
-            {/* 2a. Background Aesthetics */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black" />
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)]" />
-            <ParticleBackground />
+          <>
+            {/* 2. Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-md z-[110]"
+            />
 
-            {/* 2b. Connecting Lines (SVG) */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none">
-              {NAV_ITEMS.map((item, i) => {
-                const angle =
-                  (i * (360 / NAV_ITEMS.length) - 90) * (Math.PI / 180);
-                const x = centerX + radius * Math.cos(angle);
-                const y = centerY + radius * Math.sin(angle);
-
-                return (
-                  <g key={`line-${i}`}>
-                    {/* The glowing line */}
-                    <motion.line
-                      x1={centerX}
-                      y1={centerY}
-                      x2={x}
-                      y2={y}
-                      stroke={item.color}
-                      strokeWidth="2"
-                      strokeOpacity="0.3"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      exit={{ pathLength: 0, opacity: 0 }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
-                    />
-                    {/* The travelling pulse */}
-                    <motion.circle r="3" fill={item.color}>
-                      <animateMotion
-                        dur="3s"
-                        repeatCount="indefinite"
-                        path={`M${centerX},${centerY} L${x},${y}`}
-                      />
-                    </motion.circle>
-                  </g>
-                );
-              })}
-            </svg>
-
-            {/* 2c. Central Hub */}
+            {/* 3. Half-Screen Menu */}
             <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              exit={{ scale: 0, rotate: 180 }}
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              className="absolute z-20"
-              style={{ left: centerX, top: centerY, x: "-50%", y: "-50%" }}
+              initial={{ scale: 0, opacity: 0, x: "20%", y: "-20%", borderRadius: "100px" }}
+              animate={{ scale: 1, opacity: 1, x: 0, y: 0, borderRadius: "0px" }}
+              exit={{ scale: 0, opacity: 0, x: "20%", y: "-20%", borderRadius: "100px" }}
+              transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
+              style={{ originX: 1, originY: 0 }} 
+              className="fixed top-0 right-0 h-screen w-full md:w-1/2 bg-[#050505] z-[120] border-l border-white/5 flex flex-col text-white shadow-2xl"
             >
-              <Link
-                href="/"
-                onClick={() => setIsOpen(false)}
-                className="relative w-32 h-32 flex items-center justify-center group"
-              >
-                {/* Glowing Orbs around center */}
-                <div className="absolute inset-0 bg-cyan-500/20 blur-xl rounded-full animate-pulse" />
-                <div className="absolute inset-0 border-2 border-cyan-500/30 rounded-full group-hover:scale-110 transition-transform duration-500" />
-                <div className="absolute inset-2 border border-cyan-500/50 rounded-full border-dashed animate-[spin_10s_linear_infinite]" />
+              {/* Header */}
+              <div className="p-8 md:p-12 flex justify-between items-center border-b border-white/5">
+                <ScrambleText text="©MINDBEND_2025" className="text-xs font-mono text-zinc-600" />
+                <button onClick={() => setIsOpen(false)} className="text-xs font-mono tracking-widest hover:text-red-500 transition-colors uppercase">
+                  <ScrambleText text="CLOSE [X]" />
+                </button>
+              </div>
 
-                <Hexagon
-                  size={48}
-                  className="text-cyan-400 relative z-10 fill-black/50"
-                />
-                <span className="absolute mt-16 text-[10px] text-cyan-300 font-mono tracking-widest">
-                  HOME
-                </span>
-              </Link>
-            </motion.div>
-
-            {/* 2d. Satellite Nodes (Menu Items) */}
-            {NAV_ITEMS.map((item, i) => {
-              const angle =
-                (i * (360 / NAV_ITEMS.length) - 90) * (Math.PI / 180);
-              // Calculate explicit positions for style
-              const xPos = centerX + radius * Math.cos(angle);
-              const yPos = centerY + radius * Math.sin(angle);
-
-              return (
-                <motion.div
-                  key={item.label}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0, opacity: 0 }}
-                  transition={{ delay: 0.4 + i * 0.1, type: "spring" }}
-                  className="absolute z-20"
-                  style={{ left: xPos, top: yPos, x: "-50%", y: "-50%" }}
-                >
-                  <Link
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className="group relative flex flex-col items-center justify-center w-24 h-24"
-                  >
-                    {/* Hexagon Shape Container */}
-                    <div
-                      className="absolute inset-0 bg-black border-2 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_25px_var(--glow-color)]"
-                      style={{
-                        borderColor: item.color,
-                        clipPath:
-                          "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                        // @ts-expect-error custom variable
-                        "--glow-color": item.color,
-                      }}
-                    />
-
-                    {/* Inner Content */}
-                    <div className="relative z-10 text-white group-hover:text-white transition-colors duration-300">
-                      {React.cloneElement(
-                        item.icon as React.ReactElement<any>,
-                        {
-                          size: 28,
-                        }
-                      )}
-                    </div>
-
-                    {/* Label */}
-                    <div className="absolute -bottom-8 bg-black/80 px-2 py-1 rounded border border-white/10 backdrop-blur-sm">
-                      <span
-                        className="text-[10px] font-bold font-mono tracking-widest block whitespace-nowrap"
-                        style={{ color: item.color }}
+              {/* Menu Content - Hidden Scrollbar applied here */}
+              <div className="flex-1 overflow-y-auto p-8 md:px-16 md:py-12 space-y-10 no-scrollbar">
+                {menuData.map((section, idx) => (
+                  <div key={idx} className="space-y-4">
+                    
+                    {/* Main Categories */}
+                    {section.isHyperlink ? (
+                      <Link 
+                        href={section.href || "#"}
+                        className="group flex w-full items-center px-4 py-3 transition-all duration-300 hover:bg-white hover:translate-x-6"
                       >
-                        {item.label}
-                      </span>
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+                        <h2 className="text-3xl md:text-4xl font-light tracking-tight group-hover:text-black uppercase tracking-wide" style={{ fontFamily: "Barlow Condensed, sans-serif" }}>
+                          <ScrambleText text={section.title} />
+                        </h2>
+                      </Link>
+                    ) : (
+                      <div className="group flex w-full items-center px-4 py-3 transition-all duration-300 hover:bg-white hover:translate-x-6 cursor-default">
+                        <h2 className="text-3xl md:text-4xl font-light tracking-tight group-hover:text-black uppercase tracking-wide" style={{ fontFamily: "Barlow Condensed, sans-serif" }}>
+                          <ScrambleText text={section.title} />
+                        </h2>
+                      </div>
+                    )}
+
+                    {/* Sub-Items */}
+                    {section.items.length > 0 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 pl-4" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+                        {section.items.map((sub, sIdx) => (
+                          <Link 
+                            key={sIdx} 
+                            href={sub.href} 
+                            className="group relative flex items-center gap-4 py-2 px-4 transition-all duration-300 hover:bg-white hover:translate-x-4"
+                          >
+                            <span className="font-mono text-[10px] text-zinc-600 group-hover:text-black">
+                              {sub.id}
+                            </span>
+                            <span className="font-mono text-[10px] tracking-[0.2em] group-hover:text-black uppercase block">
+                              <ScrambleText text={sub.label} />
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
+
+      <style jsx global>{`
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+        }
+      `}</style>
     </>
   );
 }
