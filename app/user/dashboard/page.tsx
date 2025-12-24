@@ -50,6 +50,7 @@ export default function ProfilePage() {
     isProfileCompleted: false,
   })
   const [registeredEvents, setRegisteredEvents] = useState<any[]>([])
+  const [pendingInvites, setPendingInvites] = useState<any[]>([])
   const [registeredWorkshops, setRegisteredWorkshops] = useState<any[]>([])
   const [accommodations, setAccommodations] = useState<any[]>([])
 
@@ -101,7 +102,10 @@ export default function ProfilePage() {
     if (activeTab === "events" && registeredEvents.length === 0) {
       setLoading(true)
       api.get("/users/registered-events", { headers: { Authorization: `Bearer ${token}` } })
-        .then((res) => setRegisteredEvents(res.data?.data?.events || []))
+        .then((res) => {
+          setRegisteredEvents(res.data?.data?.events || []);
+          setPendingInvites(res.data?.data?.pendingInvites || []);
+        })
         .catch((err) => setError(err?.response?.data?.message || "Failed to load events"))
         .finally(() => setLoading(false))
     }
@@ -215,7 +219,51 @@ export default function ProfilePage() {
           )}
 
           {/* Registered Events Tab */}
-          {activeTab === "events" && <RegisteredEventsTab events={registeredEvents} />}
+          {activeTab === "events" && (
+            <>
+              <RegisteredEventsTab events={registeredEvents} />
+              {pendingInvites.length > 0 && (
+                <div className="mt-8">
+                  <h3 className="text-cyan-300 text-lg font-bold mb-2">Pending Event Invites</h3>
+                  <div className="space-y-4">
+                    {pendingInvites.map((invite: any) => (
+                      <div key={invite.teamId} className="p-6 border-2 border-yellow-500/60 bg-yellow-900/20 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                          <div className="font-bold text-yellow-200 text-lg">{invite.name}</div>
+                          <div className="text-yellow-300 text-sm">Team: {invite.teamName}</div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            className="px-4 py-2 bg-green-700 text-white rounded font-bold hover:bg-green-600"
+                            onClick={async () => {
+                              try {
+                                await api.post(`/events/team/${invite.teamId}/invite/respond`, { accept: true });
+                                setPendingInvites((prev: any[]) => prev.filter(i => i.teamId !== invite.teamId));
+                                setRegisteredEvents((prev: any[]) => [...prev, { ...invite, status: 'registered' }]);
+                              } catch (err) {
+                                alert('Failed to accept invite');
+                              }
+                            }}
+                          >Accept</button>
+                          <button
+                            className="px-4 py-2 bg-red-700 text-white rounded font-bold hover:bg-red-600"
+                            onClick={async () => {
+                              try {
+                                await api.post(`/events/team/${invite.teamId}/invite/respond`, { accept: false });
+                                setPendingInvites((prev: any[]) => prev.filter(i => i.teamId !== invite.teamId));
+                              } catch (err) {
+                                alert('Failed to reject invite');
+                              }
+                            }}
+                          >Reject</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
 
           {/* Workshops Tab */}
           {activeTab === "workshops" && <WorkshopsTab workshops={registeredWorkshops} />}

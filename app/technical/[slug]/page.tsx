@@ -282,6 +282,8 @@ export default function EventDetailPage() {
           unstopLink={event.unstopLink}
           psLink={event.psLink}
           formatDate={formatDate}
+          eventId={event._id}
+          isTeamEvent={event.isTeamEvent}
         />
       </div>
     </motion.div>

@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { MessageCircle, Users, Calendar } from 'lucide-react';
-import { FaWhatsapp } from 'react-icons/fa';
 import { useState } from 'react';
 import { EventContact } from '@/types';
 
@@ -167,7 +166,7 @@ const EventTabs: React.FC<EventTabsProps> = ({
                   <div key={index} className="bg-white/5 border border-white/10 p-6 hover:bg-white/10 transition-all flex items-center justify-between group">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <FaWhatsapp className="w-5 h-5 text-green-400" />
+                        <MessageCircle className="w-5 h-5 text-green-400" />
                         <h4 className="font-bold text-lg font-orbitron">{contactPerson.name}</h4>
                       </div>
                       <p className="text-gray-400 font-share-tech-mono text-xs">{contactPerson.whatsappNo}</p>
