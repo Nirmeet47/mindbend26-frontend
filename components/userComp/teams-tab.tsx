@@ -15,16 +15,19 @@ type Team = {
     eventDate?: string
   }
   leader: { name: string; email: string }
-  members: { user: { name: string; email: string } }[]
+  members: ({ user: { name: string; email: string } } & { status?: string })[]
+  pendingInvite?: boolean
 }
 
 type TeamsTabProps = {
   teams: Team[]
   loading: boolean
   error: string
+  onAcceptRejectInvite?: (teamId: string, action: 'accept' | 'reject') => void
+  userEmail?: string
 }
 
-export default function TeamsTab({ teams, loading, error }: TeamsTabProps) {
+export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, userEmail }: TeamsTabProps) {
   if (loading) {
     return <div className="text-center text-cyan-400">Loading your teams...</div>
   }
@@ -46,6 +49,9 @@ export default function TeamsTab({ teams, loading, error }: TeamsTabProps) {
         const [inviteError, setInviteError] = useState<string | null>(null);
         // Assume current user is leader if their email matches
         const isLeader = typeof window !== "undefined" && localStorage.getItem("mb_admin_token") && team.leader.email === JSON.parse(atob(localStorage.getItem("mb_admin_token")!.split(".")[1])).email;
+        // Find current user in members and check for pending status
+        const currentMember = team.members.find((m) => m.user.email === userEmail);
+        const isPending = currentMember?.status === 'pending';
         return (
           <div
             key={team._id}
@@ -63,9 +69,25 @@ export default function TeamsTab({ teams, loading, error }: TeamsTabProps) {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <span className="px-4 py-1 text-xs font-bold uppercase tracking-[0.1em] bg-green-600/30 text-green-300 border border-green-500/60">
-                  Active
-                </span>
+                {isPending ? (
+                  <>
+                    <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest bg-yellow-600/30 text-yellow-300 border border-yellow-500/60 mr-2">Pending</span>
+                    {onAcceptRejectInvite && (
+                      <>
+                        <button
+                          className="px-4 py-1 border-2 border-green-500 text-green-300 rounded font-bold text-xs mr-1 hover:bg-green-500/10 hover:text-green-200 transition"
+                          onClick={() => onAcceptRejectInvite(team._id, 'accept')}
+                        >Accept</button>
+                        <button
+                          className="px-4 py-1 border-2 border-red-500 text-red-300 rounded font-bold text-xs hover:bg-red-500/10 hover:text-red-200 transition"
+                          onClick={() => onAcceptRejectInvite(team._id, 'reject')}
+                        >Reject</button>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest bg-green-600/30 text-green-300 border border-green-500/60">Active</span>
+                )}
                 <ChevronRight className="text-cyan-400" size={20} />
               </div>
             </div>
