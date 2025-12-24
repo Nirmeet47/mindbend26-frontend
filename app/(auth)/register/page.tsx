@@ -77,9 +77,9 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#050508] flex items-center justify-center px-4 py-10 font-sans" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+    <div className="relative min-h-screen bg-black flex items-center justify-center px-4 py-10 font-sans" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
       <video
-        className="absolute inset-0 w-full h-full object-cover scale-90"
+        className="absolute inset-0 w-full h-full object-cover scale-95"
         src="/videos/auth.mp4"
         autoPlay
         muted
