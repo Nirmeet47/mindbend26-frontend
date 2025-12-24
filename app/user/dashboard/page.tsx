@@ -5,6 +5,7 @@ import { User, Calendar, Users, Home } from "lucide-react"
 import api from "../../../lib/api"
 import { useRouter } from "next/navigation"
 import ProfileHeader from "../../../components/userComp/profile-header"
+import { useMemo } from "react"
 import ResetPasswordForm from "../../../components/userComp/reset-password-form"
 import RegisteredEventsTab from "../../../components/userComp/registered-events-tab"
 import WorkshopsTab from "../../../components/userComp/workshops-tab"
@@ -37,33 +38,24 @@ export default function ProfilePage() {
   const [error, setError] = useState("")
   const router = useRouter()
 
+
   const [userData, setUserData] = useState({
-    fullName: "John Doe",
-    email: "john@example.com",
-    collegeName: "SVNIT",
-    degree: "B.Tech",
-    yearOfStudy: "3rd Year",
-    contactNumber: "+91 9876543210",
-    joinedDate: "15 Dec 2024",
+    fullName: "",
+    email: "",
+    collegeName: "",
+    degree: "",
+    yearOfStudy: "",
+    contactNumber: "",
+    joinedDate: "",
+    isProfileCompleted: false,
   })
+  const [registeredEvents, setRegisteredEvents] = useState<any[]>([])
+  const [registeredWorkshops, setRegisteredWorkshops] = useState<any[]>([])
+  const [accommodations, setAccommodations] = useState<any[]>([])
 
-  const registeredEvents = [
-    { id: 1, name: "AI Workshop", category: "Technical", date: "25 Jan 2025", status: "registered" },
-    { id: 2, name: "Leadership Challenge", category: "Managerial", date: "28 Jan 2025", status: "registered" },
-    { id: 3, name: "Robotics Competition", category: "Technical", date: "26 Jan 2025", status: "completed" },
-  ]
-
-  const registeredWorkshops = [
-    { id: 1, name: "Web Development Bootcamp", instructor: "John Smith", date: "20 Jan 2025", status: "registered" },
-    { id: 2, name: "Machine Learning Basics", instructor: "Sarah Wilson", date: "22 Jan 2025", status: "registered" },
-  ]
-
-  const accommodations = [
-    { id: 1, hostel: "Hostel A", room: "A-205", checkIn: "24 Jan 2025", checkOut: "30 Jan 2025", status: "booked" },
-  ]
-
+  // Fetch user profile on mount
   useEffect(() => {
-    const fetchTeams = async () => {
+    const fetchProfile = async () => {
       setLoading(true)
       setError("")
       try {
@@ -72,18 +64,67 @@ export default function ProfilePage() {
           setError("You are not logged in.")
           return
         }
-        const res = await api.get("/teams", {
+        const profileRes = await api.get("/users/profile", {
           headers: { Authorization: `Bearer ${token}` },
         })
-        setTeams(res.data?.data?.teams || [])
+        const user = profileRes.data?.data?.user
+        setUserData({
+          fullName: user?.name || "",
+          email: user?.email || "",
+          collegeName: user?.college_name || "",
+          degree: user?.degree || "",
+          yearOfStudy: user?.year_of_study ? `${user.year_of_study}` : "",
+          contactNumber: user?.phoneNumber || "",
+          joinedDate: user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "",
+          isProfileCompleted: user?.isProfile_completed || false,
+        })
       } catch (err: any) {
-        setError(err?.response?.data?.message || "Failed to load teams")
+        setError(err?.response?.data?.message || "Failed to load profile")
       } finally {
         setLoading(false)
       }
     }
-    fetchTeams()
+    fetchProfile()
   }, [])
+
+  // Fetch data for each tab only when selected
+  useEffect(() => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null
+    if (!token) return
+    if (activeTab === "teams" && teams.length === 0) {
+      setLoading(true)
+      api.get("/users/teams", { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => setTeams(res.data?.data?.teams || []))
+        .catch((err) => setError(err?.response?.data?.message || "Failed to load teams"))
+        .finally(() => setLoading(false))
+    }
+    if (activeTab === "events" && registeredEvents.length === 0) {
+      setLoading(true)
+      api.get("/users/registered-events", { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => setRegisteredEvents(res.data?.data?.events || []))
+        .catch((err) => setError(err?.response?.data?.message || "Failed to load events"))
+        .finally(() => setLoading(false))
+    }
+    if (activeTab === "workshops" && registeredWorkshops.length === 0) {
+      setLoading(true)
+      api.get("/users/registered-workshops", { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => setRegisteredWorkshops(res.data?.data?.workshops || []))
+        .catch((err) => setError(err?.response?.data?.message || "Failed to load workshops"))
+        .finally(() => setLoading(false))
+    }
+    if (activeTab === "accommodation" && accommodations.length === 0) {
+      setLoading(true)
+      api.get("/users/accommodation", { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => setAccommodations(res.data?.data?.accommodations || []))
+        .catch((err) => setError(err?.response?.data?.message || "Failed to load accommodation"))
+        .finally(() => setLoading(false))
+    }
+  }, [activeTab])
+
+  // Profile completion check
+  const isProfileComplete = useMemo(() => {
+    return userData.isProfileCompleted;
+  }, [userData])
 
   return (
     <div className="min-h-screen bg-black py-12 px-4">
@@ -91,10 +132,43 @@ export default function ProfilePage() {
         {/* Header with User Info */}
         <ProfileHeader
           userData={userData}
-          onEditProfile={() => {}}
+          onEditProfile={async (editData) => {
+            try {
+              const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null;
+              if (!token) return;
+              const res = await api.put(
+                "/users/update-profile",
+                {
+                  name: editData.fullName,
+                  college_name: editData.collegeName,
+                  year_of_study: editData.yearOfStudy,
+                  phoneNumber: editData.contactNumber,
+                },
+                { headers: { Authorization: `Bearer ${token}` } }
+              );
+              const user = res.data?.data?.user;
+              setUserData((prev) => ({
+                ...prev,
+                fullName: user?.name || prev.fullName,
+                collegeName: user?.college_name || prev.collegeName,
+                yearOfStudy: user?.year_of_study ? `${user.year_of_study}` : prev.yearOfStudy,
+                contactNumber: user?.phoneNumber || prev.contactNumber,
+                isProfileCompleted: user?.isProfile_completed || false,
+              }));
+            } catch (err) {
+              // Optionally show error
+            }
+          }}
           onResetPassword={setShowResetPassword}
           showResetPassword={showResetPassword}
         />
+
+        {/* Prompt to complete profile if not complete */}
+        {!isProfileComplete && (
+          <div className="bg-yellow-900/80 border-l-4 border-yellow-400 text-yellow-200 p-4 mb-6 rounded">
+            Please complete your profile by filling in your college name, year of study, and contact number.
+          </div>
+        )}
 
         {/* Reset Password Form */}
         {showResetPassword && (

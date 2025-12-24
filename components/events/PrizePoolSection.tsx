@@ -22,35 +22,34 @@ const PrizePoolSection: React.FC<PrizePoolSectionProps> = ({ prizeMoney, prizeDi
           <div className="absolute inset-0 opacity-10"
             style={{ backgroundImage: 'radial-gradient(#FF4D00 1px, transparent 1px)', backgroundSize: '20px 20px' }}
           />
-
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="text-center md:text-left">
-              <div className="inline-flex items-center gap-2 border border-[#FF4D00] px-3 py-1 text-xs text-[#FF4D00] font-share-tech-mono uppercase tracking-widest mb-4">
-                <span className="w-2 h-2 bg-[#FF4D00] animate-pulse rounded-full" />
-                Prize_Distribution
+            <div className={`relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-20 ${(prizeDistribution?.first > 0 || prizeDistribution?.second > 0 || prizeDistribution?.third > 0) ? '' : 'justify-center'}`}>
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 border-l-2 border-[#FF4D00] pl-3 mb-3">
+              <span className="text-[#FF4D00] font-share-tech-mono text-xs uppercase tracking-[0.2em]">Total Prize Pool</span>
               </div>
-              <div className="text-6xl md:text-8xl font-black font-orbitron text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 tracking-tighter">
-                ₹{prizeMoney.toLocaleString()}
-              </div>
-              <p className="text-gray-500 font-rajdhani tracking-[0.3em] uppercase mt-2">Total Prize Pool Allocated</p>
-            </div>
-
-            <div className="flex-1 w-full md:w-auto">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[
-                  { label: '1ST_PLACE', value: prizeDistribution.first, color: 'from-amber-300 to-amber-600' },
-                  { label: '2ND_PLACE', value: prizeDistribution.second, color: 'from-slate-300 to-slate-500' },
-                  { label: '3RD_PLACE', value: prizeDistribution.third, color: 'from-orange-700 to-orange-900' }
-                ].map((prize, i) => (
-                  <div key={i} className="bg-white/5 border border-white/10 p-4 relative group hover:border-[#FF4D00]/50 transition-colors">
-                    <p className="text-[10px] text-gray-500 font-share-tech-mono mb-2">{prize.label}</p>
-                    <p className="text-2xl font-bold font-orbitron">₹{prize.value.toLocaleString()}</p>
-                    <div className={`absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r ${prize.color} opacity-50 group-hover:opacity-100 transition-opacity`} />
-                  </div>
-                ))}
+              <div className="text-5xl md:text-6xl font-black font-orbitron text-white tracking-tight">
+              ₹{prizeMoney.toLocaleString()}  
               </div>
             </div>
-          </div>
+
+            {(prizeDistribution?.first > 0 || prizeDistribution?.second > 0 || prizeDistribution?.third > 0) && (
+              <div className="flex-1 w-full lg:w-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/10 border border-white/10 overflow-hidden">
+              {[
+                { label: '1st Place', value: prizeDistribution.first, color: 'text-amber-400' },
+                { label: '2nd Place', value: prizeDistribution.second, color: 'text-slate-300' },
+                { label: '3rd Place', value: prizeDistribution.third, color: 'text-orange-600' }
+              ].filter(prize => prize.value > 0).map((prize, i) => (
+                <div key={i} className="bg-[#050505] p-4 md:p-6 text-center group hover:bg-white/5 transition-colors relative">
+                <div className={`text-xs md:text-sm font-share-tech-mono ${prize.color} mb-1 uppercase tracking-wider`}>{prize.label}</div>
+                <div className="text-lg md:text-2xl font-bold font-orbitron text-white">₹{prize.value.toLocaleString()}</div>
+                <div className={`absolute bottom-0 left-0 w-full h-0.5 bg-current opacity-0 group-hover:opacity-100 transition-opacity ${prize.color}`} />
+                </div>
+              ))}
+              </div>
+              </div>
+            )}
+            </div>
         </div>
       </motion.div>
     </section>

@@ -15,6 +15,9 @@ type RegisteredEventsTabProps = {
 }
 
 export default function RegisteredEventsTab({ events }: RegisteredEventsTabProps) {
+  if (events.length === 0) {
+    return <div className="text-cyan-300/60 text-center py-8">You haven't registered for any events yet.</div>;
+  }
   return (
     <div className="space-y-4">
       {events.map((event) => (

@@ -2,17 +2,19 @@
 
 import { motion } from 'framer-motion';
 import { MessageCircle, Users, Calendar } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { useState } from 'react';
+import { EventContact } from '@/types';
 
 type TabType = 'about' | 'structure' | 'rules' | 'contact';
 
 interface EventTabsProps {
   aboutEvent: string;
-  isTeamEvent: boolean;
-  minTeamSize: number;
-  maxTeamSize: number;
-  rules: string[];
-  whatsappNo?: string;
+  isTeamEvent?: boolean;
+  minTeamSize?: number;
+  maxTeamSize?: number;
+  rules?: string[];
+  contact?: EventContact[];
   whatsappGrpLink?: string;
 }
 
@@ -22,7 +24,7 @@ const EventTabs: React.FC<EventTabsProps> = ({
   minTeamSize,
   maxTeamSize,
   rules,
-  whatsappNo,
+  contact,
   whatsappGrpLink
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('about');
@@ -34,10 +36,10 @@ const EventTabs: React.FC<EventTabsProps> = ({
         <div className="flex flex-wrap gap-2 md:gap-8 overflow-x-auto pb-1 scrollbar-hide">
           {[
             { id: 'about', label: 'About' },
-            { id: 'structure', label: 'Structure' },
-            { id: 'rules', label: 'Protocol' },
-            { id: 'contact', label: 'Contact' },
-          ].map((tab) => (
+            ...((isTeamEvent != null || isTeamEvent != undefined) ? [{ id: 'structure', label: 'Structure' }] : []),
+            ...(rules && rules.length > 0 ? [{ id: 'rules', label: 'Protocol' }] : []),
+            ...(contact && contact.length > 0 ? [{ id: 'contact', label: 'Contact' }] : []),
+            ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabType)}
@@ -159,24 +161,30 @@ const EventTabs: React.FC<EventTabsProps> = ({
         {activeTab === 'contact' && (
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* WhatsApp Contact */}
-              {whatsappNo && (
-                <div className="bg-white/5 border border-white/10 p-6 hover:bg-white/10 transition-all flex items-center justify-between group">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <MessageCircle className="w-5 h-5 text-green-400" />
-                      <h4 className="font-bold text-lg font-orbitron">Direct_Comms</h4>
+              {/* WhatsApp Contacts */}
+              {contact && contact.length > 0 ? (
+                contact.map((contactPerson, index) => (
+                  <div key={index} className="bg-white/5 border border-white/10 p-6 hover:bg-white/10 transition-all flex items-center justify-between group">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <FaWhatsapp className="w-5 h-5 text-green-400" />
+                        <h4 className="font-bold text-lg font-orbitron">{contactPerson.name}</h4>
+                      </div>
+                      <p className="text-gray-400 font-share-tech-mono text-xs">{contactPerson.whatsappNo}</p>
                     </div>
-                    <p className="text-gray-400 font-share-tech-mono text-xs">{whatsappNo}</p>
+                    <a
+                      href={`https://wa.me/${contactPerson.whatsappNo.replace(/[^0-9]/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 bg-green-500/20 text-green-400 border border-green-500/50 hover:bg-green-500 hover:text-black font-bold uppercase tracking-wider text-xs transition-all"
+                    >
+                      Contact
+                    </a>
                   </div>
-                  <a
-                    href={`https://wa.me/${whatsappNo.replace(/[^0-9]/g, '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-green-500/20 text-green-400 border border-green-500/50 hover:bg-green-500 hover:text-black font-bold uppercase tracking-wider text-xs transition-all"
-                  >
-                    Contact via Whatsapp
-                  </a>
+                ))
+              ) : (
+                <div className="bg-white/5 border border-white/10 p-8 rounded-lg text-center border-dashed col-span-full">
+                  <p className="text-gray-400 font-share-tech-mono">No contacts available</p>
                 </div>
               )}
 

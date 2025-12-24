@@ -2,7 +2,7 @@
 export interface Event {
   _id: string;
   name: string;
-  type: 'technical' | 'managerial';
+  type: 'technical' | 'managerial' | 'workshops';
   slug?: string;
   isTeamEvent: boolean;
   minTeamSize: number;
@@ -18,7 +18,7 @@ export interface Event {
   prizeDistribution: PrizeDistribution;
   hideEvent: boolean;
   stopRegistration: boolean;
-  whatsappNo: string;
+  contact: EventContact[];
   whatsappGrpLink: string;
   unstopLink: string;
   psLink: string;
@@ -32,5 +32,10 @@ export interface PrizeDistribution {
   third: number;
 }
 
+export interface EventContact {
+  name: string;
+  whatsappNo: string;
+}
+
 export type EventStatus = 'OPEN' | 'CLOSED' | 'HIDDEN';
-export type EventType = 'technical' | 'managerial' | 'cultural';
+export type EventType = 'technical' | 'managerial' | 'workshops';

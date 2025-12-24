@@ -14,6 +14,9 @@ type AccommodationTabProps = {
 }
 
 export default function AccommodationTab({ accommodations }: AccommodationTabProps) {
+  if (accommodations.length === 0) {
+    return <div className="text-cyan-300/60 text-center py-8">You have no accommodation bookings yet.</div>;
+  }
   return (
     <div className="space-y-4">
       {accommodations.map((booking) => (
