@@ -88,14 +88,15 @@ export default function JoinTeamPage() {
   useEffect(() => {
     const fetchTeamDetails = async () => {
       try {
-        const token = localStorage.getItem('authToken') || localStorage.getItem('mb_admin_token');
         
-        if (!token) {
-          setError('Please login to view this invite');
-          setLoading(false);
-          return;
-        }
-
+        // const token = localStorage.getItem('authToken') || localStorage.getItem('mb_admin_token');
+        // 
+        // if (!token) {
+        //   setError('Please login to view this invite');
+        //   setLoading(false);
+        //   return;
+        // }
+        
         const response = await eventTeamApi.getTeamByInviteToken(inviteToken);
         if (response.data?.data?.team) {
           setTeamData(response.data.data.team);
@@ -112,15 +113,6 @@ export default function JoinTeamPage() {
   }, [inviteToken]);
 
   const handleJoinTeam = async () => {
-    const token = localStorage.getItem('authToken') || localStorage.getItem('mb_admin_token');
-    
-    if (!token) {
-      setError('Please login to join the team');
-      setTimeout(() => {
-        router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
-      }, 2000);
-      return;
-    }
 
     setJoining(true);
     setError(null);
@@ -138,6 +130,15 @@ export default function JoinTeamPage() {
         }, 2000);
       }
     } catch (err: any) {
+      
+      if(err?.response?.status === 401){
+        setError('Please login to join the team');
+        setTimeout(() => {
+          router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
+        }, 2000);
+        return;
+      }
+
       const errorMsg = err?.response?.data?.message || 'Failed to join team. Please try again.';
       setError(errorMsg);
     } finally {
