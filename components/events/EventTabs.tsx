@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { MessageCircle, Users, Calendar } from 'lucide-react';
 import { useState } from 'react';
 import { EventContact } from '@/types';
+import Link from 'next/link';
 
 type TabType = 'about' | 'structure' | 'rules' | 'contact';
 
@@ -171,14 +172,14 @@ const EventTabs: React.FC<EventTabsProps> = ({
                       </div>
                       <p className="text-gray-400 font-share-tech-mono text-xs">{contactPerson.whatsappNo}</p>
                     </div>
-                    <a
+                    <Link
                       href={`https://wa.me/${contactPerson.whatsappNo.replace(/[^0-9]/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 py-2 bg-green-500/20 text-green-400 border border-green-500/50 hover:bg-green-500 hover:text-black font-bold uppercase tracking-wider text-xs transition-all"
                     >
                       Contact
-                    </a>
+                    </Link>
                   </div>
                 ))
               ) : (

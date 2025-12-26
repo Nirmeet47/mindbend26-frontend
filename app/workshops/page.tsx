@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { publicEventsApi } from '@/lib/events';
 import WorkshopBackground from '@/components/events/WorkshopBackground';
 import WorkshopEventCard from '@/components/WorkshopEventCard';
+import Navbar from '@/components/layoutComp/Navbar';
 
 interface Event {
   _id: string;
@@ -68,7 +69,9 @@ function Workshop() {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen text-white overflow-x-hidden selection:bg-[#33ABB9]/30">
+    <>
+    <Navbar />
+    <div className="relative mt-8 w-full min-h-screen text-white overflow-x-hidden selection:bg-[#33ABB9]/30">
       <WorkshopBackground />
       <div className="container mx-auto py-8 z-5 relative">
         <div className="flex flex-col items-center w-full animate-fade-in">
@@ -118,6 +121,7 @@ function Workshop() {
         )}
       </div>
     </div>
+    </>
   );
 }
 

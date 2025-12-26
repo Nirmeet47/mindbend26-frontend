@@ -1,19 +1,12 @@
 'use client';
-
-// import ManagerialBackground from '@/components/managerial/ManagerialBackground';
-// import { IMAGES } from '@/components/events/constants'; // Import real data
 import ManagerialBackground from "@/components/events/ManagerialBackground";
 import EventCard from "@/components/EventCard";
 import Link from "next/link";
 
-// Helper to generate slug consistent with the detail page logic
-// const generateSlug = (item: any) => {
-//     return `${item.title.toLowerCase().replace(/\s+/g, '-')}-${item.subtitle.toLowerCase().replace(/\s+/g, '-')}`;
-// };
-
 
 import { useEffect, useState } from 'react';
 import { publicEventsApi } from "@/lib/events";
+import Navbar from "@/components/layoutComp/Navbar";
 
 interface Event {
   _id: string;
@@ -42,43 +35,12 @@ export default function ManagerialPage() {
         }
         fetchEvents();
 
-
-        // dummy data for testing
-        // setEvents([
-        //     {
-        //     _id: "1",
-        //     name: "Codewars",
-        //     aboutEvent: "coding..",
-        //     slug: "codewars",
-        //     prizeMoney: 100,
-        //     eventDate: new Date(),
-        //     eventPhoto: "https://mindbend-main.vercel.app/mindbend.png"
-        //     },
-        //     {
-        //     _id: "2",
-        //     name: "Codewars",
-        //     aboutEvent: "coding..",
-        //     slug: "codewars",
-        //     prizeMoney: 100,
-        //     eventDate: new Date(),
-        //     eventPhoto: "https://mindbend-main.vercel.app/mindbend.png"
-        //     },
-        //     {
-        //     _id: "3",
-        //     name: "Codewars",
-        //     aboutEvent: "coding..",
-        //     slug: "codewars",
-        //     prizeMoney: 100,
-        //     eventDate: new Date(),
-        //     eventPhoto: "https://mindbend-main.vercel.app/mindbend.png"
-        //     },
-        // ])
-        // setLoading(false)
-
     }, []);
 
     return (
-        <div className="relative w-full min-h-screen text-white overflow-x-hidden selection:bg-blue-500/30">
+        <>
+        <Navbar />
+        <div className="relative mt-8 w-full min-h-screen text-white overflow-x-hidden selection:bg-blue-500/30">
             <div className="fixed inset-0 z-0">
                 <ManagerialBackground
                     density={350}
@@ -142,5 +104,6 @@ export default function ManagerialPage() {
                 )}
             </div>
         </div>
+        </>
     );
 }

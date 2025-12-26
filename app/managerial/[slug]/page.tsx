@@ -9,13 +9,12 @@ import InfoCard from '@/components/events/InfoCard';
 import PrizePoolSection from '@/components/events/PrizePoolSection';
 import EventTabs from '@/components/events/EventTabs';
 import RegistrationCTA from '@/components/events/RegistrationCTA';
-import EventCard from '@/components/EventCard';
-import EventsHeader from '@/components/events/EventsHeader';
-
-import { Event } from '@/types';
-
 import { formatDate, getDaysRemaining, getEventStatus } from '@/utils/eventsUtils';
 import { publicEventsApi } from '@/lib/events';
+import EventCard from '@/components/EventCard';
+import EventsHeader from '@/components/events/EventsHeader';
+import RegisteredTeamModal from '@/components/events/RegisteredTeamModal';
+import { DetailedTeam, Event } from '@/types';
 
 // Lazy load the background scene
 const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScene'), {
@@ -28,6 +27,9 @@ export default function EventDetailPage() {
   const slug = params.slug as string;
 
   const [event, setEvent] = useState<Event | null>(null);
+  const [eventTeam, setEventTeam] = useState<DetailedTeam | null>(null);
+  const [isLeader, setIsLeader] = useState<boolean>(false);
+  const [isSvnitian, setIsSvnitian] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,7 +38,19 @@ export default function EventDetailPage() {
     async function fetchEvent() {
       publicEventsApi
         .get(slug)
-        .then((res) => { setEvent(res.data?.data?.event || null); })
+        .then((res) => {
+          setEvent(res.data?.data?.event || null);
+          // console.log(res.data)
+          if(res.data?.data?.team){
+          setEventTeam(res.data?.data?.team || null);
+          }
+          if(res.data?.data?.team && res.data?.data?.isLeader){
+            setIsLeader(true);
+          }
+          if(res.data?.data?.isSvnitian){
+            setIsSvnitian(true);
+          }
+        })
         .catch(() => setError('Failed to load event details. Please try again later.'))
         .finally(() => setLoading(false));
     }
@@ -276,14 +290,27 @@ export default function EventDetailPage() {
           whatsappGrpLink={event.whatsappGrpLink}
         />
 
-        {/* Registration CTA */}
-        <RegistrationCTA
-          eventStatus={eventStatus}
-          registrationDeadline={event.registrationDeadline}
-          unstopLink={event.unstopLink}
-          psLink={event.psLink}
-          formatDate={formatDate}
-        />
+        {/* Registered Team Modal - Show if user is registered */}
+        {eventTeam ? (
+          <RegisteredTeamModal
+            team={eventTeam}
+            isLeader={isLeader}
+            eventId={event._id}
+            eventName={event.name}
+          />
+        ) : (
+          /* Registration CTA - Show only if not registered */
+          <RegistrationCTA
+            eventStatus={eventStatus}
+            registrationDeadline={event.registrationDeadline}
+            unstopLink={event.unstopLink}
+            psLink={event.psLink}
+            formatDate={formatDate}
+            eventId={event._id}
+            isTeamEvent={event.isTeamEvent}
+            isSvnitian={isSvnitian}
+          />
+        )}
       </div>
     </motion.div>
   );

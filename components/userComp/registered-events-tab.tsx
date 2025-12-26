@@ -1,6 +1,7 @@
 "use client"
 
 import { ChevronRight } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 type Event = {
   id: number
@@ -15,6 +16,12 @@ type RegisteredEventsTabProps = {
 }
 
 export default function RegisteredEventsTab({ events }: RegisteredEventsTabProps) {
+  const router = useRouter()
+
+  const handleEventClick = (event: Event) => {
+    router.push(`/${event.category.toLowerCase()}/${event.id}`)
+  }
+
   if (events.length === 0) {
     return <div className="text-cyan-300/60 text-center py-8">You haven't registered for any events yet.</div>;
   }
@@ -23,7 +30,8 @@ export default function RegisteredEventsTab({ events }: RegisteredEventsTabProps
       {events.map((event) => (
         <div
           key={event.id}
-          className="p-6 border-2 border-cyan-500/60 bg-slate-950/80 backdrop-blur-sm hover:border-cyan-400 transition-all flex items-center justify-between"
+          onClick={() => handleEventClick(event)}
+          className="p-6 border-2 border-cyan-500/60 bg-slate-950/80 backdrop-blur-sm hover:border-cyan-400 transition-all flex items-center justify-between cursor-pointer"
           style={{
             clipPath: "polygon(0 0, 98% 0, 100% 2%, 100% 98%, 98% 100%, 0 100%, 0 98%, 0 2%)",
           }}

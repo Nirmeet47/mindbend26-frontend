@@ -16,24 +16,12 @@ import AcademicDetailsCard from "@/components/userComp/academic-details-card"
 
 type EventType = "technical" | "managerial"
 
-type Team = {
-  _id: string
-  name: string
-  eventId: {
-    _id: string
-    name: string
-    type: EventType
-    venue?: string
-    eventDate?: string
-  }
-  leader: { name: string; email: string }
-  members: { user: { name: string; email: string } }[]
-}
+import { DetailedTeam } from "@/types"
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("overview")
   const [showResetPassword, setShowResetPassword] = useState(false)
-  const [teams, setTeams] = useState<Team[]>([])
+  const [teams, setTeams] = useState<DetailedTeam[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const router = useRouter()

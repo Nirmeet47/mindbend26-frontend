@@ -3,24 +3,11 @@
 import { ChevronRight } from "lucide-react"
 import { useState } from "react"
 import { eventTeamApi } from "@/lib/eventTeam"
-
-type Team = {
-  _id: string
-  name: string
-  eventId: {
-    _id: string
-    name: string
-    type: string
-    venue?: string
-    eventDate?: string
-  }
-  leader: { name: string; email: string }
-  members: ({ user: { name: string; email: string } } & { status?: string })[]
-  pendingInvite?: boolean
-}
+import RegisteredTeamModal from "../events/RegisteredTeamModal"
+import { DetailedTeam } from "@/types"
 
 type TeamsTabProps = {
-  teams: Team[]
+  teams: DetailedTeam[]
   loading: boolean
   error: string
   onAcceptRejectInvite?: (teamId: string, action: 'accept' | 'reject') => void
@@ -43,89 +30,17 @@ export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, 
   return (
     <div className="space-y-4">
       {teams.map((team) => {
-        const [inviteEmail, setInviteEmail] = useState("");
-        const [inviteStatus, setInviteStatus] = useState<string | null>(null);
-        const [inviteLoading, setInviteLoading] = useState(false);
-        const [inviteError, setInviteError] = useState<string | null>(null);
-        // Assume current user is leader if their email matches
-        const isLeader = typeof window !== "undefined" && localStorage.getItem("mb_admin_token") && team.leader.email === JSON.parse(atob(localStorage.getItem("mb_admin_token")!.split(".")[1])).email;
-        // Find current user in members and check for pending status
-        const currentMember = team.members.find((m) => m.user.email === userEmail);
-        const isPending = currentMember?.status === 'pending';
         return (
-          <div
-            key={team._id}
-            className="p-6 border-2 border-cyan-500/60 bg-slate-950/80 backdrop-blur-sm hover:border-cyan-400 transition-all flex flex-col gap-4"
-            style={{
-              clipPath: "polygon(0 0, 98% 0, 100% 2%, 100% 98%, 98% 100%, 0 100%, 0 98%, 0 2%)",
-            }}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="text-white font-bold text-lg mb-1">{team.name}</h4>
-                <div className="flex gap-4 text-cyan-300/70 text-sm">
-                  <span className="text-cyan-400">{team.eventId.name}</span>
-                  <span>{team.members.length} Members</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                {isPending ? (
-                  <>
-                    <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest bg-yellow-600/30 text-yellow-300 border border-yellow-500/60 mr-2">Pending</span>
-                    {onAcceptRejectInvite && (
-                      <>
-                        <button
-                          className="px-4 py-1 border-2 border-green-500 text-green-300 rounded font-bold text-xs mr-1 hover:bg-green-500/10 hover:text-green-200 transition"
-                          onClick={() => onAcceptRejectInvite(team._id, 'accept')}
-                        >Accept</button>
-                        <button
-                          className="px-4 py-1 border-2 border-red-500 text-red-300 rounded font-bold text-xs hover:bg-red-500/10 hover:text-red-200 transition"
-                          onClick={() => onAcceptRejectInvite(team._id, 'reject')}
-                        >Reject</button>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest bg-green-600/30 text-green-300 border border-green-500/60">Active</span>
-                )}
-                <ChevronRight className="text-cyan-400" size={20} />
-              </div>
-            </div>
-            {/* Invite UI for leader */}
-            {isLeader && (
-              <div className="flex flex-col md:flex-row gap-2 items-center mt-2">
-                <input
-                  type="email"
-                  className="px-3 py-2 rounded border border-cyan-700 bg-black text-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                  placeholder="Invite member by email"
-                  value={inviteEmail}
-                  onChange={e => { setInviteEmail(e.target.value); setInviteStatus(null); setInviteError(null); }}
-                  disabled={inviteLoading}
-                />
-                <button
-                  className="px-4 py-2 bg-cyan-700 text-white rounded font-bold hover:bg-cyan-600 disabled:opacity-60"
-                  disabled={inviteLoading || !inviteEmail}
-                  onClick={async () => {
-                    setInviteLoading(true);
-                    setInviteStatus(null);
-                    setInviteError(null);
-                    try {
-                      await eventTeamApi.inviteMemberByEmail(team._id, inviteEmail);
-                      setInviteStatus("Invite sent!");
-                      setInviteEmail("");
-                    } catch (err: any) {
-                      setInviteError(err?.response?.data?.message || "Failed to send invite");
-                    } finally {
-                      setInviteLoading(false);
-                    }
-                  }}
-                >
-                  {inviteLoading ? "Inviting..." : "Invite"}
-                </button>
-                {inviteStatus && <span className="text-green-400 ml-2">{inviteStatus}</span>}
-                {inviteError && <span className="text-red-400 ml-2">{inviteError}</span>}
-              </div>
-            )}
+          <div key={team._id}>
+            <RegisteredTeamModal
+              team={team}
+              isLeader={team.isLeader ? team.isLeader : false}
+              eventId={team.eventId._id}
+              eventName={team.eventId.name}
+              isFullView={false}
+              userEmail={userEmail}
+              onAcceptRejectInvite={onAcceptRejectInvite}
+            />
           </div>
         );
       })}
