@@ -42,17 +42,17 @@ export default function ProfilePage() {
   const [registeredWorkshops, setRegisteredWorkshops] = useState<any[]>([])
   const [accommodations, setAccommodations] = useState<any[]>([])
 
-  // Fetch user profile on mount
+  // Redirect to /login if not logged in
   useEffect(() => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null;
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
     const fetchProfile = async () => {
       setLoading(true)
       setError("")
       try {
-        const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null
-        if (!token) {
-          setError("You are not logged in.")
-          return
-        }
         const profileRes = await api.get("/users/profile", {
           headers: { Authorization: `Bearer ${token}` },
         })
