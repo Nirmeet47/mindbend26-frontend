@@ -2,9 +2,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { parseJWT } from "../../../lib/auth";
 import { getCounts } from "../../../lib/dashboardApi";
 import Header from "../../../components/Header";
+import api from "@/lib/api";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -13,20 +13,30 @@ export default function AdminDashboardPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null;
-    if (!token || !parseJWT(token)) {
-      router.replace("/admin");
-      return;
-    }
-    getCounts()
-      .then((data) => {
+    let isMounted = true;
+    async function load() {
+      try {
+        // Require auth via profile endpoint; server-side cookies handle session
+        await api.get("/users/profile");
+        const data = await getCounts();
+        if (!isMounted) return;
         setCounts(data);
         setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err: any) {
+        if (!isMounted) return;
+        const status = err?.response?.status || err?.status;
+        if (status === 401 || status === 403) {
+          router.replace("/admin");
+          return;
+        }
         setError("Failed to load dashboard stats");
         setLoading(false);
-      });
+      }
+    }
+    load();
+    return () => {
+      isMounted = false;
+    };
   }, [router]);
 
   return (

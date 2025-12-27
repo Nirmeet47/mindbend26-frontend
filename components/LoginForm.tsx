@@ -26,7 +26,9 @@ export default function LoginForm() {
       );
       const token = res.data?.data?.token;
       if (token) {
-        localStorage.setItem("mb_admin_token", token);
+        
+        // localStorage.setItem("mb_admin_token", token);
+
         router.push("/admin/dashboard");
       } else {
         setError("No token returned from server.");

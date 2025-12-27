@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { LogOut, Edit2, Lock, Save, X } from "lucide-react"
+import { logout } from "@/lib/auth"
 
 type ProfileHeaderProps = {
   userData: {
@@ -41,7 +42,7 @@ export default function ProfileHeader({
         >
           My Profile
         </h1>
-        <button className="flex items-center gap-2 px-6 py-2 bg-red-600/80 hover:bg-red-700 text-white font-bold uppercase tracking-[0.1em] transition-all border border-red-500/60 text-sm">
+        <button className="flex items-center gap-2 px-6 py-2 bg-red-600/80 hover:bg-red-700 text-white font-bold uppercase tracking-[0.1em] transition-all border border-red-500/60 text-sm" onClick={logout}>
           <LogOut size={18} />
           Logout
         </button>
