@@ -23,4 +23,5 @@ export const eventTeamApi = {
     api.get(`/teams/${teamId}`),
   getTeamByInviteToken: (inviteToken: string) =>
     api.get(`/teams/invite/${inviteToken}`),
+  deleteTeam: (teamId: string) => api.delete(`/teams/${teamId}`),
 };

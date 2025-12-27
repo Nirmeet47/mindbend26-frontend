@@ -297,6 +297,7 @@ export default function EventDetailPage() {
             isLeader={isLeader}
             eventId={event._id}
             eventName={event.name}
+            isTeamEvent={event.isTeamEvent}
           />
         ) : (
           /* Registration CTA - Show only if not registered */

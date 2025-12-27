@@ -31,7 +31,6 @@ export default function ProfilePage() {
     fullName: "",
     email: "",
     collegeName: "",
-    degree: "",
     yearOfStudy: "",
     contactNumber: "",
     joinedDate: "",
@@ -65,13 +64,16 @@ export default function ProfilePage() {
           fullName: user?.name || "",
           email: user?.email || "",
           collegeName: user?.college_name || "",
-          degree: user?.degree || "",
           yearOfStudy: user?.year_of_study ? `${user.year_of_study}` : "",
           contactNumber: user?.phoneNumber || "",
           joinedDate: user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "",
           isProfileCompleted: user?.isProfile_completed || false,
         })
       } catch (err: any) {
+        if (err?.response?.status === 401) {
+          router.replace("/login")
+          return
+        }
         setError(err?.response?.data?.message || "Failed to load profile")
       } finally {
         setLoading(false)
@@ -136,26 +138,35 @@ export default function ProfilePage() {
               // const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null;
               // if (!token) return;
               
-              const res = await api.put(
-                "/users/update-profile",
-                {
+                if (editData.fullName && editData.collegeName && editData.yearOfStudy && editData.contactNumber) {
+                const res = await api.put(
+                  "/users/update-profile",
+                  {
                   name: editData.fullName,
                   college_name: editData.collegeName,
                   year_of_study: editData.yearOfStudy,
                   phoneNumber: editData.contactNumber,
-                }
-              );
-              const user = res.data?.data?.user;
-              setUserData((prev) => ({
-                ...prev,
-                fullName: user?.name || prev.fullName,
-                collegeName: user?.college_name || prev.collegeName,
-                yearOfStudy: user?.year_of_study ? `${user.year_of_study}` : prev.yearOfStudy,
-                contactNumber: user?.phoneNumber || prev.contactNumber,
-                isProfileCompleted: user?.isProfile_completed || false,
-              }));
-            } catch (err) {
+                  }
+                );
+                
+                const user = res.data?.data?.user;
+                setUserData((prev) => ({
+                  ...prev,
+                  fullName: user?.name || prev.fullName,
+                  collegeName: user?.college_name || prev.collegeName,
+                  yearOfStudy: user?.year_of_study ? `${user.year_of_study}` : prev.yearOfStudy,
+                  contactNumber: user?.phoneNumber || prev.contactNumber,
+                  isProfileCompleted: user?.isProfile_completed || false,
+                }));
+                
+              } else {
+                alert("Please fill in all required fields to update your profile.");
+                return;
+              }
+            } catch (err: any) {
               // Optionally show error
+                console.error("Failed to update profile:", err);
+                alert("Failed to update profile: " + err.response?.data?.message || err.message);
             }
           }}
           onResetPassword={setShowResetPassword}
@@ -230,20 +241,21 @@ export default function ProfilePage() {
               onAcceptRejectInvite={async (teamId, action) => {
                 try {
                   await api.post(`/events/team/${teamId}/invite/respond`, { action });
-                  // Refetch teams after accept/reject to update UI
-                  
-                  // const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null;
-                  // if (token) {
-                  //   const res = await api.get("/users/teams", { headers: { Authorization: `Bearer ${token}` } });
-                  //   setTeams(res.data?.data?.teams || []);
-                  // }
-                  
+                } catch (err: any) {
+                  console.log('Error responding to invite:', err);
+                  const errorMessage = err.response?.data?.message || 'Failed to update invite';
+                  alert(errorMessage);
+                  return;
+                }
+
+                // Refetch teams to update UI
+                try {
                   const res = await api.get("/users/teams");
                   setTeams(res.data?.data?.teams || []);
-                  
                   setPendingInvites(prev => prev.filter(i => i.teamId !== teamId));
-                } catch (err) {
-                  alert('Failed to update invite');
+                } catch (err: any) {
+                  console.error('Error refetching teams:', err);
+                  setError(err?.response?.data?.message || "Failed to refresh teams");
                 }
               }}
               userEmail={userData.email}
