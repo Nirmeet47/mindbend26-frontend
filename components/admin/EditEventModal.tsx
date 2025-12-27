@@ -30,6 +30,7 @@ export default function EditEventModal({ event, onClose, onSuccess }: { event: E
       second: event.prizeDistribution?.second || 0,
       third: event.prizeDistribution?.third || 0,
     },
+    rules: event.rules || [],
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(event.eventPhoto || "");
@@ -42,11 +43,25 @@ export default function EditEventModal({ event, onClose, onSuccess }: { event: E
     if (type === "checkbox" && "checked" in e.target) {
       fieldValue = (e.target as HTMLInputElement).checked;
     }
-    
-    setForm((prev) => ({
-      ...prev,
-      [name]: fieldValue,
-    }));
+
+    // Handle nested fields using dot notation with type safety
+    if (name.includes(".")) {
+      const keys = name.split(".") as (keyof typeof form)[];
+      setForm((prev) => {
+        const updatedForm = { ...prev };
+        let current: any = updatedForm;
+        for (let i = 0; i < keys.length - 1; i++) {
+          current = current[keys[i]];
+        }
+        current[keys[keys.length - 1]] = fieldValue;
+        return updatedForm;
+      });
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [name]: fieldValue,
+      }));
+    }
   }
 
   function addContact() {
@@ -75,6 +90,28 @@ export default function EditEventModal({ event, onClose, onSuccess }: { event: E
     }
   }
 
+  function addRule() {
+    setForm((prev) => ({
+      ...prev,
+      rules: [...(prev.rules || []), ""],
+    }));
+  }
+
+  function removeRule(index: number) {
+    setForm((prev) => ({
+      ...prev,
+      rules: prev.rules.filter((_, i) => i !== index),
+    }));
+  }
+
+  function handleRuleChange(index: number, value: string) {
+    setForm((prev) => {
+      const updatedRules = [...(prev.rules || [])];
+      updatedRules[index] = value;
+      return { ...prev, rules: updatedRules };
+    });
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -84,8 +121,9 @@ export default function EditEventModal({ event, onClose, onSuccess }: { event: E
         const formData = new FormData();
         Object.entries(form).forEach(([key, value]) => {
           if (key !== 'eventPhoto') {
-            if (key === 'prizeDistribution' || key === 'contact') {
+            if (key === 'prizeDistribution' || key === 'contact' || key === 'rules') {
               formData.append(key, JSON.stringify(value));
+              console.log('Appending', key, JSON.stringify(value));
             } else {
               formData.append(key, String(value));
             }
@@ -264,6 +302,36 @@ export default function EditEventModal({ event, onClose, onSuccess }: { event: E
               className="w-full border rounded px-3 py-2 bg-gray-50 dark:bg-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-gray-700 dark:file:text-gray-200"
             />
             <p className="text-xs text-gray-500 mt-1">Upload a new image or leave empty to keep current image</p>
+          </div>
+          <div className="border-t pt-4 mt-4">
+            <h3 className="text-md font-semibold mb-3">Rules</h3>
+            <div className="space-y-2">
+              {form.rules?.map((rule, index) => (
+                <div key={index} className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={rule}
+                    onChange={(e) => handleRuleChange(index, e.target.value)}
+                    placeholder={`Rule ${index + 1}`}
+                    className="flex-1 border rounded px-3 py-2 bg-gray-50 dark:bg-gray-800"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeRule(index)}
+                    className="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addRule}
+                className="text-sm px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                + Add Rule
+              </button>
+            </div>
           </div>
           {error && <div className="text-red-500 text-sm">{error}</div>}
           <div className="flex justify-end gap-2 pt-2">

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import api from "@/lib/api";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -20,19 +21,22 @@ export default function LoginForm() {
     }
     setLoading(true);
     try {
-      const res = await axios.post(
-        process.env.NEXT_PUBLIC_API_URL + "/auth/login",
-        { email, password }
-      );
-      const token = res.data?.data?.token;
-      if (token) {
+
+      const res = await api.post("/auth/login", { email, password });
+
+      // const res = await axios.post(
+      //   process.env.NEXT_PUBLIC_API_URL + "/auth/login",
+      //   { email, password }, { withCredentials: true }
+      // );
+      // const token = res.data?.data?.token;
+      // if (token) {
         
         // localStorage.setItem("mb_admin_token", token);
 
         router.push("/admin/dashboard");
-      } else {
-        setError("No token returned from server.");
-      }
+      // } else {
+      //   setError("No token returned from server.");
+      // }
     } catch (err: any) {
       setError(
         err?.response?.data?.message ||

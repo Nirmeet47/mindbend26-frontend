@@ -43,6 +43,7 @@ export default function Sidebar() {
   const canViewSecurity = user ? permissions.canViewSecurity(user.role) : false;
 
   async function doLogout() {
+    if (!confirm('Are you sure you want to logout?')) return;
     try {
       await logout();
     } finally {
