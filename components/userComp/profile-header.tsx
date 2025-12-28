@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { logout } from "../../lib/auth"
 import { LogOut, Edit2, Lock, Save, X } from "lucide-react"
 import { logout } from "@/lib/auth"
 
