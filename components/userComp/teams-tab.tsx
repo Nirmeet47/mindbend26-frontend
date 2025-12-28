@@ -32,6 +32,7 @@ export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, 
       {teams.map((team) => {
         return (
           <div key={team._id}>
+            
             <RegisteredTeamModal
               team={team}
               isLeader={team.isLeader ? team.isLeader : false}
@@ -40,6 +41,7 @@ export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, 
               isFullView={false}
               userEmail={userEmail}
               onAcceptRejectInvite={onAcceptRejectInvite}
+              isTeamEvent={team.eventId.isTeamEvent}
             />
           </div>
         );

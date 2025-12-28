@@ -38,11 +38,11 @@ const Countdown = () => {
   return (
     <section className="countdown-section flex-col items-center justify-center">
       <div
-        className="text-center text-white text-3xl md:text-7xl font-black mb-20 tracking-wider"
+        className="text-center text-white text-[40px] md:text-7xl font-black mb-12 sm:mb-16 md:mb-20 tracking-wider"
         style={{ fontFamily: "Barlow Condensed, sans-serif" }}
       >
         EVENT STARTS IN
-        <div className="h-[3px] w-[80%] bg-linear-to-t from-cyan-500 to-transparent my-4 mx-auto opacity-50"></div>
+        <div className="h-[3px] w-[80%] bg-linear-to-t from-cyan-500 to-transparent my-3 sm:my-4 mx-auto opacity-50"></div>
       </div>
 
       <div className="container">
@@ -61,7 +61,7 @@ const Countdown = () => {
       <style jsx>{`
         .countdown-section {
           background: black;
-          padding: 120px 0;
+          padding: 60px 16px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -73,9 +73,35 @@ const Countdown = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 60px;
-          width: 80%;
+          gap: 12px;
+          width: 100%;
           max-width: 1400px;
+          padding: 0 8px;
+        }
+
+        @media (min-width: 640px) {
+          .countdown-section {
+            padding: 80px 16px;
+          }
+          .container {
+            gap: 30px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .countdown-section {
+            padding: 100px 0;
+          }
+          .container {
+            gap: 60px;
+            width: 80%;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .countdown-section {
+            padding: 120px 0;
+          }
         }
       `}</style>
     </section>
@@ -92,23 +118,51 @@ const TimeBox = ({ value, label }: { value: string; label: string }) => {
         .time-box {
           text-align: center;
           flex: 1;
+          min-width: 50px;
         }
 
         .number {
-          font-size: clamp(70px, 12vw, 150px);
+          font-size: clamp(28px, 14vw, 150px);
           font-weight: 500;
-          letter-spacing: 6px;
+          letter-spacing: 2px;
           display: block;
           font-family: "Digital-7", "Space Grotesk", sans-serif;
+          transform: scale(1, 1.3);
         }
 
         .label {
           display: block;
-          margin-top: 12px;
-          font-size: clamp(12px, 1.5vw, 18px);
-          letter-spacing: 4px;
+          margin-top: 6px;
+          font-size: clamp(8px, 1.8vw, 18px);
+          letter-spacing: 2px;
           opacity: 0.7;
           font-family: "Space Grotesk", sans-serif;
+        }
+
+        @media (min-width: 640px) {
+          .time-box {
+            min-width: 80px;
+          }
+          .number {
+            letter-spacing: 4px;
+          }
+          .label {
+            margin-top: 8px;
+            letter-spacing: 3px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .time-box {
+            min-width: 100px;
+          }
+          .number {
+            letter-spacing: 6px;
+          }
+          .label {
+            margin-top: 12px;
+            letter-spacing: 4px;
+          }
         }
       `}</style>
     </div>
@@ -124,7 +178,7 @@ const Divider = () => {
         .divider {
           position: relative;
           width: 0.5px;
-          height: 300px;
+          height: 120px;
           background: repeating-linear-gradient(
             to bottom,
             rgba(255, 255, 255, 0.25),
@@ -158,7 +212,35 @@ const Divider = () => {
             top: -150px;
           }
           to {
-            top: 300px;
+            top: 150px;
+          }
+        }
+
+        @media (min-width: 640px) {
+          .divider {
+            height: 200px;
+          }
+          @keyframes shineMove {
+            from {
+              top: -150px;
+            }
+            to {
+              top: 200px;
+            }
+          }
+        }
+
+        @media (min-width: 768px) {
+          .divider {
+            height: 300px;
+          }
+          @keyframes shineMove {
+            from {
+              top: -150px;
+            }
+            to {
+              top: 300px;
+            }
           }
         }
       `}</style>

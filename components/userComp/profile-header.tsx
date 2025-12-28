@@ -4,13 +4,13 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { logout } from "../../lib/auth"
 import { LogOut, Edit2, Lock, Save, X } from "lucide-react"
+import { logout } from "@/lib/auth"
 
 type ProfileHeaderProps = {
   userData: {
     fullName: string
     email: string
     collegeName: string
-    degree: string
     yearOfStudy: string
     contactNumber: string
     joinedDate: string
@@ -50,10 +50,11 @@ export default function ProfileHeader({
         >
           My Profile
         </h1>
-        <button
-          className="flex items-center gap-2 px-6 py-2 bg-red-600/80 hover:bg-red-700 text-white font-bold uppercase tracking-[0.1em] transition-all border border-red-500/60 text-sm"
-          onClick={handleLogout}
-        >
+        <button className="flex items-center gap-2 px-6 py-2 bg-red-600/80 hover:bg-red-700 text-white font-bold uppercase tracking-[0.1em] transition-all border border-red-500/60 text-sm" onClick={() => {
+          if (confirm('Are you sure you want to logout?')) {
+            logout();
+          }
+        }}>
           <LogOut size={18} />
           Logout
         </button>

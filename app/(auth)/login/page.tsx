@@ -40,14 +40,13 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const res = await api.post("/auth/login", { email, password });
-      const token = res.data?.data?.token;
-      if (token) {
-        localStorage.setItem("mb_admin_token", token);
+      // const token = res.data?.data?.token;
+      // if (token) {
+      //   localStorage.setItem("mb_admin_token", token);
         setSuccess("Login successful! Redirecting...");
         setTimeout(() => {
           router.push("/");
         }, 1000);
-      }
     } catch (err: any) {
       setError(
         err?.response?.data?.message || "Login failed. Please try again."

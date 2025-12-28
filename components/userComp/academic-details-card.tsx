@@ -3,7 +3,6 @@
 type AcademicDetailsCardProps = {
   userData: {
     collegeName: string
-    degree: string
     yearOfStudy: string
   }
 }
@@ -21,10 +20,6 @@ export default function AcademicDetailsCard({ userData }: AcademicDetailsCardPro
         <div>
           <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em]">College</p>
           <p className="text-white font-semibold">{userData.collegeName}</p>
-        </div>
-        <div>
-          <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em]">Degree</p>
-          <p className="text-white font-semibold">{userData.degree}</p>
         </div>
         <div>
           <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em]">Year of Study</p>

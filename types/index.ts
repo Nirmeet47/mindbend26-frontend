@@ -79,6 +79,7 @@ export type DetailedTeam = {
     type: string
     venue?: string
     eventDate?: string
+    isTeamEvent: boolean
   }
   leader: { _id: string, name: string; email: string }
   members: {

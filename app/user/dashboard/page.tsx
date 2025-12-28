@@ -31,7 +31,6 @@ export default function ProfilePage() {
     fullName: "",
     email: "",
     collegeName: "",
-    degree: "",
     yearOfStudy: "",
     contactNumber: "",
     joinedDate: "",
@@ -53,21 +52,33 @@ export default function ProfilePage() {
       setLoading(true)
       setError("")
       try {
-        const profileRes = await api.get("/users/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        
+        // const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null
+        // if (!token) {
+        //   setError("You are not logged in.")
+        //   return
+        // }
+        // const profileRes = await api.get("/users/profile", {
+        //   headers: { Authorization: `Bearer ${token}` },
+        // })
+        
+        // Server-side cookies implementation - no manual token management needed
+        const profileRes = await api.get("/users/profile")
         const user = profileRes.data?.data?.user
         setUserData({
           fullName: user?.name || "",
           email: user?.email || "",
           collegeName: user?.college_name || "",
-          degree: user?.degree || "",
           yearOfStudy: user?.year_of_study ? `${user.year_of_study}` : "",
           contactNumber: user?.phoneNumber || "",
           joinedDate: user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "",
           isProfileCompleted: user?.isProfile_completed || false,
         })
       } catch (err: any) {
+        if (err?.response?.status === 401) {
+          router.replace("/login")
+          return
+        }
         setError(err?.response?.data?.message || "Failed to load profile")
       } finally {
         setLoading(false)
@@ -78,18 +89,20 @@ export default function ProfilePage() {
 
   // Fetch data for each tab only when selected
   useEffect(() => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null
-    if (!token) return
+    
+    // const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null
+    // if (!token) return
+
     if (activeTab === "teams" && teams.length === 0) {
       setLoading(true)
-      api.get("/users/teams", { headers: { Authorization: `Bearer ${token}` } })
+      api.get("/users/teams")
         .then((res) => setTeams(res.data?.data?.teams || []))
         .catch((err) => setError(err?.response?.data?.message || "Failed to load teams"))
         .finally(() => setLoading(false))
     }
     if (activeTab === "events" && registeredEvents.length === 0) {
       setLoading(true)
-      api.get("/users/registered-events", { headers: { Authorization: `Bearer ${token}` } })
+      api.get("/users/registered-events")
         .then((res) => {
           setRegisteredEvents(res.data?.data?.events || []);
           setPendingInvites(res.data?.data?.pendingInvites || []);
@@ -99,14 +112,14 @@ export default function ProfilePage() {
     }
     if (activeTab === "workshops" && registeredWorkshops.length === 0) {
       setLoading(true)
-      api.get("/users/registered-workshops", { headers: { Authorization: `Bearer ${token}` } })
+      api.get("/users/registered-workshops")
         .then((res) => setRegisteredWorkshops(res.data?.data?.workshops || []))
         .catch((err) => setError(err?.response?.data?.message || "Failed to load workshops"))
         .finally(() => setLoading(false))
     }
     if (activeTab === "accommodation" && accommodations.length === 0) {
       setLoading(true)
-      api.get("/users/accommodation", { headers: { Authorization: `Bearer ${token}` } })
+      api.get("/users/accommodation")
         .then((res) => setAccommodations(res.data?.data?.accommodations || []))
         .catch((err) => setError(err?.response?.data?.message || "Failed to load accommodation"))
         .finally(() => setLoading(false))
@@ -126,29 +139,39 @@ export default function ProfilePage() {
           userData={userData}
           onEditProfile={async (editData) => {
             try {
-              const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null;
-              if (!token) return;
-              const res = await api.put(
-                "/users/update-profile",
-                {
+              
+              // const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null;
+              // if (!token) return;
+              
+                if (editData.fullName && editData.collegeName && editData.yearOfStudy && editData.contactNumber) {
+                const res = await api.put(
+                  "/users/update-profile",
+                  {
                   name: editData.fullName,
                   college_name: editData.collegeName,
                   year_of_study: editData.yearOfStudy,
                   phoneNumber: editData.contactNumber,
-                },
-                { headers: { Authorization: `Bearer ${token}` } }
-              );
-              const user = res.data?.data?.user;
-              setUserData((prev) => ({
-                ...prev,
-                fullName: user?.name || prev.fullName,
-                collegeName: user?.college_name || prev.collegeName,
-                yearOfStudy: user?.year_of_study ? `${user.year_of_study}` : prev.yearOfStudy,
-                contactNumber: user?.phoneNumber || prev.contactNumber,
-                isProfileCompleted: user?.isProfile_completed || false,
-              }));
-            } catch (err) {
+                  }
+                );
+                
+                const user = res.data?.data?.user;
+                setUserData((prev) => ({
+                  ...prev,
+                  fullName: user?.name || prev.fullName,
+                  collegeName: user?.college_name || prev.collegeName,
+                  yearOfStudy: user?.year_of_study ? `${user.year_of_study}` : prev.yearOfStudy,
+                  contactNumber: user?.phoneNumber || prev.contactNumber,
+                  isProfileCompleted: user?.isProfile_completed || false,
+                }));
+                
+              } else {
+                alert("Please fill in all required fields to update your profile.");
+                return;
+              }
+            } catch (err: any) {
               // Optionally show error
+                console.error("Failed to update profile:", err);
+                alert("Failed to update profile: " + err.response?.data?.message || err.message);
             }
           }}
           onResetPassword={setShowResetPassword}
@@ -223,15 +246,21 @@ export default function ProfilePage() {
               onAcceptRejectInvite={async (teamId, action) => {
                 try {
                   await api.post(`/events/team/${teamId}/invite/respond`, { action });
-                  // Refetch teams after accept/reject to update UI
-                  const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null;
-                  if (token) {
-                    const res = await api.get("/users/teams", { headers: { Authorization: `Bearer ${token}` } });
-                    setTeams(res.data?.data?.teams || []);
-                  }
+                } catch (err: any) {
+                  console.log('Error responding to invite:', err);
+                  const errorMessage = err.response?.data?.message || 'Failed to update invite';
+                  alert(errorMessage);
+                  return;
+                }
+
+                // Refetch teams to update UI
+                try {
+                  const res = await api.get("/users/teams");
+                  setTeams(res.data?.data?.teams || []);
                   setPendingInvites(prev => prev.filter(i => i.teamId !== teamId));
-                } catch (err) {
-                  alert('Failed to update invite');
+                } catch (err: any) {
+                  console.error('Error refetching teams:', err);
+                  setError(err?.response?.data?.message || "Failed to refresh teams");
                 }
               }}
               userEmail={userData.email}
