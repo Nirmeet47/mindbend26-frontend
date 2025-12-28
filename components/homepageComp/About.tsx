@@ -1,100 +1,44 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 
 const About = () => {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    const targetDate = new Date("2026-03-01T00:00:00").getTime();
-
-    const updateCountdown = () => {
-      const now = new Date().getTime();
-      const difference = targetDate - now;
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor(
-            (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-          ),
-          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((difference % (1000 * 60)) / 1000),
-        });
-      }
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <>
       {/* Hero Section - Elite Opportunities */}
-      <section className="relative h-[85vh] w-full bg-black z-10 flex items-center justify-center overflow-hidden">
-        {/* Top gradient for smooth transition from Hero */}
+      <section className="relative min-h-[55vh] md:min-h-[85vh] w-full bg-black z-10 flex items-center justify-center overflow-hidden py-20">
         <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-[#020205] to-transparent pointer-events-none z-0" />
-        {/* Grid Pattern Background */}
 
-        <div className="absolute bottom-8 right-15">
-          <img
-            src="/images/image.png"
-            alt="grid pattern"
-            className="w-25 h-25 object-contain"
-          />
+        {/* Decorative Grid Pattern - Hidden on small mobile */}
+        <div className="absolute bottom-8 right-4 md:right-15 opacity-40 md:opacity-100">
+          <img src="/images/image.png" alt="grid" className="w-16 h-16 md:w-25 md:h-25 object-contain" />
         </div>
 
-        {/* Metadata Text Top Left */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 0.5 }}
-          transition={{ duration: 1 }}
-          className="absolute top-18 left-12 text-xs text-gray-500 tracking-widest space-y-1"
-          style={{ fontFamily: "Space Grotesk, sans-serif" }}
-        >
-          <p>SVNIT SURAT PRESENTS</p>
-          <p>GLOBAL EVENT</p>
-          <p>2026 EDITION</p>
-        </motion.div>
+        {/* Metadata Grid */}
+        <div className="absolute top-10 md:top-18 left-0 w-full px-6 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-[10px] md:text-xs text-gray-500 tracking-widest uppercase" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+          <div className="space-y-1">
+            <p>SVNIT SURAT PRESENTS</p>
+            <p>GLOBAL EVENT / 2026 EDITION</p>
+          </div>
+          
+          <div className="hidden lg:block text-center max-w-xs lowercase italic opacity-60">
+            <p>where tradition fuels progress, shaping a sustainable and dynamic future.</p>
+          </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 0.5 }}
-          transition={{ duration: 1 }}
-          className="absolute top-18 left-[52vw] capitalize -translate-x-1/2 text-xs text-gray-500 tracking-widest space-y-1 text-center"
-          style={{ fontFamily: "Space Grotesk, sans-serif" }}
-        >
-          <p>where tradition fuels progress, shaping a sustainable</p>
-          <p>and dynamic future.</p>
-        </motion.div>
-
-        {/* Year Text Top Right */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 0.5 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="absolute top-18 right-12 text-xl text-gray-600 font-light"
-          style={{ fontFamily: "Space Grotesk, sans-serif" }}
-        >
-          31ST EDITION
-        </motion.div>
+          <div className="text-right font-light text-sm md:text-xl">
+            31ST EDITION
+          </div>
+        </div>
 
         {/* Main Heading */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="z-10 px-6"
+          className="z-10 px-4 sm:px-6 md:px-8"
         >
-          <h1 className="text-5xl md:text-7xl font-light tracking-tight leading-tight mb-4" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+          <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-light tracking-tight leading-tight mb-2 sm:mb-4" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
             <span className="text-white">Elite Innovation</span>
             <br />
             <span className="text-white">Opportunities.</span>
@@ -107,7 +51,7 @@ const About = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="absolute bottom-10 left-12 md:left-32 max-w-md text-gray-400 text-sm tracking-wide leading-relaxed"
+          className="absolute bottom-10 left-6 md:left-32 max-w-[280px] md:max-w-md text-gray-400 text-[10px] md:text-sm tracking-wide leading-relaxed uppercase"
           style={{ fontFamily: "Space Grotesk, sans-serif" }}
         >
           WHERE CUTTING-EDGE INNOVATION MEETS THE VISION OF TOMORROW. WE EXPLORE
@@ -116,98 +60,45 @@ const About = () => {
       </section>
 
       {/* About Section with Video Background */}
-      <section className="relative h-screen w-full overflow-hidden z-10 bg-black">
-        {/* Background Video */}
-        <video
-          autoPlay
-          muted
-          loop
-          className="absolute inset-0 left-35 w-full h-full object-cover scale-80"
-        >
+      <section className="relative min-h-[85vh] md:min-h-screen w-full overflow-hidden z-10 bg-black flex items-center">
+        {/* Background Video - Adjusted for mobile */}
+        <video autoPlay muted loop className="absolute inset-0 w-full h-full object-cover opacity-40 md:opacity-100 md:scale-90 md:translate-x-20">
           <source src="/videos/Home_about.mp4" type="video/mp4" />
         </video>
 
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-black/50 md:bg-black/40"></div>
 
         {/* Text Content */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="absolute top-[15vh] left-12 md:left-32 lg:left-20 z-10 max-w-xl"
+          className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-20 py-20"
         >
-          <h3
-            className="text-white text-5xl md:text-7xl font-black mb-6 tracking-wide"
-            style={{ fontFamily: "Barlow Condensed, sans-serif" }}
-          >
-            ABOUT{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
-              MINDBEND
-            </span>
-          </h3>
-          <div className="h-[2px] w-[80%] bg-linear-to-r from-cyan-500 to-transparent my-4 opacity-50"></div>
+          <div className="max-w-xl">
+            <h3 className="text-white text-5xl md:text-7xl font-black mb-4 tracking-wide uppercase" style={{ fontFamily: "Barlow Condensed, sans-serif" }}>
+              ABOUT <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">MINDBEND</span>
+            </h3>
+            <div className="h-[2px] w-32 md:w-64 bg-gradient-to-r from-cyan-500 to-transparent mb-8 md:mb-12"></div>
 
-          <p
-            className="text-gray-200 text-base md:text-xl leading-relaxed mt-15"
-            style={{ fontFamily: "Space Grotesk, sans-serif" }}
-          >
-            Mindbend is Gujarat's{" "}
-            <span className="text-cyan-300 font-semibold">
-              Techno-Managerial festival
-            </span>{" "}
-            , hosted annually by SVNIT, Surat. It stands as a grand stage where
-            intelligence meets innovation, pushing the boundaries of what's
-            possible in the realms of technology, management, and sustainable
-            growth.
-            <br />
-            <br /> Attracting over 15,000 participants, it features workshops,
-            competitions, and engaging activities.
-          </p>
+            <p className="text-gray-200 text-md md:text-xl leading-relaxed font-light" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+              Mindbend is Gujarat's <span className="text-cyan-300 font-semibold">Techno-Managerial festival</span>, hosted annually by SVNIT, Surat. It stands as a grand stage where intelligence meets innovation.
+              <br /><br />
+              Attracting over 15,000 participants, it features workshops, competitions, and engaging activities.
+            </p>
 
-          {/* Metrics: Footfall, Prize Pool, Teams */}
-          <div className="flex w-full justify-between mt-15">
-            <div>
-              <div
-                className="text-white text-4xl md:text-5xl font-extrabold"
-                style={{ fontFamily: "Barlow Condensed, sans-serif" }}
-              >
-                15k+
-              </div>
-              <div
-                className="text-white text-sm md:text-base tracking-wide"
-                style={{ fontFamily: "Space Grotesk, sans-serif" }}
-              >
-                Footfall
-              </div>
-            </div>
-            <div>
-              <div
-                className="text-white text-4xl md:text-5xl font-extrabold"
-                style={{ fontFamily: "Barlow Condensed, sans-serif" }}
-              >
-                ₹ 1300k+
-              </div>
-              <div
-                className="text-white text-sm md:text-base tracking-wide"
-                style={{ fontFamily: "Space Grotesk, sans-serif" }}
-              >
-                Total Prize Pool
-              </div>
-            </div>
-            <div>
-              <div
-                className="text-white text-4xl md:text-5xl font-extrabold"
-                style={{ fontFamily: "Barlow Condensed, sans-serif" }}
-              >
-                4k+
-              </div>
-              <div
-                className="text-white text-sm md:text-base tracking-wide"
-                style={{ fontFamily: "Space Grotesk, sans-serif" }}
-              >
-                Teams Participated
-              </div>
+            {/* Metrics */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12 md:mt-16">
+              {[
+                { val: "15k+", label: "Footfall" },
+                { val: "₹1300k+", label: "Prize Pool" },
+                { val: "4k+", label: "Teams" }
+              ].map((item, i) => (
+                <div key={i}>
+                  <div className="text-white text-4xl md:text-5xl font-extrabold" style={{ fontFamily: "Barlow Condensed, sans-serif" }}>{item.val}</div>
+                  <div className="text-gray-400 text-xs md:text-sm tracking-widest uppercase">{item.label}</div>
+                </div>
+              ))}
             </div>
           </div>
         </motion.div>

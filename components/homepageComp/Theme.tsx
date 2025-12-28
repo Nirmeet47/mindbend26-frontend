@@ -53,13 +53,27 @@ export default function Theme() {
       </div>
 
       {/* VIDEO BACKGROUND */}
-      <div className="absolute inset-0 z-0 top-70 overflow-hidden">
+      {/* Mobile: limit video to heading area */}
+      <div className="absolute inset-x-0 top-30 z-0 h-[55vh] overflow-hidden md:hidden">
         <video
           autoPlay
           muted
           loop
           playsInline
-          className="w-[70%] h-auto object-cover "
+          className="w-full h-full object-cover"
+        >
+          <source src="/videos/Home_theme.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/50"></div>
+      </div>
+      {/* Desktop: keep full-section video */}
+      <div className="absolute inset-0 z-0 top-70 overflow-hidden hidden md:block">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full sm:w-[90%] md:w-[70%] scale-180 md:scale-100 h-auto object-cover"
         >
           <source src="/videos/Home_theme.mp4" type="video/mp4" />
         </video>
@@ -68,28 +82,33 @@ export default function Theme() {
       </div>
 
       {/* CONTENT CONTAINER */}
-      <div className="relative z-20 h-screen flex flex-col justify-between px-8 md:px-16">
+      <div className="relative z-20 md:h-screen flex flex-col justify-between px-4 sm:px-8 md:px-16 py-8 sm:py-10 md:py-0">
         {/* HEADING - TOP */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex-shrink-0 px-20 pt-12 md:pt-16 z-1"
+          className="flex-shrink-0 px-6 sm:px-12 md:px-20 pt-6 sm:pt-10 md:pt-16 z-1"
         >
           <h2
-            className="text-5xl md:text-7xl font-bold text-white uppercase tracking-wide"
+            className="text-3xl text-5xl md:text-7xl font-bold text-white uppercase tracking-wide"
             style={{ fontFamily: "Barlow Condensed, sans-serif" }}
           >
             The Theme
           </h2>
-          <div className="h-[2px] w-[30%] bg-linear-to-r from-cyan-500 to-transparent my-4 opacity-50"></div>
+          <div className="h-[2px] w-[30%] bg-linear-to-r from-cyan-500 to-transparent my-3 md:my-4 opacity-50"></div>
 
-          <div className="pt-1 text-white max-w-md mt-auto" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
-            <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r tracking-widest from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)]"             style={{ fontFamily: "Barlow Condensed, sans-serif" }}
->
+          <div
+            className="pt-1 text-white max-w-md mt-auto"
+            style={{ fontFamily: "Space Grotesk, sans-serif" }}
+          >
+            <h2
+              className="text-2xl sm:text-3xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r tracking-widest from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)]"
+              style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+            >
               SYMBIONT
             </h2>
-            <p className="text-xl font-medium tracking-widest text-blue-200 mt-1 uppercase">
+            <p className="text-sm sm:text-lg md:text-xl font-medium tracking-widest text-blue-200 mt-1 uppercase">
               The Cognitive Genesis
             </p>
           </div>
@@ -98,10 +117,10 @@ export default function Theme() {
         {/* PARAGRAPHS - RIGHT SIDE WITH SCROLL-TRIGGERED CHANGES */}
         <div
           ref={contentRef}
-          className="flex-1 flex items-start justify-end pr-0 md:pr-30 pt-6"
+          className="flex-1 flex items-center justify-center md:justify-end pr-0 md:pr-30 pt-4 sm:pt-6 min-h-[40vh]"
           style={{ fontFamily: "Space Grotesk, sans-serif" }}
         >
-          <div className="w-full md:w-[30vw] max-w-[40vw] relative min-h-96">
+          <div className="w-full md:w-[30vw] max-w-[90vw] sm:max-w-[70vw] md:max-w-[40vw] relative min-h-60 sm:min-h-80 md:min-h-96 px-2">
             {paragraphs.map((paragraph, index) => (
               <motion.div
                 key={index}
@@ -113,7 +132,7 @@ export default function Theme() {
                 }
                 transition={{ duration: 0.6, ease: "easeInOut" }}
               >
-                <p className="text-gray-200 text-base md:text-lg leading-relaxed font-light">
+                <p className="text-gray-200 text-md md:text-xl leading-relaxed font-light">
                   {paragraph.content}
                 </p>
               </motion.div>
@@ -122,7 +141,7 @@ export default function Theme() {
         </div>
       </div>
 
-      <div className="relative flex flex-col items-center justify-center mx-auto pt-20">
+      <div className="relative flex flex-col items-center justify-center mx-auto py-8 md:pt-20 px-4">
         <div className="divider ">
           <div className="shine" />
 
@@ -146,7 +165,7 @@ export default function Theme() {
               top: -60%;
               left: -6px;
               width: 18px;
-              height: 250px;
+              height: 200px;
               background: linear-gradient(
                 to bottom,
                 transparent,
@@ -159,6 +178,12 @@ export default function Theme() {
               animation: shineMove 2s linear infinite;
             }
 
+            @media (max-width: 640px) {
+              .divider {
+                height: 160px;
+              }
+            }
+
             @keyframes shineMove {
               from {
                 top: -150px;
@@ -169,13 +194,16 @@ export default function Theme() {
             }
           `}</style>
         </div>
-        <div className="py-3 text-center tracking-wide" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
-          <h1 className="text-4xl">
+        <div
+          className="py-3 text-center tracking-wide"
+          style={{ fontFamily: "Space Grotesk, sans-serif" }}
+        >
+          <h1 className="text-2xl md:text-4xl">
             Artificial Intelligence
             <br />
             With Human Values
           </h1>
-          <p className="text-md opacity-60 leading-relaxed italic justify-center">
+          <p className="text-sm sm:text-base md:text-md opacity-60 leading-relaxed italic justify-center">
             Forging the Future of Indian Intelligence
           </p>
         </div>
@@ -202,7 +230,7 @@ export default function Theme() {
               top: -60%;
               left: -6px;
               width: 18px;
-              height: 250px;
+              height: 200px;
               background: linear-gradient(
                 to bottom,
                 transparent,
@@ -213,6 +241,12 @@ export default function Theme() {
               );
               filter: blur(4px);
               animation: shineMove 2s linear infinite;
+            }
+
+            @media (max-width: 640px) {
+              .divider {
+                height: 160px;
+              }
             }
 
             @keyframes shineMove {

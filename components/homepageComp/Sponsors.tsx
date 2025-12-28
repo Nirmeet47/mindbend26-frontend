@@ -1,7 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import {
+  motion,
+  useAnimationFrame,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from "framer-motion";
+
+// Custom wrap function to replace @motionone/utils
+const wrap = (min: number, max: number, v: number) => {
+  const rangeSize = max - min;
+  return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
+};
 
 const sponsors = [
   "Stripe",
@@ -19,98 +33,111 @@ const sponsors = [
 ];
 
 export default function Sponsors() {
-  const [scrollDirection, setScrollDirection] = useState<"down" | "up">("down");
-  const lastScrollY = useRef(0);
-  const duplicatedSponsors = [...sponsors, ...sponsors, ...sponsors];
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrollDirection(currentScrollY > lastScrollY.current ? "down" : "up");
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <section className="relative w-full py-20 bg-black overflow-hidden">
+    <section className="relative w-full py-16 md:py-24 bg-black overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="max-w-7xl mx-auto px-4 mb-12"
+        className="max-w-7xl mx-auto px-6 mb-12 md:mb-16"
       >
-        <h2 className="text-5xl md:text-7xl font-extrabold text-white text-center mb-4 tracking-wide" style={{ fontFamily: "Barlow Condensed, sans-serif" }}>
-          OUR SPONSORS
+        <h2
+          className="text-4xl md:text-7xl font-extrabold text-white text-center mb-4 tracking-wide uppercase"
+          style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+        >
+          Our Sponsors
         </h2>
-        <div className="h-[3px] w-[25%] bg-linear-to-t from-cyan-500 to-transparent my-4 mx-auto opacity-50"></div>
+        <div className="h-[2px] w-20 md:w-48 bg-cyan-500 mx-auto mb-6 opacity-50"></div>
 
-        <p className="text-cyan-200/70 text-center max-w-2xl mx-auto" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
+        <p
+          className="text-cyan-200/60 text-center max-w-xl mx-auto text-sm md:text-base"
+          style={{ fontFamily: "Space Grotesk, sans-serif" }}
+        >
           Powered by industry leaders who believe in innovation
         </p>
       </motion.div>
 
-      {/* Single scrolling row */}
-      <div className="relative">
-        <div
-          className="flex gap-6 animate-scroll"
-          style={{
-            animationDirection:
-              scrollDirection === "down" ? "normal" : "reverse",
-          }}
-        >
-          {duplicatedSponsors.map((sponsor, index) => (
+      <div className="relative flex flex-nowrap overflow-hidden">
+        <ParallaxText baseVelocity={-2}>
+          {sponsors.map((sponsor, index) => (
             <SponsorBox key={index} name={sponsor} />
           ))}
-        </div>
+        </ParallaxText>
       </div>
-
-      <style jsx>{`
-        @keyframes scroll {
-          0% {
-            transform: translateX(0%);
-          }
-          100% {
-            transform: translateX(-33.33%);
-          }
-        }
-
-        .animate-scroll {
-          animation: scroll 20s linear infinite;
-        }
-      `}</style>
     </section>
+  );
+}
+
+interface ParallaxProps {
+  children: React.ReactNode;
+  baseVelocity: number;
+}
+
+function ParallaxText({ children, baseVelocity = 100 }: ParallaxProps) {
+  const baseX = useMotionValue(0);
+  const { scrollY } = useScroll();
+  const scrollVelocity = useVelocity(scrollY);
+  const smoothVelocity = useSpring(scrollVelocity, {
+    damping: 50,
+    stiffness: 400,
+  });
+
+  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], {
+    clamp: false,
+  });
+
+  // We wrap between -25% and -50% to keep the marquee seamless
+  // This assumes we have enough children to fill the screen
+  const x = useTransform(baseX, (v) => `${wrap(-25, -50, v)}%`);
+
+  const directionFactor = useRef<number>(1);
+  useAnimationFrame((t, delta) => {
+    let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
+
+    if (velocityFactor.get() < 0) {
+      directionFactor.current = -1;
+    } else if (velocityFactor.get() > 0) {
+      directionFactor.current = 1;
+    }
+
+    moveBy += directionFactor.current * moveBy * velocityFactor.get();
+    baseX.set(baseX.get() + moveBy);
+  });
+
+  return (
+    <div className="flex flex-nowrap whitespace-nowrap">
+      <motion.div
+        className="flex flex-nowrap whitespace-nowrap gap-4 md:gap-8"
+        style={{ x }}
+      >
+        <span className="flex gap-4 md:gap-8">{children}</span>
+        <span className="flex gap-4 md:gap-8">{children}</span>
+        <span className="flex gap-4 md:gap-8">{children}</span>
+        <span className="flex gap-4 md:gap-8">{children}</span>
+      </motion.div>
+    </div>
   );
 }
 
 function SponsorBox({ name }: { name: string }) {
   return (
     <div
-      className="relative flex-shrink-0 w-64 h-32 bg-black border-2 border-gray-500/40
-                 flex items-center justify-center overflow-hidden
-                 shadow-[0_0_20px_rgba(156,163,175,0.15)]"
+      className="relative flex-shrink-0 w-40 h-24 md:w-64 md:h-32 bg-zinc-950 border border-zinc-800 
+                    flex items-center justify-center overflow-hidden group"
     >
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900/30 via-black to-gray-800/30 opacity-70" />
+      <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-      {/* Sponsor name */}
       <h3
-        className="relative z-10 text-xl font-bold text-white uppercase tracking-wider"
+        className="relative z-10 text-lg md:text-xl font-bold text-white/70 group-hover:text-white transition-colors duration-300 uppercase tracking-widest"
         style={{ fontFamily: "Barlow Condensed, sans-serif" }}
       >
         {name}
       </h3>
 
-      {/* Scanline effect */}
-      <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(156,163,175,0.1) 2px, rgba(156,163,175,0.1) 4px)",
-        }}
-      />
+      <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-cyan-500/50" />
+      <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-cyan-500/50" />
+
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,white_2px,white_4px)]" />
     </div>
   );
 }
