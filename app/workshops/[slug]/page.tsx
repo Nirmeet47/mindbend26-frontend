@@ -7,10 +7,12 @@ import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import InfoCard from '@/components/events/InfoCard';
 import EventTabs from '@/components/events/EventTabs';
-import { formatDate, getDaysRemaining } from '@/utils/eventsUtils';
+import { formatDate, getDaysRemaining, getWorkshopStatus } from '@/utils/eventsUtils';
 import WorkshopEventCard from '@/components/WorkshopEventCard';
 import EventsHeader from '@/components/events/EventsHeader';
+import WorkshopRegistrationCTA from '@/components/workshops/WorkshopRegistrationCTA';
 import { EventStatus } from '@/types';
+
 
 // Lazy load the background scene
 const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScene'), {
@@ -57,6 +59,7 @@ export default function WorkshopDetailPage() {
   const [workshop, setWorkshop] = useState<Workshop | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSvnitian, setIsSvnitian] = useState<boolean>(false);
 
   useEffect(() => {
     fetchWorkshop();
@@ -64,11 +67,17 @@ export default function WorkshopDetailPage() {
 
   const fetchWorkshop = async () => {
     try {
-      const response = await fetch(`http://localhost:6969/api/workshops/public/${slug}`);
+      const response = await fetch(`http://localhost:6969/api/workshops/public/${slug}`, {
+        credentials: 'include' // Include cookies for auth
+      });
       const data = await response.json();
       
       if (data.success) {
         setWorkshop(data.data.workshop);
+        // Check if user is SVNITIAN from response
+        if (data.data?.isSvnitian) {
+          setIsSvnitian(true);
+        }
       } else {
         setError(data.message);
       }
@@ -232,7 +241,7 @@ export default function WorkshopDetailPage() {
             eventName={workshop.name}
             eventType="workshop"
             isTeamEvent={false}
-            eventStatus="OPEN"
+            eventStatus={getWorkshopStatus(workshop)}
             breadcrumbType="WORKSHOPS"
           />
           {/* Workshop Image - Holographic Border */}
@@ -331,25 +340,17 @@ export default function WorkshopDetailPage() {
         />
 
         {/* Registration CTA */}
-        <section className="max-w-7xl mx-auto px-4 pb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.0 }}
-            className="text-center"
-          >
-            <button 
-              className={`px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 ${
-                !workshop.stopRegistration 
-                  ? 'bg-gradient-to-r from-[#33ABB9] to-[#184344] hover:shadow-lg hover:shadow-[#33ABB9]/50 text-white' 
-                  : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-              }`}
-              disabled={workshop.stopRegistration}
-            >
-              {!workshop.stopRegistration ? 'Register for Workshop' : 'Registration Closed'}
-            </button>
-          </motion.div>
-        </section>
+        <WorkshopRegistrationCTA
+          workshopId={workshop._id}
+          workshopName={workshop.name}
+          registeredCount={workshop.registeredCount}
+          maxParticipants={workshop.maxParticipants}
+          isRegistrationOpen={workshop.isRegistrationOpen}
+          stopRegistration={workshop.stopRegistration}
+          registrationDeadline={workshop.registrationDeadline}
+          isSvnitian={isSvnitian}
+          formatDate={formatDate}
+        />
       </div>
     </motion.div>
   );

@@ -97,7 +97,7 @@ export default function ProfilePage() {
     }
     if (activeTab === "workshops" && registeredWorkshops.length === 0) {
       setLoading(true)
-      api.get("/users/registered-workshops")
+      api.get("/workshops/my-registrations")
         .then((res) => setRegisteredWorkshops(res.data?.data?.workshops || []))
         .catch((err) => setError(err?.response?.data?.message || "Failed to load workshops"))
         .finally(() => setLoading(false))
