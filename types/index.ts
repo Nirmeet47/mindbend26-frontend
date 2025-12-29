@@ -99,3 +99,36 @@ export type DetailedTeam = {
   pendingInvite?: boolean,
   isLeader?: boolean,
 }
+
+// Workshop interface
+export interface Workshop {
+  _id: string;
+  name: string;
+  slug: string;
+  workshopPhoto: string;
+  instructor: {
+    name: string;
+    company: string;
+    photo: string;
+    linkedin: string;
+  };
+  duration: string;
+  entryFee: number;
+  contact: {
+    name: string;
+    whatsappNo: string;
+  }[];
+  whatsappGrpLink: string;
+  aboutWorkshop: string;
+  prerequisites: string[];
+  registrationDeadline: string;
+  workshopDate: string;
+  startTime: string;
+  endTime: string;
+  venue: string;
+  maxParticipants: number;
+  registeredCount: number;
+  hideWorkshop: boolean;
+  stopRegistration: boolean;
+  isRegistrationOpen: boolean;
+}
