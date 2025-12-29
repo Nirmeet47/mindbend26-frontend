@@ -99,7 +99,7 @@ export default function WorkshopDetailPage() {
               {/* Breadcrumb and title skeleton */}
               <div className="space-y-4">
                 <div className="h-4 bg-gray-800/50 rounded w-48"></div>
-                <div className="h-16 bg-gradient-to-r from-gray-800/50 to-gray-700/50 rounded w-3/4"></div>
+                <div className="h-16 bg-linear-to-r from-gray-800/50 to-gray-700/50 rounded w-3/4"></div>
                 <div className="h-6 bg-gray-800/50 rounded w-32"></div>
               </div>
               
@@ -164,7 +164,7 @@ export default function WorkshopDetailPage() {
               </svg>
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-4 bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent">
             Workshop Not Found
           </h1>
           <p className="text-gray-400 mb-8 leading-relaxed">

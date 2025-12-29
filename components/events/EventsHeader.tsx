@@ -41,7 +41,7 @@ function EventsHeader({ eventName, eventType, isTeamEvent, eventStatus, breadcru
         </div>
 
         {/* Event Title */}
-        <div className="relative mb-16 p-8 border-l-2 border-[#FF4D00] bg-gradient-to-r from-[#FF4D00]/5 to-transparent">
+        <div className="relative mb-16 p-8 border-l-2 border-[#FF4D00] bg-linear-to-r from-[#FF4D00]/5 to-transparent">
           {/* Decorative artifacts */}
           <div className="absolute -left-[5px] -top-[5px] w-2 h-2 bg-[#FF4D00]" />
 

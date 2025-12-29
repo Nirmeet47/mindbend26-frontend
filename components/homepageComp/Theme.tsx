@@ -88,22 +88,22 @@ export default function Theme() {
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex-shrink-0 px-6 sm:px-12 md:px-20 pt-6 sm:pt-10 md:pt-16 z-1"
+          className="shrink-0 px-6 sm:px-12 md:px-20 pt-6 sm:pt-10 md:pt-16 z-1"
         >
           <h2
-            className="text-3xl text-5xl md:text-7xl font-bold text-white uppercase tracking-wide"
+            className="text-3xl sm:text-5xl md:text-7xl font-bold text-white uppercase tracking-wide"
             style={{ fontFamily: "Barlow Condensed, sans-serif" }}
           >
             The Theme
           </h2>
-          <div className="h-[2px] w-[30%] bg-linear-to-r from-cyan-500 to-transparent my-3 md:my-4 opacity-50"></div>
+          <div className="h-0.5 w-[30%] bg-linear-to-r from-cyan-500 to-transparent my-3 md:my-4 opacity-50"></div>
 
           <div
             className="pt-1 text-white max-w-md mt-auto"
             style={{ fontFamily: "Space Grotesk, sans-serif" }}
           >
             <h2
-              className="text-2xl sm:text-3xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r tracking-widest from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)]"
+              className="text-2xl sm:text-3xl md:text-3xl font-black text-transparent bg-clip-text bg-linear-to-r tracking-widest from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)]"
               style={{ fontFamily: "Barlow Condensed, sans-serif" }}
             >
               SYMBIONT

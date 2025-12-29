@@ -32,7 +32,7 @@ const EventTabs: React.FC<EventTabsProps> = ({
   return (
     <section className="max-w-7xl mx-auto px-4 pb-12">
       <div className="border-b border-white/10 mb-8 relative">
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#00F0FF]/50 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-linear-to-r from-transparent via-[#00F0FF]/50 to-transparent" />
         <div className="flex flex-wrap gap-2 md:gap-8 overflow-x-auto pb-1 scrollbar-hide">
           {[
             { id: 'about', label: 'About' },

@@ -18,11 +18,11 @@ export default function AcademicDetailsCard({ userData }: AcademicDetailsCardPro
       <h3 className="text-cyan-300 font-bold uppercase tracking-[0.15em] mb-4 text-sm">Academic Details</h3>
       <div className="space-y-3 text-sm">
         <div>
-          <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em]">College</p>
+          <p className="text-cyan-400/70 text-xs uppercase tracking-widest">College</p>
           <p className="text-white font-semibold">{userData.collegeName}</p>
         </div>
         <div>
-          <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em]">Year of Study</p>
+          <p className="text-cyan-400/70 text-xs uppercase tracking-widest">Year of Study</p>
           <p className="text-white font-semibold">{userData.yearOfStudy}</p>
         </div>
       </div>

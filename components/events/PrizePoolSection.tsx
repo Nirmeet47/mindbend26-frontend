@@ -15,7 +15,7 @@ const PrizePoolSection: React.FC<PrizePoolSectionProps> = ({ prizeMoney, prizeDi
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.5 }}
-        className="relative p-[1px] bg-gradient-to-r from-transparent via-[#FF4D00] to-transparent"
+        className="relative p-px bg-linear-to-r from-transparent via-[#FF4D00] to-transparent"
       >
         <div className="bg-[#050505] p-8 md:p-12 relative overflow-hidden">
           {/* Background Grid */}

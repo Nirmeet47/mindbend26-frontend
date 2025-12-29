@@ -132,7 +132,7 @@ export default function AdminTeamsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
       {/* Header Section */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-white mb-2">
@@ -145,30 +145,30 @@ export default function AdminTeamsPage() {
       
       {/* Stats Bar */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
+        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
           <div className="text-slate-400 text-sm font-medium mb-1">Total Teams</div>
           <div className="text-3xl font-bold text-white">{totalResults}</div>
         </div>
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
+        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
           <div className="text-slate-400 text-sm font-medium mb-1">Active Teams</div>
           <div className="text-3xl font-bold text-white">
             {teams.filter(t => t.isActive).length}
           </div>
         </div>
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
+        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
           <div className="text-slate-400 text-sm font-medium mb-1">Inactive Teams</div>
           <div className="text-3xl font-bold text-white">
             {teams.filter(t => !t.isActive).length}
           </div>
         </div>
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
+        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
           <div className="text-slate-400 text-sm font-medium mb-1">Displayed</div>
           <div className="text-3xl font-bold text-white">{teams.length}</div>
         </div>
       </div>
 
       {/* Filters Section */}
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 mb-8 shadow-xl">
+      <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 mb-8 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
           <h2 className="text-xl font-semibold text-white">
             Filter Options
@@ -297,7 +297,7 @@ export default function AdminTeamsPage() {
             {teams.map((team) => (
               <div 
                 key={team._id}
-                className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl overflow-hidden hover:border-purple-500/50 transition-all shadow-xl"
+                className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl overflow-hidden hover:border-purple-500/50 transition-all shadow-xl"
               >
                 {/* Card Header */}
                 <div className="bg-slate-800/50 p-5 border-b border-slate-700">
@@ -433,7 +433,7 @@ export default function AdminTeamsPage() {
                       onClick={() => setPage(pageNum)}
                       className={`w-10 h-10 rounded-lg font-medium transition-colors ${
                         page === pageNum
-                          ? "bg-gradient-to-r from-purple-600 to-gray-600 text-white"
+                          ? "bg-linear-to-r from-purple-600 to-gray-600 text-white"
                           : "bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700"
                       }`}
                     >
