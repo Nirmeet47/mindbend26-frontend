@@ -1,49 +1,71 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Users, Calendar, MapPin, Trophy } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
-import InfoCard from '@/components/events/InfoCard';
-import PrizePoolSection from '@/components/events/PrizePoolSection';
-import EventTabs from '@/components/events/EventTabs';
-import RegistrationCTA from '@/components/events/RegistrationCTA';
-import EventCard from '@/components/EventCard';
-import EventsHeader from '@/components/events/EventsHeader';
+import Navbar from '@/components/layoutComp/Navbar';
+import WorkshopBackground from '@/components/events/WorkshopBackground';
 
-import { Event } from '@/types';
+interface Workshop {
+  _id: string;
+  name: string;
+  slug: string;
+  workshopPhoto: string;
+  instructor: {
+    name: string;
+    company: string;
+    photo: string;
+    linkedin: string;
+  };
+  duration: string;
+  entryFee: number;
+  contact: {
+    name: string;
+    whatsappNo: string;
+  }[];
+  whatsappGrpLink: string;
+  aboutWorkshop: string;
+  prerequisites: string[];
+  registrationDeadline: string;
+  workshopDate: string;
+  startTime: string;
+  endTime: string;
+  venue: string;
+  maxParticipants: number;
+  registeredCount: number;
+  hideWorkshop: boolean;
+  stopRegistration: boolean;
+  isRegistrationOpen: boolean;
+}
 
-import { formatDate, getDaysRemaining, getEventStatus } from '@/utils/eventsUtils';
-import { publicEventsApi } from '@/lib/events';
-import WorkshopEventCard from '@/components/WorkshopEventCard';
-
-// Lazy load the background scene
-const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScene'), {
-  ssr: false,
-});
-
-export default function EventDetailPage() {
+export default function WorkshopDetailPage() {
   const params = useParams();
   const router = useRouter();
   const slug = params.slug as string;
 
-  const [event, setEvent] = useState<Event | null>(null);
+  const [workshop, setWorkshop] = useState<Workshop | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch event data from API
   useEffect(() => {
-    async function fetchEvent() {
-      publicEventsApi
-        .get(slug)
-        .then((res) => { setEvent(res.data?.data?.event || null); })
-        .catch(() => setError('Failed to load event details. Please try again later.'))
-        .finally(() => setLoading(false));
-    }
-    // console.log(event)
-    fetchEvent();
+    fetchWorkshop();
   }, [slug]);
+
+  const fetchWorkshop = async () => {
+    try {
+      const response = await fetch(`http://localhost:6969/api/workshops/public/${slug}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setWorkshop(data.data.workshop);
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError('Failed to fetch workshop details');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Handle back navigation
   const goHome = () => {
@@ -117,7 +139,7 @@ export default function EventDetailPage() {
   }
 
   // Error state
-  if (error || !event) {
+  if (error || !workshop) {
     return (
       <div className="min-h-screen bg-[#030303] text-white flex items-center justify-center px-4">
         <div className="text-center max-w-md">
@@ -129,128 +151,208 @@ export default function EventDetailPage() {
             </div>
           </div>
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Event Not Found
+            Workshop Not Found
           </h1>
           <p className="text-gray-400 mb-8 leading-relaxed">
-            {error || 'The event you are looking for does not exist or has been removed.'}
+            {error || 'The workshop you are looking for does not exist or has been removed.'}
           </p>
           <button
             onClick={handleBack}
             className="px-8 py-4 bg-gradient-to-r from-[#FF4D00] to-[#FF6020] text-white font-bold rounded-lg hover:shadow-lg hover:shadow-[#FF4D00]/50 transition-all duration-300 transform hover:scale-105"
           >
-            Back to Events
+            Back to Workshops
           </button>
         </div>
       </div>
     );
   }
 
-  const eventStatus = getEventStatus(event);
-  const daysRemaining = getDaysRemaining(event.registrationDeadline);
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen bg-[#030303] text-white overflow-x-hidden selection:bg-[#FF4D00] selection:text-white font-rajdhani tracking-wide relative"
-    >
-      {/* Background 3D Scene - Reduced opacity */}
-      <div className="fixed inset-0 z-0 opacity-20 pointer-events-none mix-blend-screen">
-        <BackgroundScene />
-      </div>
+    <>
+      <Navbar />
+      <div className="relative mt-8 w-full min-h-screen text-white overflow-x-hidden selection:bg-[#33ABB9]/30">
+        <WorkshopBackground />
+        <div className="container mx-auto py-8 z-5 relative">
+          {/* Header */}
+          <div className="flex flex-col items-center w-full animate-fade-in mb-8">
+            <button 
+              onClick={() => router.push('/workshops')}
+              className="self-start mb-4 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+            >
+              ← Back to Workshops
+            </button>
+            
+            <h1
+              className="text-5xl sm:text-6xl md:text-7xl uppercase tracking-normal leading-[1.1] font-black mb-4 text-center"
+              style={{
+                fontFamily: 'Barlow Condensed, sans-serif',
+                color: '#e5e7eb',
+                fontWeight: 900,
+                textShadow: '0 2px 8px rgba(0,0,0,0.25)'
+              }}
+            >
+              {workshop.name}
+            </h1>
+          </div>
 
-      {/* Cyberpunk Grid Overlay */}
-      <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(0, 240, 255, 0.4) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 240, 255, 0.4) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px',
-          maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
-        }}
-      />
-
-      <div className="relative z-10">
-        {/* Event Header */}
-        <section className="max-w-7xl mx-auto px-4 pt-16 pb-12">
-          <EventsHeader
-            eventName={event.name}
-            eventType={event.type}
-            eventStatus={eventStatus}
-            breadcrumbType="WORKSHOPS"
-          />
-          {/* Event Image - Holographic Border */}
-            {event.eventPhoto && (
-              <div className="relative w-full mb-12">
-                <WorkshopEventCard
-                  showExploreButton={false}
-                  slug="#"
-                  title={event.name}
-                  date={event.eventDate ? (() => { 
-                    const d = new Date(event.eventDate); 
-                    return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}${d.getDate() % 10 === 1 && d.getDate() !== 11 ? 'st' : d.getDate() % 10 === 2 && d.getDate() !== 12 ? 'nd' : d.getDate() % 10 === 3 && d.getDate() !== 13 ? 'rd' : 'th'}`; 
-                  })() : 'Coming Soon'}
-                  entryFee={`₹${event.entryFee.toLocaleString()}`}
-                  image={event.eventPhoto}
+          {/* Workshop Details */}
+          <div className="max-w-4xl mx-auto">
+            {/* Workshop Photo */}
+            {workshop.workshopPhoto && (
+              <div className="w-full h-64 md:h-96 bg-gray-800 rounded-lg mb-8 overflow-hidden">
+                <img 
+                  src={workshop.workshopPhoto} 
+                  alt={workshop.name}
+                  className="w-full h-full object-cover"
                 />
               </div>
             )}
-        </section>
 
-        {/* Quick Info Cards - Cyberpunk Style */}
-        <section className="max-w-7xl mx-auto px-4 pb-16">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <InfoCard
-              icon={Calendar}
-              label="DEADLINE"
-              value={event.registrationDeadline ? formatDate(event.registrationDeadline ) : 'TBA'}
-              sub={daysRemaining > 0 ? `${daysRemaining} DAYS LEFT` : null}
-              color="text-[#00F0FF]"
-              delay={0.3}
-            />
-            <InfoCard
-              icon={MapPin}
-              label="VENUE"
-              value={event.venue || 'TBA'}
-              color="text-[#FF4D00]"
-              delay={0.4}
-            />
-            <InfoCard
-              icon={Trophy}
-              label="FEES"
-              value={event.entryFee === 0 ? 'FREE_ENTRY' : `₹${event.entryFee}`}
-              color="text-[#FF4D00]"
-              delay={0.6}
-            />
-            <InfoCard
-              icon={Users}
-              label="CERTIFICATES"
-              value="FOR ALL PARTICIPANTS"
-              color="text-[#00F0FF]"
-              delay={0.7}
-            />
-            
+            {/* Workshop Info Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              {/* Left Column */}
+              <div className="space-y-6">
+                {/* Instructor */}
+                <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-lg p-6 border border-gray-700/30">
+                  <h2 className="text-2xl font-bold mb-4 text-cyan-400">Instructor</h2>
+                  <div className="flex items-center space-x-4">
+                    {workshop.instructor.photo && (
+                      <img 
+                        src={workshop.instructor.photo} 
+                        alt={workshop.instructor.name}
+                        className="w-16 h-16 rounded-full object-cover"
+                      />
+                    )}
+                    <div>
+                      <h3 className="text-xl font-semibold">{workshop.instructor.name}</h3>
+                      {workshop.instructor.company && (
+                        <p className="text-gray-400">{workshop.instructor.company}</p>
+                      )}
+                      {workshop.instructor.linkedin && (
+                        <a 
+                          href={workshop.instructor.linkedin} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-cyan-400 hover:text-cyan-300 text-sm"
+                        >
+                          LinkedIn Profile
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Workshop Info */}
+                <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-lg p-6 border border-gray-700/30">
+                  <h2 className="text-2xl font-bold mb-4 text-cyan-400">Workshop Details</h2>
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <span className="mr-3">📅</span>
+                      <span>{formatDate(workshop.workshopDate)}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="mr-3">🕐</span>
+                      <span>{workshop.startTime} - {workshop.endTime}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="mr-3">⏱️</span>
+                      <span>{workshop.duration}</span>
+                    </div>
+                    {workshop.venue && (
+                      <div className="flex items-center">
+                        <span className="mr-3">📍</span>
+                        <span>{workshop.venue}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center">
+                      <span className="mr-3">👥</span>
+                      <span>{workshop.registeredCount}/{workshop.maxParticipants} participants</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="mr-3">💰</span>
+                      <span className="text-green-400 font-semibold">
+                        {workshop.entryFee === 0 ? 'Free' : `₹${workshop.entryFee}`}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-6">
+                {/* About Workshop */}
+                <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-lg p-6 border border-gray-700/30">
+                  <h2 className="text-2xl font-bold mb-4 text-cyan-400">About Workshop</h2>
+                  <p className="text-gray-300 leading-relaxed">{workshop.aboutWorkshop}</p>
+                </div>
+
+                {/* Prerequisites */}
+                {workshop.prerequisites.length > 0 && (
+                  <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-lg p-6 border border-gray-700/30">
+                    <h2 className="text-2xl font-bold mb-4 text-cyan-400">Prerequisites</h2>
+                    <ul className="space-y-2">
+                      {workshop.prerequisites.map((prereq, index) => (
+                        <li key={index} className="flex items-center text-gray-300">
+                          <span className="mr-3">✓</span>
+                          {prereq}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Contact */}
+                <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-lg p-6 border border-gray-700/30">
+                  <h2 className="text-2xl font-bold mb-4 text-cyan-400">Contact</h2>
+                  <div className="space-y-3">
+                    {workshop.contact.map((contact, index) => (
+                      <div key={index} className="flex items-center">
+                        <span className="mr-3">📱</span>
+                        <div>
+                          <p className="font-semibold">{contact.name}</p>
+                          <p className="text-gray-400">{contact.whatsappNo}</p>
+                        </div>
+                      </div>
+                    ))}
+                    {workshop.whatsappGrpLink && (
+                      <a 
+                        href={workshop.whatsappGrpLink} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-block mt-3 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+                      >
+                        Join WhatsApp Group
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Registration CTA */}
+            <div className="text-center">
+              <button 
+                className={`px-8 py-4 text-lg font-semibold rounded-lg transition-colors duration-200 ${
+                  !workshop.stopRegistration 
+                    ? 'bg-cyan-500 hover:bg-cyan-600 text-white' 
+                    : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                }`}
+                disabled={workshop.stopRegistration}
+              >
+                {!workshop.stopRegistration ? 'Register for Workshop' : 'Registration Closed'}
+              </button>
+            </div>
           </div>
-        </section>
-
-        {/* Tabbed Navigation - Terminal Style */}
-        <EventTabs
-          aboutEvent={event.aboutEvent}
-          contact={event.contact}
-          whatsappGrpLink={event.whatsappGrpLink}
-        />
-
-        {/* Registration CTA */}
-        <RegistrationCTA
-          eventStatus={eventStatus}
-          registrationDeadline={event.registrationDeadline}
-          unstopLink={event.unstopLink}
-          formatDate={formatDate}
-        />
+        </div>
       </div>
-    </motion.div>
+    </>
   );
 }
