@@ -36,6 +36,10 @@ export const teamsApi = {
   leaveTeam: (teamId: string) => api.post(`/teams/${teamId}/leave`),
   regenerateInvite: (teamId: string) =>
     api.post(`/teams/${teamId}/regenerate-invite`),
+  listAdmin: (payload: { page?: number; limit?: number; filter?: any; sortBy?: any } = { page: 1, limit: 20 }) =>
+    api.post("/teams/admin/all", payload),
+  updateStatus: (id: string, isActive: boolean) =>
+    api.put(`/teams/${id}/status`, { isActive }),
 };
 
 export const securityApi = {
