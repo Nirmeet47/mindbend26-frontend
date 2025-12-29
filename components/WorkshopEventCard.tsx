@@ -21,7 +21,7 @@ interface EventCardProps {
 // Background: Deep Slate
 
 const DecorationTopLeft = () => (
-    <svg className="absolute -top-[1px] -left-[1px] w-12 h-12 pointer-events-none" viewBox="0 0 48 48" fill="none">
+    <svg className="absolute -top-px -left-px w-12 h-12 pointer-events-none" viewBox="0 0 48 48" fill="none">
         <path d="M0 48V12C0 5.37258 5.37258 0 12 0H48" stroke="#33ABB9" strokeWidth="2" />
         <circle cx="6" cy="6" r="3" fill="#33ABB9" />
         <path d="M12 12L24 24" stroke="#33ABB9" strokeWidth="1" strokeDasharray="2 2" />
@@ -29,7 +29,7 @@ const DecorationTopLeft = () => (
 );
 
 const DecorationBottomRight = () => (
-    <svg className="absolute -bottom-[1px] -right-[1px] w-16 h-16 pointer-events-none" viewBox="0 0 64 64" fill="none">
+    <svg className="absolute -bottom-px -right-px w-16 h-16 pointer-events-none" viewBox="0 0 64 64" fill="none">
         <path d="M0 64H52C58.6274 64 64 58.6274 64 52V0" stroke="#33ABB9" strokeWidth="2" strokeOpacity="1" />
         <path d="M64 48L48 64" stroke="#F59E0B" strokeWidth="2" /> {/* Amber accent */}
         <rect x="54" y="54" width="6" height="6" fill="#33ABB9" fillOpacity="0.5" />
@@ -43,7 +43,7 @@ const WorkshopEventCard: React.FC<EventCardProps> = ({ title, slug, date, entryF
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay }}
-            className="relative group min-h-[380px] w-full max-w-[350px] mx-auto"
+            className="relative group min-h-95 w-full max-w-87.5 mx-auto"
         >
             {/* Card Content Container */}
             <div className="relative h-full bg-[#1e1b29]/80 backdrop-blur-md border border-[#33ABB9]/30 overflow-hidden rounded-xl transition-all duration-300 group-hover:border-[#33ABB9]/80 group-hover:bg-[#2a2438]/90 group-hover:shadow-[0_0_30px_rgba(139,92,246,0.3)]">
@@ -53,7 +53,7 @@ const WorkshopEventCard: React.FC<EventCardProps> = ({ title, slug, date, entryF
                 <DecorationBottomRight />
 
                 {/* Top Glowing Edge */}
-                <div className="absolute top-0 left-12 right-12 h-[1px] bg-gradient-to-r from-transparent via-[#F59E0B] to-transparent opacity-50" />
+                <div className="absolute top-0 left-12 right-12 h-px bg-linear-to-r from-transparent via-[#F59E0B] to-transparent opacity-50" />
 
                 <div className="p-5 flex flex-col h-full z-10 relative">
                     {/* Header */}
@@ -73,11 +73,11 @@ const WorkshopEventCard: React.FC<EventCardProps> = ({ title, slug, date, entryF
                             // eslint-disable-next-line @next/next/no-img-element
                             <Image fill src={image} alt={title} className="object-cover" />
                         ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-[#2a2438] to-[#1e1b29] flex items-center justify-center">
+                            <div className="w-full h-full bg-linear-to-br from-[#2a2438] to-[#1e1b29] flex items-center justify-center">
                                 <span className="text-[#33ABB9]/40 font-mono text-sm">[ LOADING_DATA ]</span>
                             </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#1e1b29] to-transparent opacity-60" />
+                        <div className="absolute inset-0 bg-linear-to-t from-[#1e1b29] to-transparent opacity-60" />
                     </div>
 
                     {/* name & Info */}

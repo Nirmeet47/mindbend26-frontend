@@ -267,7 +267,7 @@ const TechnicalBackground = () => {
                         >
                             {/* SVG RING */}
                             <svg
-                                className="w-full h-full z-[1]"
+                                className="w-full h-full z-1"
                                 viewBox="0 0 100 100"
                                 xmlns="http://www.w3.org/2000/svg"
                             >

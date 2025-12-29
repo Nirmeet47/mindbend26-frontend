@@ -21,7 +21,7 @@ const InfoCard: React.FC<InfoCardProps> = ({ icon: Icon, label, value, sub, colo
       className="relative group"
     >
       <div className="absolute inset-0 bg-white/5 transform skew-x-[-5deg] group-hover:bg-white/10 transition-colors border border-white/10 group-hover:border-[#00F0FF]/50" />
-      <div className="relative p-6 px-8 z-10 flex flex-col h-full min-h-[140px]">
+      <div className="relative p-6 px-8 z-10 flex flex-col h-full min-h-35">
         <div className="flex justify-between items-start mb-4">
           <Icon className={`w-6 h-6 ${color}`} />
           <div className="w-2 h-2 bg-white/20 group-hover:bg-[#00F0FF] transition-colors" />

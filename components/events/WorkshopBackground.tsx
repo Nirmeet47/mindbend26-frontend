@@ -121,16 +121,16 @@ const WorkshopBackground = () => {
     return (
         <div ref={containerRef} className="fixed inset-0 w-full h-full z-0 bg-[#0f0e13] overflow-hidden">
             {/* Base Gradient Layer */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#0f0e13] via-[#1a1625] to-[#0f0e13] opacity-90" />
+            <div className="absolute inset-0 bg-linear-to-br from-[#0f0e13] via-[#1a1625] to-[#0f0e13] opacity-90" />
 
             {/* Grid Overlay */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.03)_1px,transparent_1px)] bg-size-[50px_50px]" />
 
             {/* Canvas Layer for Neural Network */}
             <canvas ref={canvasRef} className="absolute inset-0 block" />
 
             {/* Vignette */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0f0e13] via-transparent to-[#0f0e13] opacity-80 pointer-events-none" />
+            <div className="absolute inset-0 bg-linear-to-t from-[#0f0e13] via-transparent to-[#0f0e13] opacity-80 pointer-events-none" />
         </div>
     );
 };

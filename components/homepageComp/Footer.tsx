@@ -8,7 +8,7 @@ export default function Footer() {
   return (
     <footer className="relative w-full bg-black pt-10">
       {/* Map Section */}
-      <div className="relative w-full h-[250px] md:h-[400px] px-4 md:px-10 overflow-hidden mb-12">
+      <div className="relative w-full h-62.5 md:h-100 px-4 md:px-10 overflow-hidden mb-12">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3720.8534437877856!2d72.78394707520775!3d21.16713598049612!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be04dec8b56fdf1%3A0x423b99085d26d1f9!2sSardar%20Vallabhbhai%20National%20Institute%20of%20Technology!5e0!3m2!1sen!2sin!4v1703012345678!5m2!1sen!2sin"
           width="100%"
@@ -74,7 +74,7 @@ export default function Footer() {
           </div>
 
           {/* Bottom Accent Line */}
-          <div className="mt-12 w-full max-w-xs h-[1px] bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent" />
+          <div className="mt-12 w-full max-w-xs h-px bg-linear-to-r from-transparent via-cyan-500/30 to-transparent" />
         </div>
       </motion.div>
     </footer>

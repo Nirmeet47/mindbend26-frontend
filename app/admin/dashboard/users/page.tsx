@@ -178,7 +178,7 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-white mb-2">User Management</h1>
@@ -187,7 +187,7 @@ export default function AdminUsersPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
+        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm font-medium mb-1">Total Users</p>
@@ -199,7 +199,7 @@ export default function AdminUsersPage() {
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
+        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm font-medium mb-1">Verified</p>
@@ -211,7 +211,7 @@ export default function AdminUsersPage() {
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
+        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm font-medium mb-1">Banned</p>
@@ -223,7 +223,7 @@ export default function AdminUsersPage() {
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
+        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm font-medium mb-1">Profile Complete</p>
@@ -237,7 +237,7 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 mb-8 shadow-xl">
+      <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 mb-8 shadow-xl">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Search */}
           <div className="flex-1">
@@ -291,7 +291,7 @@ export default function AdminUsersPage() {
           {/* Create User Button */}
           <button
             onClick={() => setShowCreateModal(true)}
-            className="px-6 py-3 bg-gradient-to-r from-black-600 to-gray-600 hover:from-black-700 hover:to-gray-700 text-white rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg shadow-black-500/30"
+            className="px-6 py-3 bg-linear-to-r from-black-600 to-gray-600 hover:from-black-700 hover:to-gray-700 text-white rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg shadow-black-500/30"
           >
             <UserPlus className="w-5 h-5" />
             Create User
@@ -318,7 +318,7 @@ export default function AdminUsersPage() {
             {filteredUsers.map((user) => (
               <div
                 key={user._id}
-                className="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 hover:border-black-500/50 transition-all shadow-xl"
+                className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 hover:border-black-500/50 transition-all shadow-xl"
               >
                 {/* User Header */}
                 <div className="flex items-start justify-between mb-4">
@@ -447,7 +447,7 @@ export default function AdminUsersPage() {
                       onClick={() => setCurrentPage(page)}
                       className={`w-10 h-10 rounded-lg font-medium transition-colors ${
                         currentPage === page
-                          ? 'bg-gradient-to-r from-black-600 to-gray-600 text-white'
+                          ? 'bg-linear-to-r from-black-600 to-gray-600 text-white'
                           : 'bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700'
                       }`}
                     >
@@ -573,7 +573,7 @@ export default function AdminUsersPage() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-black-600 to-gray-600 hover:from-black-700 hover:to-gray-700 text-white rounded-xl font-medium transition-all shadow-lg shadow-black-500/30"
+                  className="flex-1 px-6 py-3 bg-linear-to-r from-black-600 to-gray-600 hover:from-black-700 hover:to-gray-700 text-white rounded-xl font-medium transition-all shadow-lg shadow-black-500/30"
                 >
                   Create User
                 </button>
@@ -774,7 +774,7 @@ export default function AdminUsersPage() {
               </button>
               <button
                 onClick={handleChangeRole}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-black-600 to-gray-600 hover:from-black-700 hover:to-gray-700 text-white rounded-xl font-medium transition-all shadow-lg shadow-black-500/30"
+                className="flex-1 px-6 py-3 bg-linear-to-r from-black-600 to-gray-600 hover:from-black-700 hover:to-gray-700 text-white rounded-xl font-medium transition-all shadow-lg shadow-black-500/30"
               >
                 Change Role
               </button>

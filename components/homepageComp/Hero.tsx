@@ -117,7 +117,7 @@ export default function Hero() {
         ${isMobile ? "justify-end items-center text-center" : "justify-between items-end text-right"}`}>
         
         <div className={`text-white mt-auto max-w-md ${isMobile ? "mb-10" : ""}`}>
-          <h2 className={`font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)] tracking-wide animate-fadeIn
+          <h2 className={`font-black text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)] tracking-wide animate-fadeIn
             ${isMobile ? "text-5xl" : "text-6xl lg:text-7xl"}`} 
             style={{ fontFamily: "Barlow Condensed, sans-serif" }}>
             SYMBIONT
@@ -128,7 +128,7 @@ export default function Hero() {
             The Cognitive Genesis
           </p>
           
-          <div className={`h-[1px] bg-gradient-to-r from-cyan-500 to-transparent my-4 opacity-50 animate-slideUp 
+          <div className={`h-px bg-linear-to-r from-cyan-500 to-transparent my-4 opacity-50 animate-slideUp 
             ${isMobile ? "w-32 mx-auto via-cyan-500 to-transparent" : "w-full ml-auto"}`}></div>
           
           <p className="text-xs md:text-sm opacity-60 leading-relaxed italic animate-slideUp" 
@@ -139,7 +139,7 @@ export default function Hero() {
       </div>
 
       {/* Smooth Bottom Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#020205] to-transparent pointer-events-none z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-[#020205] to-transparent pointer-events-none z-10" />
 
       <style jsx>{`
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

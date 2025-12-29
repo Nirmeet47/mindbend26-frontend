@@ -45,7 +45,7 @@ export default function RegisteredEventsTab({ events }: RegisteredEventsTabProps
           </div>
           <div className="flex items-center gap-3">
             <span
-              className={`px-4 py-1 text-xs font-bold uppercase tracking-[0.1em] ${
+              className={`px-4 py-1 text-xs font-bold uppercase tracking-widest ${
                 event.status === "registered"
                   ? "bg-cyan-600/30 text-cyan-300 border border-cyan-500/60"
                   : "bg-green-600/30 text-green-300 border border-green-500/60"

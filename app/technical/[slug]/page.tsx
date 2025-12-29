@@ -78,12 +78,12 @@ export default function EventDetailPage() {
               {/* Breadcrumb and title skeleton */}
               <div className="space-y-4">
                 <div className="h-4 bg-gray-800/50 rounded w-48"></div>
-                <div className="h-16 bg-gradient-to-r from-gray-800/50 to-gray-700/50 rounded w-3/4"></div>
+                <div className="h-16 bg-linear-to-r from-gray-800/50 to-gray-700/50 rounded w-3/4"></div>
                 <div className="h-6 bg-gray-800/50 rounded w-32"></div>
               </div>
               
               {/* Event Card Skeleton */}
-              <div className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-lg overflow-hidden border border-gray-700/30">
+              <div className="bg-linear-to-br from-gray-800/30 to-gray-900/30 rounded-lg overflow-hidden border border-gray-700/30">
                 <div className="w-full h-96 bg-gray-700/30"></div>
                 <div className="p-6 space-y-4">
                   <div className="h-8 bg-gray-700/30 rounded w-2/3"></div>
@@ -113,7 +113,7 @@ export default function EventDetailPage() {
 
           {/* Prize Pool Skeleton */}
           <section className="max-w-7xl mx-auto px-4 pb-16">
-            <div className="animate-pulse bg-gradient-to-br from-gray-800/30 to-gray-900/30 border border-gray-700/30 rounded-lg p-8 space-y-6">
+            <div className="animate-pulse bg-linear-to-br from-gray-800/30 to-gray-900/30 border border-gray-700/30 rounded-lg p-8 space-y-6">
               <div className="h-10 bg-gray-700/40 rounded w-64 mx-auto"></div>
               <div className="grid grid-cols-3 gap-6">
                 {[1, 2, 3].map((i) => (
@@ -158,7 +158,7 @@ export default function EventDetailPage() {
               </svg>
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-4 bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent">
             Event Not Found
           </h1>
           <p className="text-gray-400 mb-8 leading-relaxed">
@@ -166,7 +166,7 @@ export default function EventDetailPage() {
           </p>
           <button
             onClick={handleBack}
-            className="px-8 py-4 bg-gradient-to-r from-[#FF4D00] to-[#FF6020] text-white font-bold rounded-lg hover:shadow-lg hover:shadow-[#FF4D00]/50 transition-all duration-300 transform hover:scale-105"
+            className="px-8 py-4 bg-linear-to-r from-[#FF4D00] to-[#FF6020] text-white font-bold rounded-lg hover:shadow-lg hover:shadow-[#FF4D00]/50 transition-all duration-300 transform hover:scale-105"
           >
             Back to Events
           </button>

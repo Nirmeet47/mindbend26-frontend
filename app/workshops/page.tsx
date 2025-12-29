@@ -135,7 +135,7 @@ export default function WorkshopsPage() {
             {workshops.map((workshop) => (
               <div
                 key={workshop._id}
-                className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-lg overflow-hidden border border-gray-700/30 hover:border-cyan-400/50 transition-all duration-300 transform hover:scale-105"
+                className="bg-linear-to-br from-gray-800/50 to-gray-900/50 rounded-lg overflow-hidden border border-gray-700/30 hover:border-cyan-400/50 transition-all duration-300 transform hover:scale-105"
               >
                 {workshop.workshopPhoto && (
                   <div className="w-full h-48 bg-gray-800 rounded-t-lg overflow-hidden">

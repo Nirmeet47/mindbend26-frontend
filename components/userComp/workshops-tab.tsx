@@ -36,7 +36,7 @@ export default function WorkshopsTab({ workshops }: WorkshopsTabProps) {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="px-4 py-1 text-xs font-bold uppercase tracking-[0.1em] bg-cyan-600/30 text-cyan-300 border border-cyan-500/60">
+            <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest bg-cyan-600/30 text-cyan-300 border border-cyan-500/60">
               Registered
             </span>
             <ChevronRight className="text-cyan-400" size={20} />

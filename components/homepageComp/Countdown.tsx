@@ -42,7 +42,7 @@ const Countdown = () => {
         style={{ fontFamily: "Barlow Condensed, sans-serif" }}
       >
         EVENT STARTS IN
-        <div className="h-[3px] w-[80%] bg-linear-to-t from-cyan-500 to-transparent my-3 sm:my-4 mx-auto opacity-50"></div>
+        <div className="h-0.75 w-[80%] bg-linear-to-t from-cyan-500 to-transparent my-3 sm:my-4 mx-auto opacity-50"></div>
       </div>
 
       <div className="container">

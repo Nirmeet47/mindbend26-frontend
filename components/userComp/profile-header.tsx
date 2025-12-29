@@ -49,7 +49,7 @@ export default function ProfileHeader({
         >
           My Profile
         </h1>
-        <button className="flex items-center gap-2 px-6 py-2 bg-red-600/80 hover:bg-red-700 text-white font-bold uppercase tracking-[0.1em] transition-all border border-red-500/60 text-sm" onClick={() => {
+        <button className="flex items-center gap-2 px-6 py-2 bg-red-600/80 hover:bg-red-700 text-white font-bold uppercase tracking-widest transition-all border border-red-500/60 text-sm" onClick={() => {
           if (confirm('Are you sure you want to logout?')) {
             logout();
           }
@@ -67,7 +67,7 @@ export default function ProfileHeader({
       >
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-6">
-            <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center border-2 border-cyan-400/60">
+            <div className="w-20 h-20 rounded-lg bg-linear-to-br from-cyan-500 to-blue-600 flex items-center justify-center border-2 border-cyan-400/60">
               <span className="text-3xl font-black text-white">
                 {userData.fullName.charAt(0)}
                 {userData.fullName.split(" ")[1]?.charAt(0) || "D"}
@@ -90,14 +90,14 @@ export default function ProfileHeader({
                 setShowEditProfile(!showEditProfile)
                 setEditData(userData)
               }}
-              className="flex items-center gap-2 px-4 py-2 border border-cyan-500/60 text-cyan-300 hover:bg-cyan-600/10 hover:border-cyan-400 transition-all text-sm uppercase tracking-[0.1em] font-semibold"
+              className="flex items-center gap-2 px-4 py-2 border border-cyan-500/60 text-cyan-300 hover:bg-cyan-600/10 hover:border-cyan-400 transition-all text-sm uppercase tracking-widest font-semibold"
             >
               <Edit2 size={16} />
               Edit Profile
             </button>
             <button
               onClick={() => onResetPassword(!showResetPassword)}
-              className="flex items-center gap-2 px-4 py-2 border border-cyan-500/60 text-cyan-300 hover:bg-cyan-600/10 hover:border-cyan-400 transition-all text-sm uppercase tracking-[0.1em] font-semibold"
+              className="flex items-center gap-2 px-4 py-2 border border-cyan-500/60 text-cyan-300 hover:bg-cyan-600/10 hover:border-cyan-400 transition-all text-sm uppercase tracking-widest font-semibold"
             >
               <Lock size={16} />
               Reset Password
@@ -157,7 +157,7 @@ export default function ProfileHeader({
               <div className="flex gap-2 pt-2">
                 <button
                   onClick={handleSaveProfile}
-                  className="flex-1 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold uppercase tracking-[0.15em] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] text-sm flex items-center justify-center gap-2"
+                  className="flex-1 py-2 bg-linear-to-r from-cyan-600 to-blue-600 text-white font-bold uppercase tracking-[0.15em] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] text-sm flex items-center justify-center gap-2"
                 >
                   <Save size={16} /> Save Changes
                 </button>

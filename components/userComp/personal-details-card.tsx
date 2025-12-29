@@ -19,15 +19,15 @@ export default function PersonalDetailsCard({ userData }: PersonalDetailsCardPro
       <h3 className="text-cyan-300 font-bold uppercase tracking-[0.15em] mb-4 text-sm">Personal Details</h3>
       <div className="space-y-3 text-sm">
         <div>
-          <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em]">Full Name</p>
+          <p className="text-cyan-400/70 text-xs uppercase tracking-widest">Full Name</p>
           <p className="text-white font-semibold">{userData.fullName}</p>
         </div>
         <div>
-          <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em]">Email</p>
+          <p className="text-cyan-400/70 text-xs uppercase tracking-widest">Email</p>
           <p className="text-white font-semibold">{userData.email}</p>
         </div>
         <div>
-          <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em]">Contact</p>
+          <p className="text-cyan-400/70 text-xs uppercase tracking-widest">Contact</p>
           <p className="text-white font-semibold">{userData.contactNumber}</p>
         </div>
       </div>

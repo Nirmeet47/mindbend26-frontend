@@ -5,44 +5,7 @@ import { motion } from 'framer-motion';
 import { Users, Crown, Calendar, Trophy, AlertCircle, CheckCircle, Loader2, ArrowRight, Shield, Zap } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { eventTeamApi } from '@/lib/eventTeam';
-
-// Tech Decorations matching RegisteredTeamModal style
-const TechDecorationTopLeft = () => (
-  <svg className="absolute -top-[1px] -left-[1px] w-16 h-16 pointer-events-none" viewBox="0 0 64 64" fill="none">
-    <path d="M0 64V16L16 0H64" stroke="#33ABB9" strokeWidth="1.5" strokeOpacity="1" />
-    <path d="M0 16L16 0" fill="#33ABB9" fillOpacity="0.2" />
-    <circle cx="16" cy="16" r="2" fill="#33ABB9" />
-    <path d="M6 16H26" stroke="#33ABB9" strokeWidth="1" strokeOpacity="0.5" />
-    <path d="M16 6V26" stroke="#33ABB9" strokeWidth="1" strokeOpacity="0.5" />
-  </svg>
-);
-
-const TechDecorationBottomRight = () => (
-  <svg className="absolute -bottom-[1px] -right-[1px] w-20 h-20 pointer-events-none" viewBox="0 0 80 80" fill="none">
-    <path d="M80 0V48L64 64H48L32 80H0" stroke="#33ABB9" strokeWidth="1.5" strokeOpacity="1" />
-    <path d="M64 64L32 80V64H64Z" fill="#33ABB9" fillOpacity="0.1" />
-    <g transform="translate(60, 60)">
-      <circle cx="0" cy="0" r="12" stroke="#33ABB9" strokeWidth="1" strokeOpacity="0.8" strokeDasharray="10 5" />
-      <circle cx="0" cy="0" r="6" stroke="#33ABB9" strokeWidth="1" fill="#33ABB9" fillOpacity="0.2" />
-      <circle cx="0" cy="0" r="2" fill="#ffffff" />
-    </g>
-  </svg>
-);
-
-const TechDecorationTopRight = () => (
-  <svg className="absolute -top-[1px] -right-[1px] w-12 h-12 pointer-events-none" viewBox="0 0 48 48" fill="none">
-    <path d="M0 0H32L48 16V32" stroke="#33ABB9" strokeWidth="1.5" />
-    <rect x="42" y="6" width="3" height="3" fill="#33ABB9" />
-    <rect x="38" y="6" width="3" height="3" fill="#33ABB9" fillOpacity="0.5" />
-  </svg>
-);
-
-const TechDecorationBottomLeft = () => (
-  <svg className="absolute -bottom-[1px] -left-[1px] w-12 h-12 pointer-events-none" viewBox="0 0 48 48" fill="none">
-    <path d="M0 32V48H16" stroke="#33ABB9" strokeWidth="1.5" />
-    <path d="M0 32L16 48" stroke="#33ABB9" strokeWidth="0.5" strokeOpacity="0.3" />
-  </svg>
-);
+import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from '@/components/ui/TechDecorations';
 
 interface TeamData {
   _id: string;
@@ -167,7 +130,7 @@ export default function JoinTeamPage() {
         >
           {/* Background Shape with ClipPath */}
           <div
-            className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-xl border-[0px] border-white/5 shadow-2xl"
+            className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-xl border-0 border-white/5 shadow-2xl"
             style={{
               clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)'
             }}
@@ -180,10 +143,10 @@ export default function JoinTeamPage() {
           <TechDecorationBottomLeft />
 
           {/* Gradient Border Lines */}
-          <div className="absolute top-0 left-16 right-12 h-[1.5px] bg-gradient-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-          <div className="absolute top-12 bottom-16 right-0 w-[1.5px] bg-gradient-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
-          <div className="absolute bottom-0 left-0 right-32 h-[1.5px] bg-gradient-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-          <div className="absolute top-16 bottom-0 left-0 w-[1.5px] bg-gradient-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
+          <div className="absolute top-0 left-16 right-12 h-[1.5px] bg-linear-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
+          <div className="absolute top-12 bottom-16 right-0 w-[1.5px] bg-linear-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
+          <div className="absolute bottom-0 left-0 right-32 h-[1.5px] bg-linear-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
+          <div className="absolute top-16 bottom-0 left-0 w-[1.5px] bg-linear-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
 
           {/* Content */}
           <div className="relative z-10 p-6 md:p-8">
@@ -198,7 +161,7 @@ export default function JoinTeamPage() {
               <h1 className="text-2xl md:text-3xl font-black uppercase font-orbitron tracking-tight mb-2">
                 WELCOME ABOARD
               </h1>
-              <div className="h-1 w-24 bg-gradient-to-r from-[#33ABB9] to-transparent mx-auto" />
+              <div className="h-1 w-24 bg-linear-to-r from-[#33ABB9] to-transparent mx-auto" />
             </div>
 
             {/* Team Info */}
@@ -255,7 +218,7 @@ export default function JoinTeamPage() {
           >
             {/* Background Shape with ClipPath */}
             <div
-              className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-xl border-[0px] border-white/5 shadow-2xl"
+              className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-xl border-0 border-white/5 shadow-2xl"
               style={{
                 clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)'
               }}
@@ -268,10 +231,10 @@ export default function JoinTeamPage() {
             <TechDecorationBottomLeft />
 
             {/* Gradient Border Lines */}
-            <div className="absolute top-0 left-16 right-12 h-[1.5px] bg-gradient-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-            <div className="absolute top-12 bottom-16 right-0 w-[1.5px] bg-gradient-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
-            <div className="absolute bottom-0 left-0 right-32 h-[1.5px] bg-gradient-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-            <div className="absolute top-16 bottom-0 left-0 w-[1.5px] bg-gradient-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
+            <div className="absolute top-0 left-16 right-12 h-[1.5px] bg-linear-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
+            <div className="absolute top-12 bottom-16 right-0 w-[1.5px] bg-linear-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
+            <div className="absolute bottom-0 left-0 right-32 h-[1.5px] bg-linear-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
+            <div className="absolute top-16 bottom-0 left-0 w-[1.5px] bg-linear-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
 
             {/* Content */}
             <div className="relative z-10 p-6 md:p-8">
@@ -286,7 +249,7 @@ export default function JoinTeamPage() {
                 <h1 className="text-2xl md:text-3xl font-black uppercase font-orbitron tracking-tight mb-2 text-white">
                   JOIN TEAM
                 </h1>
-                <div className="h-1 w-16 bg-gradient-to-r from-[#33ABB9] to-transparent mx-auto" />
+                <div className="h-1 w-16 bg-linear-to-r from-[#33ABB9] to-transparent mx-auto" />
               </div>
 
               {/* Error Display */}

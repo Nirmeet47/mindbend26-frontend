@@ -29,24 +29,24 @@ export default function AccommodationTab({ accommodations }: AccommodationTabPro
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em] mb-1">Hostel</p>
+              <p className="text-cyan-400/70 text-xs uppercase tracking-widest mb-1">Hostel</p>
               <p className="text-white font-bold text-lg">{booking.hostel}</p>
             </div>
             <div>
-              <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em] mb-1">Room</p>
+              <p className="text-cyan-400/70 text-xs uppercase tracking-widest mb-1">Room</p>
               <p className="text-white font-bold text-lg">{booking.room}</p>
             </div>
             <div>
-              <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em] mb-1">Check-in</p>
+              <p className="text-cyan-400/70 text-xs uppercase tracking-widest mb-1">Check-in</p>
               <p className="text-white font-semibold">{booking.checkIn}</p>
             </div>
             <div>
-              <p className="text-cyan-400/70 text-xs uppercase tracking-[0.1em] mb-1">Check-out</p>
+              <p className="text-cyan-400/70 text-xs uppercase tracking-widest mb-1">Check-out</p>
               <p className="text-white font-semibold">{booking.checkOut}</p>
             </div>
           </div>
           <div className="mt-4">
-            <span className="inline-block px-4 py-1 text-xs font-bold uppercase tracking-[0.1em] bg-green-600/30 text-green-300 border border-green-500/60">
+            <span className="inline-block px-4 py-1 text-xs font-bold uppercase tracking-widest bg-green-600/30 text-green-300 border border-green-500/60">
               Booked
             </span>
           </div>

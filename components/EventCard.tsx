@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
+import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from './ui/TechDecorations';
 
 interface EventCardProps {
     title: string;
@@ -21,43 +22,6 @@ interface EventCardProps {
 // Dark Green: #184344
 // Orange: #E8823A
 
-const TechDecorationTopLeft = () => (
-    <svg className="absolute -top-[1px] -left-[1px] w-16 h-16 pointer-events-none" viewBox="0 0 64 64" fill="none">
-        <path d="M0 64V16L16 0H64" stroke="#33ABB9" strokeWidth="1.5" strokeOpacity="1" />
-        <path d="M0 16L16 0" fill="#33ABB9" fillOpacity="0.2" />
-        <circle cx="16" cy="16" r="2" fill="#33ABB9" />
-        <path d="M6 16H26" stroke="#33ABB9" strokeWidth="1" strokeOpacity="0.5" />
-        <path d="M16 6V26" stroke="#33ABB9" strokeWidth="1" strokeOpacity="0.5" />
-    </svg>
-);
-
-const TechDecorationBottomRight = () => (
-    <svg className="absolute -bottom-[1px] -right-[1px] w-20 h-20 pointer-events-none" viewBox="0 0 80 80" fill="none">
-        <path d="M80 0V48L64 64H48L32 80H0" stroke="#33ABB9" strokeWidth="1.5" strokeOpacity="1" />
-        <path d="M64 64L32 80V64H64Z" fill="#33ABB9" fillOpacity="0.1" />
-        <g transform="translate(60, 60)">
-            <circle cx="0" cy="0" r="12" stroke="#33ABB9" strokeWidth="1" strokeOpacity="0.8" strokeDasharray="10 5" />
-            <circle cx="0" cy="0" r="6" stroke="#33ABB9" strokeWidth="1" fill="#33ABB9" fillOpacity="0.2" />
-            <circle cx="0" cy="0" r="2" fill="#ffffff" />
-        </g>
-    </svg>
-);
-
-const TechDecorationTopRight = () => (
-    <svg className="absolute -top-[1px] -right-[1px] w-12 h-12 pointer-events-none" viewBox="0 0 48 48" fill="none">
-        <path d="M0 0H32L48 16V32" stroke="#33ABB9" strokeWidth="1.5" />
-        <rect x="42" y="6" width="3" height="3" fill="#33ABB9" />
-        <rect x="38" y="6" width="3" height="3" fill="#33ABB9" fillOpacity="0.5" />
-    </svg>
-)
-
-const TechDecorationBottomLeft = () => (
-    <svg className="absolute -bottom-[1px] -left-[1px] w-12 h-12 pointer-events-none" viewBox="0 0 48 48" fill="none">
-        <path d="M0 32V48H16" stroke="#33ABB9" strokeWidth="1.5" />
-        <path d="M0 32L16 48" stroke="#33ABB9" strokeWidth="0.5" strokeOpacity="0.3" />
-    </svg>
-)
-
 
 const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, slug, date, prize, delay = 0, image }) => {
     return (
@@ -66,11 +30,11 @@ const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, 
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay }}
-            className="relative group min-h-[350px] w-full max-w-[350px] mx-auto"
+            className="relative group min-h-87.5 w-full max-w-87.5 mx-auto"
         >
             {/* Background Shape */}
             <div
-                className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-xl border-[0px] border-white/5 shadow-xl transition-all duration-300 group-hover:bg-[#184344]/40"
+                className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-xl border-0 border-white/5 shadow-xl transition-all duration-300 group-hover:bg-[#184344]/40"
                 style={{
                     clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)'
                 }}
@@ -82,10 +46,10 @@ const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, 
             <TechDecorationBottomRight />
             <TechDecorationBottomLeft />
 
-            <div className="absolute top-0 left-16 right-12 h-[1.5px] bg-gradient-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-            <div className="absolute top-12 bottom-16 right-0 w-[1.5px] bg-gradient-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
-            <div className="absolute bottom-0 left-0 right-32 h-[1.5px] bg-gradient-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-            <div className="absolute top-16 bottom-0 left-0 w-[1.5px] bg-gradient-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
+            <div className="absolute top-0 left-16 right-12 h-[1.5px] bg-linear-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
+            <div className="absolute top-12 bottom-16 right-0 w-[1.5px] bg-linear-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
+            <div className="absolute bottom-0 left-0 right-32 h-[1.5px] bg-linear-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
+            <div className="absolute top-16 bottom-0 left-0 w-[1.5px] bg-linear-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
 
 
             {/* Internal Content */}
@@ -123,7 +87,7 @@ const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, 
 
                     {/* Image Overlay Texture */}
                     <div className="absolute inset-0 bg-[url('/grid-pixel.png')] opacity-20 pointer-events-none mix-blend-overlay" />
-                    <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/80 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 h-10 bg-linear-to-t from-black/80 to-transparent" />
                 </div>
 
                 {/* Footer */}

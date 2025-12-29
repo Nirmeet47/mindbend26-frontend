@@ -104,7 +104,7 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 w-full z-[100] px-6 md:px-10 py-4 md:py-6 flex justify-between items-center mix-blend-difference text-white"
+        className="fixed top-0 left-0 w-full z-100 px-6 md:px-10 py-4 md:py-6 flex justify-between items-center mix-blend-difference text-white"
         style={{ fontFamily: "Barlow Condensed, sans-serif" }}
       >
         <Link
@@ -143,7 +143,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/80 backdrop-blur-md z-[110]"
+              className="fixed inset-0 bg-black/80 backdrop-blur-md z-110"
             />
 
             <motion.div
@@ -151,7 +151,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-              className="fixed top-0 right-0 h-screen w-full md:w-[500px] lg:w-1/2 bg-[#050505] z-[120] border-l border-white/5 flex flex-col text-white shadow-2xl"
+              className="fixed top-0 right-0 h-screen w-full md:w-125 lg:w-1/2 bg-[#050505] z-120 border-l border-white/5 flex flex-col text-white shadow-2xl"
             >
               <div className="p-6 md:p-12 flex justify-between items-center border-b border-white/5">
                 <ScrambleText

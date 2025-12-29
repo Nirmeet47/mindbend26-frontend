@@ -47,7 +47,7 @@ export default function Sponsors() {
         >
           Our Sponsors
         </h2>
-        <div className="h-[2px] w-20 md:w-48 bg-cyan-500 mx-auto mb-6 opacity-50"></div>
+        <div className="h-0.5 w-20 md:w-48 bg-cyan-500 mx-auto mb-6 opacity-50"></div>
 
         <p
           className="text-cyan-200/60 text-center max-w-xl mx-auto text-sm md:text-base"
@@ -122,7 +122,7 @@ function ParallaxText({ children, baseVelocity = 100 }: ParallaxProps) {
 function SponsorBox({ name }: { name: string }) {
   return (
     <div
-      className="relative flex-shrink-0 w-40 h-24 md:w-64 md:h-32 bg-zinc-950 border border-zinc-800 
+      className="relative shrink-0 w-40 h-24 md:w-64 md:h-32 bg-zinc-950 border border-zinc-800 
                     flex items-center justify-center overflow-hidden group"
     >
       <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
