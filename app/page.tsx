@@ -1,5 +1,6 @@
 import HomeBg from "@/components/ui/ParticleBG";
 import Hero from "@/components/homepageComp/Hero";
+import AlternativeHero from "@/components/homepageComp/AlternativeHero";
 import About from "@/components/homepageComp/About";
 import Theme from "@/components/homepageComp/Theme";
 import Countdown from "@/components/homepageComp/Countdown";
@@ -18,8 +19,11 @@ export default function Page() {
 
       {/* Scrollable content */}
       <div className="relative z-10">
+        {/* Alternative Hero Section */}
+        <AlternativeHero />
+
         {/* Hero Section with model and text */}
-        <Hero />
+        {/* <Hero /> */}
 
         {/* About Section */}
         <About />
