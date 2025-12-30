@@ -41,22 +41,12 @@ export default function ProfilePage() {
   const [registeredWorkshops, setRegisteredWorkshops] = useState<any[]>([])
   const [accommodations, setAccommodations] = useState<any[]>([])
 
-  // Fetch user profile on mount
+  // Redirect to /login if not authenticated (rely on API 401)
   useEffect(() => {
     const fetchProfile = async () => {
       setLoading(true)
       setError("")
       try {
-        
-        // const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null
-        // if (!token) {
-        //   setError("You are not logged in.")
-        //   return
-        // }
-        // const profileRes = await api.get("/users/profile", {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // })
-        
         // Server-side cookies implementation - no manual token management needed
         const profileRes = await api.get("/users/profile")
         const user = profileRes.data?.data?.user
@@ -107,7 +97,7 @@ export default function ProfilePage() {
     }
     if (activeTab === "workshops" && registeredWorkshops.length === 0) {
       setLoading(true)
-      api.get("/users/registered-workshops")
+      api.get("/workshops/my-registrations")
         .then((res) => setRegisteredWorkshops(res.data?.data?.workshops || []))
         .catch((err) => setError(err?.response?.data?.message || "Failed to load workshops"))
         .finally(() => setLoading(false))
@@ -199,7 +189,7 @@ export default function ProfilePage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-3 font-bold uppercase tracking-[0.1em] text-sm whitespace-nowrap transition-all border-b-2 ${
+                className={`flex items-center gap-2 px-6 py-3 font-bold uppercase tracking-widest text-sm whitespace-nowrap transition-all border-b-2 ${
                   activeTab === tab.id
                     ? "border-cyan-400 text-cyan-300 bg-cyan-600/10"
                     : "border-transparent text-cyan-300/60 hover:text-cyan-300 hover:border-cyan-500/40"

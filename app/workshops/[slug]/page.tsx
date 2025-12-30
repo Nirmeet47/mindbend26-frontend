@@ -2,48 +2,91 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Users, Calendar, MapPin, Trophy } from 'lucide-react';
+import { Users, Calendar, MapPin, Trophy, Clock, Building } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import InfoCard from '@/components/events/InfoCard';
-import PrizePoolSection from '@/components/events/PrizePoolSection';
 import EventTabs from '@/components/events/EventTabs';
-import RegistrationCTA from '@/components/events/RegistrationCTA';
-import EventCard from '@/components/EventCard';
-import EventsHeader from '@/components/events/EventsHeader';
-
-import { Event } from '@/types';
-
-import { formatDate, getDaysRemaining, getEventStatus } from '@/utils/eventsUtils';
-import { publicEventsApi } from '@/lib/events';
+import { formatDate, getDaysRemaining, getWorkshopStatus } from '@/utils/eventsUtils';
 import WorkshopEventCard from '@/components/WorkshopEventCard';
+import EventsHeader from '@/components/events/EventsHeader';
+import WorkshopRegistrationCTA from '@/components/workshops/WorkshopRegistrationCTA';
+import { EventStatus } from '@/types';
+
 
 // Lazy load the background scene
 const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScene'), {
   ssr: false,
 });
 
-export default function EventDetailPage() {
+interface Workshop {
+  _id: string;
+  name: string;
+  slug: string;
+  workshopPhoto: string;
+  instructor: {
+    name: string;
+    company: string;
+    photo: string;
+    linkedin: string;
+  };
+  duration: string;
+  entryFee: number;
+  contact: {
+    name: string;
+    whatsappNo: string;
+  }[];
+  whatsappGrpLink: string;
+  aboutWorkshop: string;
+  prerequisites: string[];
+  registrationDeadline: string;
+  workshopDate: string;
+  startTime: string;
+  endTime: string;
+  venue: string;
+  maxParticipants: number;
+  registeredCount: number;
+  hideWorkshop: boolean;
+  stopRegistration: boolean;
+  isRegistrationOpen: boolean;
+}
+
+export default function WorkshopDetailPage() {
   const params = useParams();
   const router = useRouter();
   const slug = params.slug as string;
 
-  const [event, setEvent] = useState<Event | null>(null);
+  const [workshop, setWorkshop] = useState<Workshop | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSvnitian, setIsSvnitian] = useState<boolean>(false);
 
-  // Fetch event data from API
   useEffect(() => {
-    async function fetchEvent() {
-      publicEventsApi
-        .get(slug)
-        .then((res) => { setEvent(res.data?.data?.event || null); })
-        .catch(() => setError('Failed to load event details. Please try again later.'))
-        .finally(() => setLoading(false));
-    }
-    // console.log(event)
-    fetchEvent();
+    fetchWorkshop();
   }, [slug]);
+
+  const fetchWorkshop = async () => {
+    try {
+      const response = await fetch(`http://localhost:6969/api/workshops/public/${slug}`, {
+        credentials: 'include' // Include cookies for auth
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        setWorkshop(data.data.workshop);
+        // Check if user is SVNITIAN from response
+        if (data.data?.isSvnitian) {
+          setIsSvnitian(true);
+        }
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError('Failed to fetch workshop details');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Handle back navigation
   const goHome = () => {
@@ -65,16 +108,18 @@ export default function EventDetailPage() {
               {/* Breadcrumb and title skeleton */}
               <div className="space-y-4">
                 <div className="h-4 bg-gray-800/50 rounded w-48"></div>
-                <div className="h-16 bg-gradient-to-r from-gray-800/50 to-gray-700/50 rounded w-3/4"></div>
+                <div className="h-16 bg-linear-to-r from-gray-800/50 to-gray-700/50 rounded w-3/4"></div>
                 <div className="h-6 bg-gray-800/50 rounded w-32"></div>
               </div>
               
-              {/* Event Card Skeleton */}
+              {/* Workshop Card Skeleton */}
               <div className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 rounded-lg overflow-hidden border border-gray-700/30">
                 <div className="w-full h-96 bg-gray-700/30"></div>
                 <div className="p-6 space-y-4">
                   <div className="h-8 bg-gray-700/30 rounded w-2/3"></div>
-                  <div className="flex justify-between items-center">
+                  <div className="h-5 bg-gray-700/30 rounded w-full"></div>
+                  <div className="h-5 bg-gray-700/30 rounded w-4/5"></div>
+                  <div className="flex justify-between items-center mt-4">
                     <div className="h-5 bg-gray-700/30 rounded w-32"></div>
                     <div className="h-5 bg-gray-700/30 rounded w-24"></div>
                   </div>
@@ -117,36 +162,52 @@ export default function EventDetailPage() {
   }
 
   // Error state
-  if (error || !event) {
+  if (error || !workshop) {
     return (
       <div className="min-h-screen bg-[#030303] text-white flex items-center justify-center px-4">
         <div className="text-center max-w-md">
           <div className="mb-8 relative">
-            <div className="w-24 h-24 mx-auto border-4 border-[#FF4D00]/30 rounded-full flex items-center justify-center">
-              <svg className="w-12 h-12 text-[#FF4D00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-24 h-24 mx-auto border-4 border-[#33ABB9]/30 rounded-full flex items-center justify-center">
+              <svg className="w-12 h-12 text-[#33ABB9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Event Not Found
+          <h1 className="text-4xl font-bold mb-4 bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent">
+            Workshop Not Found
           </h1>
           <p className="text-gray-400 mb-8 leading-relaxed">
-            {error || 'The event you are looking for does not exist or has been removed.'}
+            {error || 'The workshop you are looking for does not exist or has been removed.'}
           </p>
           <button
             onClick={handleBack}
-            className="px-8 py-4 bg-gradient-to-r from-[#FF4D00] to-[#FF6020] text-white font-bold rounded-lg hover:shadow-lg hover:shadow-[#FF4D00]/50 transition-all duration-300 transform hover:scale-105"
+            className="px-8 py-4 bg-gradient-to-r from-[#33ABB9] to-[#184344] text-white font-bold rounded-lg hover:shadow-lg hover:shadow-[#33ABB9]/50 transition-all duration-300 transform hover:scale-105"
           >
-            Back to Events
+            Back to Workshops
           </button>
         </div>
       </div>
     );
   }
 
-  const eventStatus = getEventStatus(event);
-  const daysRemaining = getDaysRemaining(event.registrationDeadline);
+  const formatWorkshopDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  const getDaysRemainingWorkshop = (deadline: string) => {
+    const today = new Date();
+    const deadlineDate = new Date(deadline);
+    const diffTime = deadlineDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
+  };
+
+  const daysRemaining = getDaysRemainingWorkshop(workshop.registrationDeadline);
 
   return (
     <motion.div
@@ -154,7 +215,7 @@ export default function EventDetailPage() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-[#030303] text-white overflow-x-hidden selection:bg-[#FF4D00] selection:text-white font-rajdhani tracking-wide relative"
+      className="min-h-screen bg-[#030303] text-white overflow-x-hidden selection:bg-[#33ABB9] selection:text-white font-rajdhani tracking-wide relative"
     >
       {/* Background 3D Scene - Reduced opacity */}
       <div className="fixed inset-0 z-0 opacity-20 pointer-events-none mix-blend-screen">
@@ -165,8 +226,8 @@ export default function EventDetailPage() {
       <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(0, 240, 255, 0.4) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 240, 255, 0.4) 1px, transparent 1px)
+            linear-gradient(rgba(51, 171, 185, 0.4) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(51, 171, 185, 0.4) 1px, transparent 1px)
           `,
           backgroundSize: '40px 40px',
           maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
@@ -174,27 +235,29 @@ export default function EventDetailPage() {
       />
 
       <div className="relative z-10">
-        {/* Event Header */}
+        {/* Workshop Header */}
         <section className="max-w-7xl mx-auto px-4 pt-16 pb-12">
           <EventsHeader
-            eventName={event.name}
-            eventType={event.type}
-            eventStatus={eventStatus}
+            eventName={workshop.name}
+            eventType="workshop"
+            isTeamEvent={false}
+            eventStatus={getWorkshopStatus(workshop)}
             breadcrumbType="WORKSHOPS"
           />
-          {/* Event Image - Holographic Border */}
-            {event.eventPhoto && (
+          {/* Workshop Image - Holographic Border */}
+            {workshop.workshopPhoto && (
               <div className="relative w-full mb-12">
                 <WorkshopEventCard
                   showExploreButton={false}
                   slug="#"
-                  title={event.name}
-                  date={event.eventDate ? (() => { 
-                    const d = new Date(event.eventDate); 
+                  title={workshop.name}
+                  aboutEvent={workshop.aboutWorkshop?.substring(0, 150) + "..." || ""}
+                  date={workshop.workshopDate ? (() => { 
+                    const d = new Date(workshop.workshopDate); 
                     return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}${d.getDate() % 10 === 1 && d.getDate() !== 11 ? 'st' : d.getDate() % 10 === 2 && d.getDate() !== 12 ? 'nd' : d.getDate() % 10 === 3 && d.getDate() !== 13 ? 'rd' : 'th'}`; 
                   })() : 'Coming Soon'}
-                  entryFee={`₹${event.entryFee.toLocaleString()}`}
-                  image={event.eventPhoto}
+                  prize={workshop.entryFee === 0 ? 'Free' : `₹${workshop.entryFee}`}
+                  image={workshop.workshopPhoto}
                 />
               </div>
             )}
@@ -206,48 +269,86 @@ export default function EventDetailPage() {
             <InfoCard
               icon={Calendar}
               label="DEADLINE"
-              value={event.registrationDeadline ? formatDate(event.registrationDeadline ) : 'TBA'}
+              value={workshop.registrationDeadline ? formatWorkshopDate(workshop.registrationDeadline) : 'TBA'}
               sub={daysRemaining > 0 ? `${daysRemaining} DAYS LEFT` : null}
-              color="text-[#00F0FF]"
+              color="text-[#33ABB9]"
               delay={0.3}
             />
             <InfoCard
               icon={MapPin}
               label="VENUE"
-              value={event.venue || 'TBA'}
-              color="text-[#FF4D00]"
+              value={workshop.venue || 'TBA'}
+              color="text-[#E8823A]"
               delay={0.4}
             />
             <InfoCard
-              icon={Trophy}
-              label="FEES"
-              value={event.entryFee === 0 ? 'FREE_ENTRY' : `₹${event.entryFee}`}
-              color="text-[#FF4D00]"
-              delay={0.6}
+              icon={Users}
+              label="PARTICIPANTS"
+              value={`${workshop.registeredCount}/${workshop.maxParticipants}`}
+              sub="REGISTERED"
+              color="text-[#33ABB9]"
+              delay={0.5}
             />
             <InfoCard
-              icon={Users}
-              label="CERTIFICATES"
-              value="FOR ALL PARTICIPANTS"
-              color="text-[#00F0FF]"
+              icon={Trophy}
+              label="ENTRY FEE"
+              value={workshop.entryFee === 0 ? 'FREE' : `₹${workshop.entryFee}`}
+              color="text-[#E8823A]"
+              delay={0.6}
+            />
+          </div>
+        </section>
+
+        {/* Additional Workshop Info Cards */}
+        <section className="max-w-7xl mx-auto px-4 pb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <InfoCard
+              icon={Clock}
+              label="DURATION"
+              value={workshop.duration}
+              sub={`${workshop.startTime} - ${workshop.endTime}`}
+              color="text-[#33ABB9]"
               delay={0.7}
             />
-            
+            <InfoCard
+              icon={Building}
+              label="INSTRUCTOR"
+              value={workshop.instructor.name}
+              sub={workshop.instructor.company}
+              color="text-[#E8823A]"
+              delay={0.8}
+            />
+            <InfoCard
+              icon={Calendar}
+              label="WORKSHOP DATE"
+              value={formatWorkshopDate(workshop.workshopDate)}
+              color="text-[#33ABB9]"
+              delay={0.9}
+            />
           </div>
         </section>
 
         {/* Tabbed Navigation - Terminal Style */}
         <EventTabs
-          aboutEvent={event.aboutEvent}
-          contact={event.contact}
-          whatsappGrpLink={event.whatsappGrpLink}
+          aboutEvent={workshop.aboutWorkshop}
+          isTeamEvent={false}
+          minTeamSize={1}
+          maxTeamSize={1}
+          rules={workshop.prerequisites}
+          contact={workshop.contact}
+          whatsappGrpLink={workshop.whatsappGrpLink}
         />
 
         {/* Registration CTA */}
-        <RegistrationCTA
-          eventStatus={eventStatus}
-          registrationDeadline={event.registrationDeadline}
-          unstopLink={event.unstopLink}
+        <WorkshopRegistrationCTA
+          workshopId={workshop._id}
+          workshopName={workshop.name}
+          registeredCount={workshop.registeredCount}
+          maxParticipants={workshop.maxParticipants}
+          isRegistrationOpen={workshop.isRegistrationOpen}
+          stopRegistration={workshop.stopRegistration}
+          registrationDeadline={workshop.registrationDeadline}
+          isSvnitian={isSvnitian}
           formatDate={formatDate}
         />
       </div>

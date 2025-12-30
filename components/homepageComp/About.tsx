@@ -8,7 +8,7 @@ const About = () => {
     <>
       {/* Hero Section - Elite Opportunities */}
       <section className="relative min-h-[55vh] md:min-h-[85vh] w-full bg-black z-10 flex items-center justify-center overflow-hidden py-20">
-        <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-[#020205] to-transparent pointer-events-none z-0" />
+        <div className="absolute top-0 left-0 right-0 h-28 bg-linear-to-b from-[#020205] to-transparent pointer-events-none z-0" />
 
         {/* Decorative Grid Pattern - Hidden on small mobile */}
         <div className="absolute bottom-8 right-4 md:right-15 opacity-40 md:opacity-100">
@@ -51,7 +51,7 @@ const About = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="absolute bottom-10 left-6 md:left-32 max-w-[280px] md:max-w-md text-gray-400 text-[10px] md:text-sm tracking-wide leading-relaxed uppercase"
+          className="absolute bottom-10 left-6 md:left-32 max-w-70 md:max-w-md text-gray-400 text-[10px] md:text-sm tracking-wide leading-relaxed uppercase"
           style={{ fontFamily: "Space Grotesk, sans-serif" }}
         >
           WHERE CUTTING-EDGE INNOVATION MEETS THE VISION OF TOMORROW. WE EXPLORE
@@ -77,9 +77,9 @@ const About = () => {
         >
           <div className="max-w-xl">
             <h3 className="text-white text-5xl md:text-7xl font-black mb-4 tracking-wide uppercase" style={{ fontFamily: "Barlow Condensed, sans-serif" }}>
-              ABOUT <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">MINDBEND</span>
+              ABOUT <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-300">MINDBEND</span>
             </h3>
-            <div className="h-[2px] w-32 md:w-64 bg-gradient-to-r from-cyan-500 to-transparent mb-8 md:mb-12"></div>
+            <div className="h-0.5 w-32 md:w-64 bg-linear-to-r from-cyan-500 to-transparent mb-8 md:mb-12"></div>
 
             <p className="text-gray-200 text-md md:text-xl leading-relaxed font-light" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
               Mindbend is Gujarat's <span className="text-cyan-300 font-semibold">Techno-Managerial festival</span>, hosted annually by SVNIT, Surat. It stands as a grand stage where intelligence meets innovation.

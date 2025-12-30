@@ -40,7 +40,7 @@ const Testimonials = () => {
         >
           <h3 className="text-white text-4xl md:text-6xl font-black tracking-wider">
             INSPIRING WORDS FOR{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-300">
               MINDBEND
             </span>
           </h3>
@@ -57,9 +57,9 @@ const Testimonials = () => {
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-start"
             >
               {/* Profile Image */}
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-cyan-500/30 shadow-[0_0_20px_rgba(0,255,255,0.3)]">
-                  <div className="w-full h-full bg-gradient-to-br from-blue-900 to-cyan-900 flex items-center justify-center">
+                  <div className="w-full h-full bg-linear-to-br from-blue-900 to-cyan-900 flex items-center justify-center">
                     <span className="text-white text-4xl font-bold">
                       {testimonial.name.split(' ')[testimonial.name.split(' ').length - 1][0]}
                     </span>

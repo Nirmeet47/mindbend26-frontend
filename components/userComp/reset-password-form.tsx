@@ -41,7 +41,7 @@ export default function ResetPasswordForm({ isOpen, onClose }: ResetPasswordForm
           onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
           className="w-full px-4 py-2 bg-slate-900/60 border border-cyan-500/40 text-white placeholder-cyan-300/50 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all text-sm"
         />
-        <button className="w-full py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold uppercase tracking-[0.15em] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] text-sm mt-4">
+        <button className="w-full py-2 bg-linear-to-r from-cyan-600 to-blue-600 text-white font-bold uppercase tracking-[0.15em] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] text-sm mt-4">
           Update Password
         </button>
       </div>

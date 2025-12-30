@@ -32,3 +32,10 @@ export function getEventStatus(event: Event): EventStatus {
   
   return 'OPEN';
 }
+
+// Get workshop status - simple check for stopRegistration only
+export function getWorkshopStatus(workshop: any): EventStatus {
+  if (workshop.hideWorkshop) return 'HIDDEN';
+  if (workshop.stopRegistration) return 'CLOSED';
+  return 'OPEN';
+}

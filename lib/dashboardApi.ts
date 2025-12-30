@@ -36,6 +36,10 @@ export const teamsApi = {
   leaveTeam: (teamId: string) => api.post(`/teams/${teamId}/leave`),
   regenerateInvite: (teamId: string) =>
     api.post(`/teams/${teamId}/regenerate-invite`),
+  listAdmin: (payload: { page?: number; limit?: number; filter?: any; sortBy?: any } = { page: 1, limit: 20 }) =>
+    api.post("/teams/admin/all", payload),
+  updateStatus: (id: string, isActive: boolean) =>
+    api.put(`/teams/${id}/status`, { isActive }),
 };
 
 export const securityApi = {
@@ -43,6 +47,27 @@ export const securityApi = {
   blockIp: (ip: string, reason?: string) =>
     api.post("/security/block-ip", { ip, reason }),
   unblockIp: (ip: string) => api.post("/security/unblock-ip", { ip }),
+};
+
+export const workshopsApi = {
+  listAdmin: () => api.get("/workshops/admin/all"),
+  getAdmin: (id: string) => api.get(`/workshops/admin/${id}`),
+  create: (body: any) => api.post("/workshops", body),
+  update: (id: string, body: any) => {
+    // Check if body is FormData, if so, use multipart headers
+    if (body instanceof FormData) {
+      return api.put(`/workshops/${id}`, body, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    } else {
+      return api.put(`/workshops/${id}`, body);
+    }
+  },
+  toggleVisibility: (id: string) =>
+    api.patch(`/workshops/${id}/toggle-visibility`),
+  toggleRegistration: (id: string) =>
+    api.patch(`/workshops/${id}/toggle-registration`),
+  delete: (id: string) => api.delete(`/workshops/${id}`),
 };
 
 export const getCounts = async () => {
