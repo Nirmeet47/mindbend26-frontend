@@ -278,7 +278,7 @@ export default function WorkshopDetailPage() {
               icon={MapPin}
               label="VENUE"
               value={workshop.venue || 'TBA'}
-              color="text-[#E8823A]"
+              color="text-[#33ABB9]"
               delay={0.4}
             />
             <InfoCard
@@ -293,7 +293,7 @@ export default function WorkshopDetailPage() {
               icon={Trophy}
               label="ENTRY FEE"
               value={workshop.entryFee === 0 ? 'FREE' : `₹${workshop.entryFee}`}
-              color="text-[#E8823A]"
+              color="text-[#33ABB9]"
               delay={0.6}
             />
           </div>
@@ -315,7 +315,7 @@ export default function WorkshopDetailPage() {
               label="INSTRUCTOR"
               value={workshop.instructor.name}
               sub={workshop.instructor.company}
-              color="text-[#E8823A]"
+              color="text-[#33ABB9]"
               delay={0.8}
             />
             <InfoCard
@@ -341,7 +341,7 @@ export default function WorkshopDetailPage() {
 
         {/* Registration CTA */}
         <WorkshopRegistrationCTA
-          workshopId={workshop._id}
+          workshopSlug={workshop.slug}
           workshopName={workshop.name}
           registeredCount={workshop.registeredCount}
           maxParticipants={workshop.maxParticipants}

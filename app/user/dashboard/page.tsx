@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import { User, Calendar, Users, Home } from "lucide-react"
 import api from "../../../lib/api"
 import { useRouter } from "next/navigation"
+import { motion } from "framer-motion"
+import dynamic from "next/dynamic"
 import ProfileHeader from "../../../components/userComp/profile-header"
 import { useMemo } from "react"
 import ResetPasswordForm from "../../../components/userComp/reset-password-form"
@@ -13,6 +15,11 @@ import TeamsTab from "../../../components/userComp/teams-tab"
 import AccommodationTab from "../../../components/userComp/accommodation-tab"
 import PersonalDetailsCard from "@/components/userComp/personal-details-card"
 import AcademicDetailsCard from "@/components/userComp/academic-details-card"
+
+// Lazy load the background scene
+const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScene'), {
+  ssr: false,
+})
 
 type EventType = "technical" | "managerial"
 
@@ -117,8 +124,32 @@ export default function ProfilePage() {
   }, [userData])
 
   return (
-    <div className="min-h-screen bg-black py-12 px-4">
-      <div className="max-w-6xl mx-auto">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-[#030303] text-white overflow-x-hidden selection:bg-[#33ABB9] selection:text-white font-rajdhani tracking-wide relative"
+    >
+      {/* Background 3D Scene - Reduced opacity */}
+      <div className="fixed inset-0 z-0 opacity-20 pointer-events-none mix-blend-screen">
+        <BackgroundScene />
+      </div>
+
+      {/* Cyberpunk Grid Overlay */}
+      <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(51, 171, 185, 0.4) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(51, 171, 185, 0.4) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px',
+          maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
+        }}
+      />
+
+      <div className="relative z-10 py-12 px-4">
+        <div className="max-w-6xl mx-auto">
         {/* Header with User Info */}
         <ProfileHeader
           userData={userData}
@@ -165,8 +196,14 @@ export default function ProfilePage() {
 
         {/* Prompt to complete profile if not complete */}
         {!isProfileComplete && (
-          <div className="bg-yellow-900/80 border-l-4 border-yellow-400 text-yellow-200 p-4 mb-6 rounded">
-            Please complete your profile by filling in your college name, year of study, and contact number.
+          <div className="relative mb-6">
+            <div className="absolute inset-0 bg-[#E8823A]/10 border border-[#E8823A]/30" />
+            <div className="absolute top-0 left-1 w-4 h-4 border-t-2 border-l-2 border-[#E8823A]" />
+            <div className="absolute bottom-0 right-1 w-4 h-4 border-b-2 border-r-2 border-[#E8823A]" />
+            <div className="relative p-4 text-[#E8823A]">
+              <span className="text-[10px] font-mono tracking-widest uppercase block mb-1">[ SYSTEM ALERT ]</span>
+              Please complete your profile by filling in your college name, year of study, and contact number.
+            </div>
           </div>
         )}
 
@@ -176,7 +213,7 @@ export default function ProfilePage() {
         )}
 
         {/* Navigation Tabs */}
-        <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
+        <div className="flex gap-2 mb-8 overflow-x-auto pb-2 border-b border-white/10">
           {[
             { id: "overview", label: "Overview", icon: User },
             { id: "events", label: "Registered Events", icon: Calendar },
@@ -189,12 +226,15 @@ export default function ProfilePage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-3 font-bold uppercase tracking-widest text-sm whitespace-nowrap transition-all border-b-2 ${
+                className={`flex items-center gap-2 px-6 py-3 font-bold uppercase tracking-widest text-sm whitespace-nowrap transition-all relative ${
                   activeTab === tab.id
-                    ? "border-cyan-400 text-cyan-300 bg-cyan-600/10"
-                    : "border-transparent text-cyan-300/60 hover:text-cyan-300 hover:border-cyan-500/40"
+                    ? "text-[#33ABB9] bg-[#33ABB9]/10"
+                    : "text-gray-400 hover:text-[#33ABB9] hover:bg-white/5"
                 }`}
               >
+                {activeTab === tab.id && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#33ABB9]" />
+                )}
                 <Icon size={18} />
                 {tab.label}
               </button>
@@ -256,6 +296,7 @@ export default function ProfilePage() {
           {activeTab === "accommodation" && <AccommodationTab accommodations={accommodations} />}
         </div>
       </div>
-    </div>
+      </div>
+    </motion.div>
   )
 }

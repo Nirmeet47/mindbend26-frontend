@@ -3,9 +3,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { workshopsRegistrationApi } from '@/lib/workshopsApi';
+import { showSuccessToast, showErrorToast, toastMessages } from '@/utils/toast';
 
 interface WorkshopRegistrationCTAProps {
-  workshopId: string;
+  workshopSlug: string;
   workshopName: string;
   registeredCount: number;
   maxParticipants: number;
@@ -17,7 +18,7 @@ interface WorkshopRegistrationCTAProps {
 }
 
 const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
-  workshopId,
+  workshopSlug,
   workshopName,
   registeredCount,
   maxParticipants,
@@ -33,11 +34,11 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   const [isRegistered, setIsRegistered] = useState(false);
   const [unregLoading, setUnregLoading] = useState(false);
 
-  // Check if user is already registered (you might want to fetch this on component mount)
+  // Check if user is already registered
   const checkRegistrationStatus = async () => {
     try {
-      const isUserRegistered = await workshopsRegistrationApi.checkWorkshopRegistration(workshopId);
-      setIsRegistered(isUserRegistered);
+      const response = await workshopsRegistrationApi.checkWorkshopRegistration(workshopSlug);
+      setIsRegistered(response.data?.data?.isRegistered || false);
     } catch (error) {
       console.error('Error checking registration status:', error);
     }
@@ -46,17 +47,20 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   // Call this when component mounts
   React.useEffect(() => {
     checkRegistrationStatus();
-  }, [workshopId]);
+  }, [workshopSlug]);
 
   const handleRegister = async () => {
     setRegLoading(true);
     setRegError(null);
     try {
-      await workshopsRegistrationApi.registerForWorkshop(workshopId);
+      await workshopsRegistrationApi.registerForWorkshop(workshopSlug);
       setRegSuccess(true);
       setIsRegistered(true);
+      showSuccessToast(toastMessages.registration.success(workshopName));
     } catch (err: any) {
-      setRegError(err?.response?.data?.message || err.message || 'Registration failed.');
+      const errorMessage = err?.response?.data?.message || err.message || 'Registration failed.';
+      setRegError(errorMessage);
+      showErrorToast(toastMessages.registration.error(errorMessage));
     } finally {
       setRegLoading(false);
     }
@@ -66,11 +70,14 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
     setUnregLoading(true);
     setRegError(null);
     try {
-      await workshopsRegistrationApi.unregisterFromWorkshop(workshopId);
+      await workshopsRegistrationApi.unregisterFromWorkshop(workshopSlug);
       setIsRegistered(false);
       setRegSuccess(false);
+      showSuccessToast(toastMessages.unregistration.success(workshopName));
     } catch (err: any) {
-      setRegError(err?.response?.data?.message || err.message || 'Unregistration failed.');
+      const errorMessage = err?.response?.data?.message || err.message || 'Unregistration failed.';
+      setRegError(errorMessage);
+      showErrorToast(toastMessages.unregistration.error(errorMessage));
     } finally {
       setUnregLoading(false);
     }
@@ -89,46 +96,14 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
         <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]" />
 
         {/* Background pulse */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#33ABB9]/5 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-r from-transparent via-[#33ABB9]/5 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
 
-        <h3 className="text-4xl md:text-6xl font-black uppercase mb-8 font-orbitron tracking-tighter">
+        <h3 className="text-4xl md:text-6xl font-black uppercase mb-12 font-orbitron tracking-tighter">
           Ready to <span className="text-[#33ABB9] inline-block transform hover:skew-x-12 transition-transform">Learn?</span>
         </h3>
 
-        {/* Workshop capacity info */}
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-4 px-6 py-3 bg-[#33ABB9]/10 border border-[#33ABB9]/30 rounded-lg">
-            <span className="text-[#33ABB9] font-orbitron font-bold text-lg">
-              {registeredCount}/{maxParticipants} REGISTERED
-            </span>
-            <div className="w-32 h-2 bg-gray-800 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-[#33ABB9] to-cyan-400 transition-all duration-500"
-                style={{ width: `${(registeredCount / maxParticipants) * 100}%` }}
-              />
-            </div>
-          </div>
-        </div>
-
         {isRegOpen ? (
           <div className="space-y-8 relative z-10">
-            {/* Status Messages */}
-            {regSuccess && !isRegistered && (
-              <div className="px-8 py-4 bg-green-600/20 border-2 border-green-500/50 text-green-400 font-bold font-orbitron tracking-wider text-lg rounded-lg mx-auto max-w-md">
-                Unregistered Successfully!
-              </div>
-            )}
-            {regSuccess && isRegistered && (
-              <div className="px-8 py-4 bg-green-600/20 border-2 border-green-500/50 text-green-400 font-bold font-orbitron tracking-wider text-lg rounded-lg mx-auto max-w-md">
-                Registration Successful!
-              </div>
-            )}
-            {regError && (
-              <div className="px-8 py-4 bg-red-600/20 border-2 border-red-500/50 text-red-400 font-bold font-orbitron tracking-wider text-lg rounded-lg mx-auto max-w-md">
-                {regError}
-              </div>
-            )}
-
             <div className="flex flex-wrap items-center justify-center gap-6">
               {/* Registration button for SVNIT students */}
               {isSvnitian ? (
@@ -147,16 +122,32 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                   )}
 
                   {isRegistered && (
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="px-8 py-4 bg-[#33ABB9]/20 border-2 border-[#33ABB9]/50 text-[#33ABB9] font-bold font-orbitron tracking-wider text-lg rounded-lg">
-                        YOU ARE REGISTERED ✓
+                    <div className="flex flex-col items-center gap-6">
+                      <div className="relative px-10 py-4 bg-linear-to-r from-[#33ABB9]/10 to-[#33ABB9]/5 backdrop-blur-xl border border-[#33ABB9]/40 text-[#33ABB9] font-bold font-orbitron tracking-wider text-lg overflow-hidden">
+                        {/* Corner accents */}
+                        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]" />
+                        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]" />
+                        
+                        {/* Glowing background effect */}
+                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-[#33ABB9]/20 to-transparent transform -translate-x-full animate-pulse" />
+                        
+                        <span className="relative z-10">YOU ARE REGISTERED</span>
                       </div>
                       <button
                         onClick={handleUnregister}
                         disabled={unregLoading}
-                        className="px-6 py-2 border-2 border-red-500/50 text-red-400 font-bold font-orbitron tracking-wider text-sm hover:bg-red-500/10 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                        className="group/unregister relative px-8 py-3 bg-linear-to-r from-red-600/20 to-red-500/10 border border-red-500/40 text-red-400 font-bold font-orbitron tracking-wider text-sm hover:from-red-600/30 hover:to-red-500/20 hover:border-red-400/60 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed overflow-hidden"
                       >
-                        {unregLoading ? 'UNREGISTERING...' : 'UNREGISTER'}
+                        {/* Corner accents */}
+                        <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-red-400/60" />
+                        <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-red-400/60" />
+                        
+                        {/* Hover effect */}
+                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-red-400/10 to-transparent transform -translate-x-full group-hover/unregister:translate-x-full transition-transform duration-500" />
+                        
+                        <span className="relative z-10">
+                          {unregLoading ? 'UNREGISTERING...' : 'UNREGISTER'}
+                        </span>
                       </button>
                     </div>
                   )}
