@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { eventTeamApi } from '@/lib/eventTeam';
 import Link from 'next/link';
 import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from '../ui/TechDecorations';
+import { showSuccessToast, showErrorToast, toastMessages } from '@/utils/toast';
 
 interface RegistrationCTAProps {
   eventStatus: EventStatus;
@@ -15,8 +16,10 @@ interface RegistrationCTAProps {
   psLink?: string;
   formatDate: (date: string) => string;
   eventId?: string;
+  eventName?: string;
   isTeamEvent?: boolean;
   isSvnitian?: boolean;
+  eventType?: 'technical' | 'managerial';
 }
 
 const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
@@ -26,8 +29,10 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
   psLink,
   formatDate,
   eventId,
+  eventName = 'this event',
   isTeamEvent,
-  isSvnitian
+  isSvnitian,
+  eventType = 'technical'
 }) => {
   const [regLoading, setRegLoading] = useState(false);
   const [regSuccess, setRegSuccess] = useState(false);
@@ -35,6 +40,10 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
   const [teamName, setTeamName] = useState('');
   const [teamNameTouched, setTeamNameTouched] = useState(false);
   const [showTeamModal, setShowTeamModal] = useState(false);
+
+  // Theme colors based on event type - using cyan for consistency
+  const themeColor = '#33ABB9'; // Always use cyan for consistency
+  const themeColorRgb = '51, 171, 185'; // Always use cyan RGB
 
   const handleRegister = async () => {
     if (!eventId) return;
@@ -49,13 +58,17 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
           return;
         }
         await eventTeamApi.register(eventId, teamName.trim());
+        showSuccessToast(toastMessages.team.created(teamName.trim()));
       } else {
         await eventTeamApi.register(eventId);
+        showSuccessToast(toastMessages.registration.success(eventName));
       }
       setRegSuccess(true);
       setShowTeamModal(false);
     } catch (err: any) {
-      setRegError(err?.response?.data?.message || 'Registration failed.');
+      const errorMessage = err?.response?.data?.message || 'Registration failed.';
+      setRegError(errorMessage);
+      showErrorToast(toastMessages.registration.error(errorMessage));
     } finally {
       setRegLoading(false);
     }
@@ -67,42 +80,35 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
         animate={{ opacity: 1, y: 0 }}
         className="border-y border-white/10 bg-white/5 p-12 md:p-16 text-center relative overflow-hidden group"
       >
-        <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#FF4D00]" />
-        <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#FF4D00]" />
+        <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2" style={{ borderColor: themeColor }} />
+        <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2" style={{ borderColor: themeColor }} />
 
         {/* Background pulse */}
-        <div className="absolute inset-0 bg-linear-to-r from-transparent via-[#FF4D00]/5 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
+        <div 
+          className="absolute inset-0 bg-linear-to-r from-transparent to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none"
+          style={{ 
+            background: `linear-gradient(to right, transparent, rgba(${themeColorRgb}, 0.05), transparent)`
+          }}
+        />
 
-        <h3 className="text-4xl md:text-6xl font-black uppercase mb-8 font-orbitron tracking-tighter">
-          Ready to <span className="text-[#FF4D00] inline-block transform hover:skew-x-12 transition-transform">Dominate?</span>
+        <h3 className="text-4xl md:text-6xl font-black uppercase mb-12 font-orbitron tracking-tighter">
+          Ready to <span className="inline-block transform hover:skew-x-12 transition-transform" style={{ color: themeColor }}>Dominate?</span>
         </h3>
 
         {eventStatus === 'OPEN' ? (
           <div className="space-y-8 relative z-10">
-              {/* Status Messages */}
-              {regSuccess && (
-                <div className="px-8 py-4 bg-green-600/20 border-2 border-green-500/50 text-green-400 font-bold font-orbitron tracking-wider text-lg rounded-lg mx-auto max-w-md">
-                  Registration Successful!
-                </div>
-              )}
-              {regError && (
-                <div className="px-8 py-4 bg-red-600/20 border-2 border-red-500/50 text-red-400 font-bold font-orbitron tracking-wider text-lg rounded-lg mx-auto max-w-md">
-                  {regError}
-                </div>
-              )}
-
               <div className="flex flex-wrap items-center justify-center gap-6">
               {/* Internal registration button */}
               { isSvnitian ? (
                 <>
               {eventId && !regSuccess && (
-                
                   <>
                   {!isTeamEvent && (
                     <button
                       onClick={handleRegister}
                       disabled={regLoading}
-                      className="group/register relative px-8 py-4 bg-[#FF4D00] text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden"
+                      className="group/register relative px-8 py-4 text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden"
+                      style={{ backgroundColor: themeColor }}
                     >
                       <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover/register:translate-x-0 transition-transform duration-300 opacity-30" />
                       <span className="relative z-10 flex items-center gap-2">
@@ -114,7 +120,8 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
                     <button
                       onClick={() => setShowTeamModal(true)}
                       disabled={regLoading}
-                      className="group/register relative px-8 py-4 bg-[#FF4D00] text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="group/register relative px-8 py-4 text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
+                      style={{ backgroundColor: themeColor }}
                     >
                       <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover/register:translate-x-0 transition-transform duration-300 opacity-30" />
                       <span className="relative z-10 flex items-center gap-2">
@@ -123,6 +130,32 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
                     </button>
                   )}
                   </>
+              )}
+
+              {/* Success Display */}
+              {regSuccess && (
+                <div className="relative px-10 py-4 bg-linear-to-r backdrop-blur-xl border text-white font-bold font-orbitron tracking-wider text-lg overflow-hidden"
+                  style={{ 
+                    background: `linear-gradient(to right, rgba(${themeColorRgb}, 0.1), rgba(${themeColorRgb}, 0.05))`,
+                    borderColor: `rgba(${themeColorRgb}, 0.4)`
+                  }}
+                >
+                  {/* Corner accents */}
+                  <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2" style={{ borderColor: themeColor }} />
+                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2" style={{ borderColor: themeColor }} />
+                  
+                  {/* Glowing background effect */}
+                  <div 
+                    className="absolute inset-0 bg-linear-to-r from-transparent to-transparent transform -translate-x-full animate-pulse" 
+                    style={{ 
+                      background: `linear-gradient(to right, transparent, rgba(${themeColorRgb}, 0.2), transparent)`
+                    }}
+                  />
+                  
+                  <span className="relative z-10" style={{ color: themeColor }}>
+                    {isTeamEvent ? `TEAM REGISTERED: ${teamName}` : 'YOU ARE REGISTERED'}
+                  </span>
+                </div>
               )}
               {/* Custom Modal for team name */}
               <AnimatePresence>
@@ -256,7 +289,8 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
                   href={unstopLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group/register relative px-8 py-4 bg-[#FF4D00] text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden"
+                  className="group/register relative px-8 py-4 text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden"
+                  style={{ backgroundColor: themeColor }}
                 >
                   <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover/register:translate-x-0 transition-transform duration-300 opacity-30" />
                   <span className="relative z-10 flex items-center gap-2">

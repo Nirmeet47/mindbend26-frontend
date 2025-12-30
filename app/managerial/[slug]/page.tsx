@@ -308,8 +308,10 @@ export default function EventDetailPage() {
             psLink={event.psLink}
             formatDate={formatDate}
             eventId={event._id}
+            eventName={event.name}
             isTeamEvent={event.isTeamEvent}
             isSvnitian={isSvnitian}
+            eventType="managerial"
           />
         )}
       </div>
