@@ -118,7 +118,7 @@ const WorkshopEventCard: React.FC<EventCardProps> = ({ showExploreButton = true,
                 <div className="flex items-end justify-between mt-auto">
                     <div className="flex flex-col">
                         <span className="text-[9px] uppercase tracking-widest text-[#33ABB9] mb-1">Entry Fee</span>
-                        <span className="text-lg font-bold text-[#E8823A] font-mono">{prize}</span>
+                        <span className="text-lg font-bold text-[#33ABB9] font-mono">{prize}</span>
                     </div>
 
                     {showExploreButton &&

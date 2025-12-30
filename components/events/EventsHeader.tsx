@@ -41,14 +41,14 @@ function EventsHeader({ eventName, eventType, isTeamEvent, eventStatus, breadcru
         </div>
 
         {/* Event Title */}
-        <div className="relative mb-16 p-8 border-l-2 border-[#FF4D00] bg-linear-to-r from-[#FF4D00]/5 to-transparent">
+        <div className="relative mb-16 p-8 border-l-2 border-[#33ABB9] bg-linear-to-r from-[#33ABB9]/5 to-transparent">
           {/* Decorative artifacts */}
-          <div className="absolute -left-[5px] -top-[5px] w-2 h-2 bg-[#FF4D00]" />
+          <div className="absolute -left-[5px] -top-[5px] w-2 h-2 bg-[#33ABB9]" />
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10">
             <div>
               <h1 className="text-5xl md:text-5xl lg:text-7xl font-black font-orbitron uppercase tracking-tighter leading-none text-white mb-4"
-                style={{ textShadow: '0 0 20px rgba(255, 77, 0, 0.3)' }}>
+                style={{ textShadow: '0 0 20px rgba(51, 171, 185, 0.3)' }}>
                 {eventName}
               </h1>
                 <p className="text-lg md:text-xl text-gray-400 font-rajdhani uppercase tracking-widest flex items-center gap-3">
