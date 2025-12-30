@@ -279,139 +279,149 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`p-6 border-2 border-cyan-500/60 bg-slate-950/80 backdrop-blur-sm transition-all flex flex-col ${
+            className={`relative group transition-all flex flex-col ${
               currentMember?.status?.toLowerCase() !== 'left' 
-                ? 'cursor-pointer hover:border-cyan-400' 
+                ? 'cursor-pointer' 
                 : 'opacity-60 cursor-not-allowed'
             }`}
-            style={{
-              clipPath: "polygon(0 0, 98% 0, 100% 2%, 100% 98%, 98% 100%, 0 100%, 0 98%, 0 2%)"
-            }}
             onClick={() => { if (currentMember?.status?.toLowerCase() !== 'left') setShowModal(true); }}
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex-1">
-                <h4 className="text-white font-bold text-lg mb-2">{isTeamEvent ? team.name : 'Solo Registration'}</h4>
-                <div className="flex gap-4 text-cyan-300/70 text-sm">
-                  <span className="text-cyan-400">{team.eventId.name}</span>
-                  {currentMember?.status !== 'left' && isTeamEvent && (
+            {/* Background Shape */}
+            <div className={`absolute inset-0 bg-white/5 border border-white/10 transition-all ${
+              currentMember?.status?.toLowerCase() !== 'left' 
+                ? 'group-hover:border-[#33ABB9]/30 group-hover:bg-[#33ABB9]/5' 
+                : ''
+            }`} />
+            
+            {/* Corner Accents */}
+            <div className="absolute top-0 left-1 w-4 h-4 border-t-2 border-l-2 border-[#33ABB9]" />
+            <div className="absolute bottom-0 right-1 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]" />
+
+            <div className="relative p-6 z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex-1">
+                  <h4 className="text-white font-bold text-lg mb-2 group-hover:text-[#33ABB9] transition-colors">{isTeamEvent ? team.name : 'Solo Registration'}</h4>
+                  <div className="flex gap-4 text-gray-400 text-sm">
+                    <span className="text-[#33ABB9] font-mono text-xs uppercase">{team.eventId.name}</span>
+                    {currentMember?.status !== 'left' && isTeamEvent && (
+                      <>
+                        <span className="text-gray-600">•</span>
+                        <span className="font-mono text-xs">{activeMembers.length} Active</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Status Badges */}
+                <div className="flex items-center gap-3">
+                  {isPending ? (
                     <>
-                      <span>•</span>
-                      <span>{activeMembers.length} Active</span>
+                      <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest font-mono bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                        Pending
+                      </span>
+                      {onAcceptRejectInvite && (
+                        <div className="flex gap-2">
+                          <button
+                            className="px-3 py-1 border border-green-500/30 bg-green-500/10 text-green-400 text-[10px] font-bold uppercase hover:bg-green-500/20 transition-all"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onAcceptRejectInvite(team._id, 'accept');
+                            }}
+                          >
+                            Accept
+                          </button>
+                          <button
+                            className="px-3 py-1 border border-red-500/30 bg-red-500/10 text-red-400 text-[10px] font-bold uppercase hover:bg-red-500/20 transition-all"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onAcceptRejectInvite(team._id, 'reject');
+                            }}
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      )}
                     </>
+                  ) : (
+                    <>
+                      {currentMember?.status?.toLowerCase() === "left" ? (
+                        <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest font-mono bg-red-500/20 text-red-400 border border-red-500/30">
+                          Left
+                        </span>
+                      ) : (
+                        <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest font-mono bg-green-500/20 text-green-400 border border-green-500/30">
+                          Active
+                        </span>
+                      )}
+                    </>
+                  )}
+                  {isLeader && (
+                    <div className="flex items-center gap-1 px-3 py-1 bg-[#E8823A]/20 border border-[#E8823A]/30">
+                      <Crown className="w-3 h-3 text-[#E8823A]" />
+                      <span className="text-xs font-bold text-[#E8823A] uppercase">Leader</span>
+                    </div>
+                  )}
+                  {currentMember?.status?.toLowerCase() !== 'left' && (
+                    <ChevronRight className="text-[#33ABB9] group-hover:translate-x-1 transition-transform" size={20} />
                   )}
                 </div>
               </div>
 
-              {/* Status Badges */}
-              <div className="flex items-center gap-3">
-                {isPending ? (
-                  <>
-                    <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest bg-yellow-600/30 text-yellow-300 border border-yellow-500/60">
-                      Pending
-                    </span>
-                    {onAcceptRejectInvite && (
-                      <div className="flex gap-2">
-                        <button
-                          className="px-3 py-1 border border-green-500/50 bg-green-500/10 text-green-300 text-[10px] font-bold uppercase hover:bg-green-500/20 transition-all"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onAcceptRejectInvite(team._id, 'accept');
-                          }}
-                        >
-                          Accept
-                        </button>
-                        <button
-                          className="px-3 py-1 border border-red-500/50 bg-red-500/10 text-red-300 text-[10px] font-bold uppercase hover:bg-red-500/20 transition-all"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onAcceptRejectInvite(team._id, 'reject');
-                          }}
-                        >
-                          Reject
-                        </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {currentMember?.status?.toLowerCase() === "left" ? (
-                      <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest bg-red-700/30 text-red-300 border border-red-600/60">
-                        Left
-                      </span>
-                    ) : (
-                      <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest bg-green-600/30 text-green-300 border border-green-500/60">
-                        Active
-                      </span>
-                    )}
-                  </>
-                )}
-                {isLeader && (
-                  <div className="flex items-center gap-1 px-3 py-1 bg-[#E8823A]/20 border border-[#E8823A]/50">
-                    <Crown className="w-3 h-3 text-[#E8823A]" />
-                    <span className="text-xs font-bold text-[#E8823A] uppercase">Leader</span>
-                  </div>
-                )}
-                {currentMember?.status?.toLowerCase() !== 'left' && (
-                  <ChevronRight className="text-cyan-400" size={20} />
-                )}
-              </div>
-            </div>
-
-            {/* Invite UI for leader */}
-            {isLeader && isTeamEvent && (team?.currentSize ?? 0) < (team?.maxSize ?? 0) && (
-              <div className="mt-4 pt-4 border-t border-cyan-500/30">
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <input
-                    type="email"
-                    className="flex-1 px-3 py-2 border border-cyan-500/30 bg-black/50 text-cyan-300 text-sm focus:outline-none focus:border-cyan-400 transition-colors"
-                    placeholder="invite@email.com"
-                    value={inviteEmail}
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      setInviteEmail(e.target.value);
-                      setInviteStatus(null);
-                      setInviteError(null);
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                    disabled={inviteLoading}
-                  />
-                  <button
-                    className="px-5 py-2 bg-cyan-600/30 hover:bg-cyan-600/40 border border-cyan-500/60 text-cyan-300 font-bold tracking-wider uppercase transition-all disabled:opacity-50 text-sm"
-                    disabled={inviteLoading || !inviteEmail}
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      setInviteLoading(true);
-                      setInviteStatus(null);
-                      setInviteError(null);
-                      try {
-                        await eventTeamApi.inviteMemberByEmail(team._id, inviteEmail);
-                        setInviteStatus("Invite sent!");
-                        setInviteEmail("");
-                        setTimeout(() => setInviteStatus(null), 3000);
-                      } catch (err: any) {
-                        setInviteError(err?.response?.data?.message || "Failed to send invite");
-                        setTimeout(() => setInviteError(null), 3000);
-                      } finally {
-                        setInviteLoading(false);
-                      }
-                    }}
-                  >
+              {/* Invite UI for leader */}
+              {isLeader && isTeamEvent && (team?.currentSize ?? 0) < (team?.maxSize ?? 0) && (
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="email"
+                      className="flex-1 px-3 py-2 border border-white/10 bg-white/5 text-white text-sm focus:outline-none focus:border-[#33ABB9]/50 transition-colors placeholder-gray-500"
+                      placeholder="invite@email.com"
+                      value={inviteEmail}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        setInviteEmail(e.target.value);
+                        setInviteStatus(null);
+                        setInviteError(null);
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      disabled={inviteLoading}
+                    />
+                    <button
+                      className="px-5 py-2 bg-[#33ABB9]/20 hover:bg-[#33ABB9]/30 border border-[#33ABB9]/30 text-[#33ABB9] font-bold tracking-wider uppercase transition-all disabled:opacity-50 text-sm"
+                      disabled={inviteLoading || !inviteEmail}
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        setInviteLoading(true);
+                        setInviteStatus(null);
+                        setInviteError(null);
+                        try {
+                          await eventTeamApi.inviteMemberByEmail(team._id, inviteEmail);
+                          setInviteStatus("Invite sent!");
+                          setInviteEmail("");
+                          setTimeout(() => setInviteStatus(null), 3000);
+                        } catch (err: any) {
+                          setInviteError(err?.response?.data?.message || "Failed to send invite");
+                          setTimeout(() => setInviteError(null), 3000);
+                        } finally {
+                          setInviteLoading(false);
+                        }
+                      }}
+                    >
                     {inviteLoading ? "Sending..." : "Invite"}
-                  </button>
+                    </button>
+                  </div>
+                  {inviteStatus && (
+                    <div className="mt-2 text-green-400 text-xs bg-green-500/10 border border-green-500/30 px-3 py-1">
+                      {inviteStatus}
+                    </div>
+                  )}
+                  {inviteError && (
+                    <div className="mt-2 text-red-400 text-xs bg-red-500/10 border border-red-500/30 px-3 py-1">
+                      {inviteError}
+                    </div>
+                  )}
                 </div>
-                {inviteStatus && (
-                  <div className="mt-2 text-green-400 text-xs bg-green-400/10 border border-green-400/30 px-3 py-1">
-                    {inviteStatus}
-                  </div>
-                )}
-                {inviteError && (
-                  <div className="mt-2 text-red-400 text-xs bg-red-400/10 border border-red-400/30 px-3 py-1">
-                    {inviteError}
-                  </div>
-                )}
-              </div>
-            )}
+              )}
+            </div>
           </motion.div>
         )
     }
