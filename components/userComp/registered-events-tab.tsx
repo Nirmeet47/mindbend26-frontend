@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 type Event = {
-  id: number
+  id: string
   name: string
   category: string
   date: string

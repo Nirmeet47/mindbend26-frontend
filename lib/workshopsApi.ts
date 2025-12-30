@@ -39,29 +39,19 @@ export interface MyWorkshopRegistrationsResponse {
 }
 
 export const workshopsRegistrationApi = {
-  // Register for workshop
-  registerForWorkshop: (workshopId: string) => 
-    api.post(`/workshops/${workshopId}/register`),
+  // Register for workshop (using slug instead of ID)
+  registerForWorkshop: (workshopSlug: string) => 
+    api.post(`/workshops/${workshopSlug}/register`),
 
-  // Unregister from workshop
-  unregisterFromWorkshop: (workshopId: string) => 
-    api.delete(`/workshops/${workshopId}/unregister`),
+  // Unregister from workshop (using slug instead of ID)
+  unregisterFromWorkshop: (workshopSlug: string) => 
+    api.delete(`/workshops/${workshopSlug}/unregister`),
+
+  // Check workshop registration status directly
+  checkWorkshopRegistration: (workshopSlug: string) => 
+    api.get(`/workshops/${workshopSlug}/check-registration`),
 
   // Get user's workshop registrations
   getMyWorkshopRegistrations: () => 
     api.get('/workshops/my-registrations'),
-
-  // Check if user is registered for a workshop
-  checkWorkshopRegistration: async (workshopId: string): Promise<boolean> => {
-    try {
-      const response = await workshopsRegistrationApi.getMyWorkshopRegistrations();
-      if (response.data?.data?.workshops) {
-        return response.data.data.workshops.some((workshop: WorkshopRegistration) => workshop._id === workshopId);
-      }
-      return false;
-    } catch (error) {
-      console.error("Error checking workshop registration:", error);
-      return false;
-    }
-  },
 };

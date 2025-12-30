@@ -6,7 +6,7 @@ import { workshopsRegistrationApi } from '@/lib/workshopsApi';
 import { showSuccessToast, showErrorToast, toastMessages } from '@/utils/toast';
 
 interface WorkshopRegistrationCTAProps {
-  workshopId: string;
+  workshopSlug: string;
   workshopName: string;
   registeredCount: number;
   maxParticipants: number;
@@ -18,7 +18,7 @@ interface WorkshopRegistrationCTAProps {
 }
 
 const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
-  workshopId,
+  workshopSlug,
   workshopName,
   registeredCount,
   maxParticipants,
@@ -34,11 +34,11 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   const [isRegistered, setIsRegistered] = useState(false);
   const [unregLoading, setUnregLoading] = useState(false);
 
-  // Check if user is already registered (you might want to fetch this on component mount)
+  // Check if user is already registered
   const checkRegistrationStatus = async () => {
     try {
-      const isUserRegistered = await workshopsRegistrationApi.checkWorkshopRegistration(workshopId);
-      setIsRegistered(isUserRegistered);
+      const response = await workshopsRegistrationApi.checkWorkshopRegistration(workshopSlug);
+      setIsRegistered(response.data?.data?.isRegistered || false);
     } catch (error) {
       console.error('Error checking registration status:', error);
     }
@@ -47,13 +47,13 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   // Call this when component mounts
   React.useEffect(() => {
     checkRegistrationStatus();
-  }, [workshopId]);
+  }, [workshopSlug]);
 
   const handleRegister = async () => {
     setRegLoading(true);
     setRegError(null);
     try {
-      await workshopsRegistrationApi.registerForWorkshop(workshopId);
+      await workshopsRegistrationApi.registerForWorkshop(workshopSlug);
       setRegSuccess(true);
       setIsRegistered(true);
       showSuccessToast(toastMessages.registration.success(workshopName));
@@ -70,7 +70,7 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
     setUnregLoading(true);
     setRegError(null);
     try {
-      await workshopsRegistrationApi.unregisterFromWorkshop(workshopId);
+      await workshopsRegistrationApi.unregisterFromWorkshop(workshopSlug);
       setIsRegistered(false);
       setRegSuccess(false);
       showSuccessToast(toastMessages.unregistration.success(workshopName));

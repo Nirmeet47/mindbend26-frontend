@@ -341,7 +341,7 @@ export default function WorkshopDetailPage() {
 
         {/* Registration CTA */}
         <WorkshopRegistrationCTA
-          workshopId={workshop._id}
+          workshopSlug={workshop.slug}
           workshopName={workshop.name}
           registeredCount={workshop.registeredCount}
           maxParticipants={workshop.maxParticipants}
