@@ -8,6 +8,7 @@ import EventsSection from "@/components/homepageComp/events";
 import Sponsors from "@/components/homepageComp/Sponsors";
 import Footer from "@/components/homepageComp/Footer";
 import Navbar from "@/components/layoutComp/Navbar";
+import AlternativeHero2 from "@/components/homepageComp/AlternativeHero2";
 
 export default function Page() {
   return (
@@ -20,7 +21,9 @@ export default function Page() {
       {/* Scrollable content */}
       <div className="relative z-10">
         {/* Alternative Hero Section */}
-        <AlternativeHero />
+        {/* <AlternativeHero /> */}
+
+        <AlternativeHero2 />
 
         {/* Hero Section with model and text */}
         {/* <Hero /> */}

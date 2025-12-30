@@ -22,11 +22,11 @@ const About = () => {
             <p>GLOBAL EVENT / 2026 EDITION</p>
           </div>
           
-          <div className="hidden lg:block text-center max-w-xs lowercase italic opacity-60">
+          <div className="hidden lg:block text-center max-w-xs lowercase italic opacity-60" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
             <p>where tradition fuels progress, shaping a sustainable and dynamic future.</p>
           </div>
 
-          <div className="text-right font-light text-sm md:text-xl">
+          <div className="text-right font-light text-sm md:text-xl" style={{ fontFamily: "Space Grotesk, sans-serif" }}>
             31ST EDITION
           </div>
         </div>
