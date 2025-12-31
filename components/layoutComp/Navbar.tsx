@@ -62,17 +62,6 @@ export default function Navbar() {
 
   const menuData = [
     {
-      title: "About",
-      isHyperlink: false,
-      items: [
-        { label: "HISTORY", id: "1.1", href: "/history" },
-        { label: "THEME", id: "1.2", href: "/theme" },
-        { label: "COMMITTEE", id: "1.3", href: "/committee" },
-        { label: "MEDIA", id: "1.4", href: "/media" },
-        { label: "TESTIMONIALS", id: "1.5", href: "/testimonials" },
-      ],
-    },
-    {
       title: "Events",
       isHyperlink: false,
       items: [
