@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect, useMemo, useRef } from "react";
+import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
@@ -56,6 +56,141 @@ const DroneModel = ({ tiltDirection }: { tiltDirection: number }) => {
 /* ===================== HERO SECTION ===================== */
 
 const AlternativeHero: React.FC = () => {
+  const [screenSize, setScreenSize] = useState<"mobile" | "tablet" | "desktop">(
+    "desktop"
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setScreenSize("mobile");
+      } else if (width < 1024) {
+        setScreenSize("tablet");
+      } else {
+        setScreenSize("desktop");
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Drone configurations based on screen size
+  const getDroneConfigs = () => {
+    if (screenSize === "mobile") {
+      // 2 drones for mobile
+      return [
+        {
+          position: "left",
+          top: "sm:top-40 top-32",
+          left: "sm:left-[10%] left-[5%]",
+          tilt: 1.8,
+          cameraZ: 5.5,
+        },
+        {
+          position: "right",
+          top: "sm:top-40 top-32",
+          right: "sm:right-[10%] right-[5%]",
+          tilt: -1.8,
+          cameraZ: 5.5,
+        },
+      ];
+    } else if (screenSize === "tablet") {
+      // 3 drones for tablet
+      return [
+        {
+          position: "center-top",
+          top: "top-[-5%]",
+          left: "left-[50%] -translate-x-[50%]",
+          tilt: 0,
+          cameraZ: 6,
+        },
+        {
+          position: "left",
+          top: "top-40",
+          left: "left-[12%]",
+          tilt: 1.8,
+          cameraZ: 5.5,
+        },
+        {
+          position: "right",
+          top: "top-40",
+          right: "right-[12%]",
+          tilt: -1.8,
+          cameraZ: 5.5,
+        },
+      ];
+    } else {
+      // 6 drones for desktop (current layout)
+      return [
+        {
+          position: "center-top",
+          top: "top-[-2%]",
+          left: "left-[40%]",
+          tilt: 0,
+          cameraZ: 6,
+        },
+        {
+          position: "left-mid",
+          top: "top-45",
+          left: "left-[15%]",
+          tilt: 1.8,
+          cameraZ: 5.5,
+        },
+        {
+          position: "right-mid",
+          top: "top-45",
+          right: "right-[15%]",
+          tilt: -1.8,
+          cameraZ: 5.5,
+        },
+        {
+          position: "left-corner",
+          top: "top-[-5]",
+          left: "left-[1%]",
+          tilt: 1.6,
+          cameraZ: 6,
+        },
+        {
+          position: "right-corner",
+          top: "top-[-5]",
+          right: "right-[1%]",
+          tilt: -1.6,
+          cameraZ: 6,
+        },
+        {
+          position: "left-bottom",
+          top: "top-15",
+          left: "left-[23%]",
+          tilt: 1.2,
+          cameraZ: 8,
+        },
+        {
+          position: "right-bottom",
+          top: "top-15",
+          right: "right-[23%]",
+          tilt: -1.2,
+          cameraZ: 8,
+        },
+      ];
+    }
+  };
+
+  const droneConfigs = getDroneConfigs();
+
+  const DroneCanvas = ({ config }: any) => (
+    <Canvas camera={{ position: [0, 0, config.cameraZ], fov: 50 }}>
+      <ambientLight intensity={1} />
+      <directionalLight position={[5, 5, 5]} intensity={1.5} />
+      <pointLight position={[0, 2, 3]} intensity={0.8} color="#00d9ff" />
+      <Suspense fallback={null}>
+        <DroneModel tiltDirection={config.tilt} />
+      </Suspense>
+    </Canvas>
+  );
+
   return (
     <section className="relative w-full h-screen overflow-hidden pt-50">
       {/* Background */}
@@ -66,84 +201,18 @@ const AlternativeHero: React.FC = () => {
         <div className="absolute inset-0 bg-black/20" />
       </div>
 
-      <div className="absolute top-[-2%] left-[40%] w-80 h-80 z-20 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
-          <ambientLight intensity={1} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} />
-          <pointLight position={[0, 2, 3]} intensity={0.8} color="#00d9ff" />
-          <Suspense fallback={null}>
-            <DroneModel tiltDirection={0} />
-          </Suspense>
-        </Canvas>
-      </div>
-      {/* Left Drone */}
-      <div className="absolute top-45 left-[15%] w-80 h-80 z-20 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 5.5], fov: 50 }}>
-          <ambientLight intensity={1} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} />
-          <pointLight position={[0, 2, 3]} intensity={0.8} color="#00d9ff" />
-          <Suspense fallback={null}>
-            <DroneModel tiltDirection={1.8} />
-          </Suspense>
-        </Canvas>
-      </div>
-      
-      <div className="absolute top-45 right-[15%] w-80 h-80 z-20 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 5.5], fov: 50 }}>
-          <ambientLight intensity={1} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} />
-          <pointLight position={[0, 2, 3]} intensity={0.8} color="#00d9ff" />
-          <Suspense fallback={null}>
-            <DroneModel tiltDirection={-1.8} />
-          </Suspense>
-        </Canvas>
-      </div>
+      {/* Render drones based on screen size */}
+      {droneConfigs.map((config, idx) => (
+        <div
+          key={idx}
+          className={`absolute w-64 h-64 sm:w-80 sm:h-80 z-20 pointer-events-none ${
+            config.top
+          } ${config.left || ""} ${config.right || ""}`}
+        >
+          <DroneCanvas config={config} />
+        </div>
+      ))}
 
-      <div className="absolute top-[-5] left-[1%] w-80 h-80 z-20 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
-          <ambientLight intensity={1} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} />
-          <pointLight position={[0, 2, 3]} intensity={0.8} color="#00d9ff" />
-          <Suspense fallback={null}>
-            <DroneModel tiltDirection={1.6} />
-          </Suspense>
-        </Canvas>
-      </div>
-
-      
-      <div className="absolute top-[-5] right-[1%] w-80 h-80 z-20 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
-          <ambientLight intensity={1} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} />
-          <pointLight position={[0, 2, 3]} intensity={0.8} color="#00d9ff" />
-          <Suspense fallback={null}>
-            <DroneModel tiltDirection={-1.6} />
-          </Suspense>
-        </Canvas>
-      </div>
-
-      <div className="absolute top-15 left-[23%] w-80 h-80 z-20 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
-          <ambientLight intensity={1} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} />
-          <pointLight position={[0, 2, 3]} intensity={0.8} color="#00d9ff" />
-          <Suspense fallback={null}>
-            <DroneModel tiltDirection={1.2} />
-          </Suspense>
-        </Canvas>
-      </div>{" "}
-      <div className="absolute top-15 right-[23%] w-80 h-80 z-20 pointer-events-none">
-        <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
-          <ambientLight intensity={1} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} />
-          <pointLight position={[0, 2, 3]} intensity={0.8} color="#00d9ff" />
-          <Suspense fallback={null}>
-            <DroneModel tiltDirection={-1.2} />
-          </Suspense>
-        </Canvas>
-      </div>
-      {/* Right Drone */}
-      
       {/* Title */}
       <div className="relative z-[-10] text-center">
         <h1

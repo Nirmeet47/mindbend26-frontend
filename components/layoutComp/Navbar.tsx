@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const SCRAMBLE_CHARS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!<>-_\\/[]{}—=+*^?#________";
@@ -59,6 +60,8 @@ const ScrambleText = ({
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   const menuData = [
     {
@@ -96,12 +99,16 @@ export default function Navbar() {
         className="fixed top-0 left-0 w-full z-100 px-6 md:px-10 py-4 md:py-6 flex justify-between items-center mix-blend-difference text-white"
         style={{ fontFamily: "Barlow Condensed, sans-serif" }}
       >
-        <Link
-          href="/"
-          className="text-2xl md:text-3xl font-black tracking-wider hover:scale-110 transition-transform duration-300"
-        >
-          MINDBEND
-        </Link>
+        {isHome ? (
+          <div className="w-24 md:w-32 h-8" />
+        ) : (
+          <Link
+            href="/"
+            className="text-2xl md:text-3xl font-black tracking-wider hover:scale-110 transition-transform duration-300"
+          >
+            MINDBEND
+          </Link>
+        )}
         <div className="flex items-center gap-4 md:gap-10">
           <Link
             href="/login"

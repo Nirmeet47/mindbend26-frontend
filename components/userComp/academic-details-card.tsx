@@ -1,5 +1,8 @@
 "use client"
 
+import { motion } from "framer-motion"
+import { GraduationCap, Building } from "lucide-react"
+
 type AcademicDetailsCardProps = {
   userData: {
     collegeName: string
@@ -9,23 +12,38 @@ type AcademicDetailsCardProps = {
 
 export default function AcademicDetailsCard({ userData }: AcademicDetailsCardProps) {
   return (
-    <div
-      className="p-6 border-2 border-cyan-500/60 bg-slate-950/80 backdrop-blur-sm"
-      style={{
-        clipPath: "polygon(0 0, 98% 0, 100% 2%, 100% 98%, 98% 100%, 0 100%, 0 98%, 0 2%)",
-      }}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3 }}
+      className="relative"
     >
-      <h3 className="text-cyan-300 font-bold uppercase tracking-[0.15em] mb-4 text-sm">Academic Details</h3>
-      <div className="space-y-3 text-sm">
-        <div>
-          <p className="text-cyan-400/70 text-xs uppercase tracking-widest">College</p>
-          <p className="text-white font-semibold">{userData.collegeName}</p>
-        </div>
-        <div>
-          <p className="text-cyan-400/70 text-xs uppercase tracking-widest">Year of Study</p>
-          <p className="text-white font-semibold">{userData.yearOfStudy}</p>
+      {/* Background Shape */}
+      <div className="absolute inset-0 bg-white/5 border border-white/10 transition-colors hover:border-[#33ABB9]/30" />
+      
+      {/* Corner Accents */}
+      <div className="absolute top-0 left-1 w-4 h-4 border-t-2 border-l-2 border-[#33ABB9]" />
+      <div className="absolute bottom-0 right-1 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]" />
+
+      <div className="relative p-6 z-10">
+        <h3 className="text-[10px] text-gray-500 font-mono tracking-[0.2em] mb-4 uppercase">Academic Details</h3>
+        <div className="space-y-4">
+          <div className="flex items-start gap-3">
+            <Building className="w-4 h-4 text-[#33ABB9] mt-0.5" />
+            <div>
+              <p className="text-[10px] text-gray-500 font-mono tracking-widest uppercase mb-1">College</p>
+              <p className="text-white font-semibold">{userData.collegeName || "—"}</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <GraduationCap className="w-4 h-4 text-[#33ABB9] mt-0.5" />
+            <div>
+              <p className="text-[10px] text-gray-500 font-mono tracking-widest uppercase mb-1">Year of Study</p>
+              <p className="text-white font-semibold">{userData.yearOfStudy ? `Year ${userData.yearOfStudy}` : "—"}</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
