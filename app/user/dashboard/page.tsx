@@ -8,7 +8,6 @@ import { motion } from "framer-motion"
 import dynamic from "next/dynamic"
 import ProfileHeader from "../../../components/userComp/profile-header"
 import { useMemo } from "react"
-import ResetPasswordForm from "../../../components/userComp/reset-password-form"
 import RegisteredEventsTab from "../../../components/userComp/registered-events-tab"
 import WorkshopsTab from "../../../components/userComp/workshops-tab"
 import TeamsTab from "../../../components/userComp/teams-tab"
@@ -27,7 +26,6 @@ import { DetailedTeam } from "@/types"
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("overview")
-  const [showResetPassword, setShowResetPassword] = useState(false)
   const [teams, setTeams] = useState<DetailedTeam[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -190,8 +188,6 @@ export default function ProfilePage() {
                 alert("Failed to update profile: " + err.response?.data?.message || err.message);
             }
           }}
-          onResetPassword={setShowResetPassword}
-          showResetPassword={showResetPassword}
         />
 
         {/* Prompt to complete profile if not complete */}
@@ -207,39 +203,37 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {/* Reset Password Form */}
-        {showResetPassword && (
-          <ResetPasswordForm isOpen={showResetPassword} onClose={() => setShowResetPassword(false)} />
-        )}
 
         {/* Navigation Tabs */}
-        <div className="flex gap-2 mb-8 overflow-x-auto pb-2 border-b border-white/10">
-          {[
-            { id: "overview", label: "Overview", icon: User },
-            { id: "events", label: "Registered Events", icon: Calendar },
-            { id: "workshops", label: "Workshops", icon: Calendar },
-            { id: "teams", label: "Your Teams", icon: Users },
-            { id: "accommodation", label: "Accommodation", icon: Home },
-          ].map((tab) => {
-            const Icon = tab.icon
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-3 font-bold uppercase tracking-widest text-sm whitespace-nowrap transition-all relative ${
-                  activeTab === tab.id
-                    ? "text-[#33ABB9] bg-[#33ABB9]/10"
-                    : "text-gray-400 hover:text-[#33ABB9] hover:bg-white/5"
-                }`}
-              >
-                {activeTab === tab.id && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#33ABB9]" />
-                )}
-                <Icon size={18} />
-                {tab.label}
-              </button>
-            )
-          })}
+        <div className="mb-8 border-b border-white/10">
+          <div className="flex flex-wrap gap-1 pb-2 justify-center md:justify-start">
+            {[
+              { id: "overview", label: "Overview", icon: User },
+              { id: "events", label: "Events", icon: Calendar },
+              { id: "workshops", label: "Workshops", icon: Calendar },
+              { id: "teams", label: "Teams", icon: Users },
+              { id: "accommodation", label: "Accommodation", icon: Home },
+            ].map((tab) => {
+              const Icon = tab.icon
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 px-4 py-2 font-bold uppercase tracking-wide text-xs transition-all relative ${
+                    activeTab === tab.id
+                      ? "text-[#33ABB9] bg-[#33ABB9]/10"
+                      : "text-gray-400 hover:text-[#33ABB9] hover:bg-white/5"
+                  }`}
+                >
+                  {activeTab === tab.id && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#33ABB9]" />
+                  )}
+                  <Icon size={16} />
+                  {tab.label}
+                </button>
+              )
+            })}
+          </div>
         </div>
 
         {/* Tab Content */}
