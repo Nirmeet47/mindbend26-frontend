@@ -174,6 +174,52 @@ const symbolTransforms = [
     'rotate(225deg) translateY(-200px) rotate(-225deg)',
 ];
 
+const useIsLowEndDevice = () => {
+    const [isLowEnd, setIsLowEnd] = useState(false);
+    useEffect(() => {
+        const cores = navigator.hardwareConcurrency || 4;
+        // @ts-ignore 
+        const ram = navigator.deviceMemory || 4;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (cores <= 4 || ram <= 4 || prefersReducedMotion) {
+            setIsLowEnd(true);
+        }
+    }, []);
+    return isLowEnd;
+};
+
+const VideoBackground = () => {
+    const videoRef = React.useRef<HTMLVideoElement>(null);
+
+    const handleTimeUpdate = () => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        if (video.currentTime >= video.duration - 0.5) {
+            video.currentTime = 9; 
+            video.play();
+        }
+    }
+        
+    return (
+        <div className="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden bg-black">
+            <div className="absolute top-0 left-0 w-full h-full bg-black opacity-20 z-1" />
+            
+            <video
+                ref={videoRef}
+                autoPlay
+                muted
+                playsInline
+                onTimeUpdate={handleTimeUpdate}
+                className="w-full h-full object-cover"
+            >
+                <source src="/videos/technical-bg.mp4" type="video/mp4" />
+            </video>
+        </div>
+    );
+};
+
 const TechnicalBackground = () => {
     const [is3D, setIs3D] = useState(false);
     const [isBoost, setIsBoost] = useState(false);
@@ -233,6 +279,12 @@ const TechnicalBackground = () => {
         willChange: 'transform',
         stroke: colors.blue,
     };
+
+    const isLowEnd = useIsLowEndDevice();
+    
+    if (isLowEnd) {
+        return <VideoBackground />;
+    }
 
     return (
         <>
