@@ -27,7 +27,7 @@ function Workshops() {
   useEffect(() => {
     async function fetchWorkshops() {
       try {
-        const response = await fetch('http://localhost:6969/api/workshops/public');
+        const response = await fetch('/api/proxy/workshops/public');
         const data = await response.json();
         
         if (data.success) {

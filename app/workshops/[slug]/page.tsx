@@ -67,7 +67,7 @@ export default function WorkshopDetailPage() {
 
   const fetchWorkshop = async () => {
     try {
-      const response = await fetch(`http://localhost:6969/api/workshops/public/${slug}`, {
+      const response = await fetch(`/api/proxy/workshops/public/${slug}`, {
         credentials: 'include' // Include cookies for auth
       });
       const data = await response.json();
