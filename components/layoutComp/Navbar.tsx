@@ -111,17 +111,6 @@ export default function Navbar() {
         { label: "CONFERENCE", id: "2.8", href: "/conference" },
       ],
     },
-    {
-      title: "About",
-      isHyperlink: false,
-      items: [
-        { label: "History", id: "1.1", href: "/history" },
-        { label: "Theme", id: "1.2", href: "/theme" },
-        { label: "Media", id: "1.4", href: "/media" },
-        { label: "Testimonials", id: "1.3", href: "/testimonials" },
-        { label: "Committee", id: "1.5", href: "/committee" },
-      ],
-    },
     { title: "Sponsors", isHyperlink: true, href: "/sponsors", items: [] },
     {
       title: "Accommodation",
@@ -134,6 +123,17 @@ export default function Navbar() {
       isHyperlink: true,
       href: "/ambassador",
       items: [],
+    },
+    {
+      title: "About",
+      isHyperlink: false,
+      items: [
+        { label: "History", id: "1.1", href: "/history" },
+        { label: "Theme", id: "1.2", href: "/theme" },
+        { label: "Media", id: "1.4", href: "/media" },
+        { label: "Testimonials", id: "1.3", href: "/testimonials" },
+        { label: "Committee", id: "1.5", href: "/committee" },
+      ],
     },
   ];
 
