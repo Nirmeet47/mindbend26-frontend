@@ -60,8 +60,41 @@ const ScrambleText = ({
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("up");
+  const [hasScrolledPast50vh, setHasScrolledPast50vh] = useState(false);
+  const lastScrollY = useRef(0);
   const pathname = usePathname();
   const isHome = pathname === "/";
+
+  // Track scroll position and direction
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const halfViewport = viewportHeight / 2;
+
+      // Determine scroll direction
+      if (currentScrollY > lastScrollY.current) {
+        setScrollDirection("down");
+      } else {
+        setScrollDirection("up");
+      }
+
+      // Track if we've scrolled past 50vh
+      if (currentScrollY > halfViewport) {
+        setHasScrolledPast50vh(true);
+      } else {
+        setHasScrolledPast50vh(false);
+      }
+
+      setScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const menuData = [
     {
@@ -76,6 +109,17 @@ export default function Navbar() {
         { label: "MUN", id: "2.6", href: "/mun" },
         { label: "ESPORTS", id: "2.7", href: "/esports" },
         { label: "CONFERENCE", id: "2.8", href: "/conference" },
+      ],
+    },
+    {
+      title: "About",
+      isHyperlink: false,
+      items: [
+        { label: "History", id: "1.1", href: "/history" },
+        { label: "Theme", id: "1.2", href: "/theme" },
+        { label: "Media", id: "1.4", href: "/media" },
+        { label: "Testimonials", id: "1.3", href: "/testimonials" },
+        { label: "Committee", id: "1.5", href: "/committee" },
       ],
     },
     { title: "Sponsors", isHyperlink: true, href: "/sponsors", items: [] },
@@ -95,8 +139,15 @@ export default function Navbar() {
 
   return (
     <>
-      <nav
-        className="fixed top-0 left-0 w-full z-40 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center mix-blend-difference text-white"
+      <motion.nav
+        initial={{ y: 0 }}
+        animate={{ y: scrollDirection === "down" && scrollY > 50 ? -100 : 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className={`fixed top-0 left-0 w-full z-40 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center mix-blend-difference text-white transition-all duration-300 ${
+          hasScrolledPast50vh && scrollY > 100
+            ? "backdrop-blur-lg bg-black/20"
+            : ""
+        }`}
         style={{ fontFamily: "Barlow Condensed, sans-serif" }}
       >
         {isHome ? (
@@ -130,7 +181,7 @@ export default function Navbar() {
             MENU [+]
           </button>
         </div>
-      </nav>
+      </motion.nav>
 
       <AnimatePresence>
         {isOpen && (
@@ -152,7 +203,7 @@ export default function Navbar() {
             >
               <div className="p-6 md:p-12 flex justify-between items-center border-b border-white/5">
                 <ScrambleText
-                  text="©MINDBEND_2025"
+                  text="©MINDBEND_2026"
                   className="text-[10px] font-mono text-zinc-600"
                 />
                 <button
@@ -200,10 +251,10 @@ export default function Navbar() {
                             href={sub.href}
                             className="group relative flex items-center gap-4 py-2 px-4 transition-all duration-300 hover:bg-white hover:translate-x-2"
                           >
-                            <span className="font-mono text-[9px] text-zinc-600 group-hover:text-black">
+                            <span className="font-mono text-[12px] text-zinc-600 group-hover:text-black">
                               {sub.id}
                             </span>
-                            <span className="font-mono text-[9px] tracking-[0.2em] group-hover:text-black uppercase block">
+                            <span className="font-mono text-[12px] tracking-[0.2em] group-hover:text-black uppercase block">
                               <ScrambleText text={sub.label} />
                             </span>
                           </Link>

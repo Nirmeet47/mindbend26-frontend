@@ -12,6 +12,9 @@ import {
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [vw, setVw] = useState(1200); // fallback to avoid zero on first render
+  const [scrollY, setScrollY] = useState(0);
+  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("up");
+  const lastScrollY = useRef(0);
 
   // Capture viewport width safely
   useEffect(() => {
@@ -19,6 +22,26 @@ const Hero = () => {
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
+  }, []);
+
+  // Track scroll position and direction
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Determine scroll direction
+      if (currentScrollY > lastScrollY.current) {
+        setScrollDirection("down");
+      } else {
+        setScrollDirection("up");
+      }
+
+      setScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Scroll tracking
@@ -58,7 +81,7 @@ const Hero = () => {
   }, [vw]);
 
   // Responsive END_SCALE
-  const END_SCALE = useMemo(() => (vw < 640 ? 0.30 : 0.2 ), [vw]);
+  const END_SCALE = useMemo(() => (vw < 640 ? 0.3 : 0.2), [vw]);
 
   // Move from center → top-left navbar
   const x = useTransform(progress, [0, 0.3], [0, target.x]);
@@ -79,6 +102,33 @@ const Hero = () => {
       ref={containerRef}
       className="relative h-[100vh] bg-transparent text-white "
     >
+      {/* SINGLE LOGO (ANIMATES → STICKS IN NAV) - MOVED OUTSIDE SECTION */}
+      <motion.div
+        style={{
+          scaleX,
+          scaleY,
+          x,
+          y,
+          pointerEvents: linkEnabled ? "auto" : "none",
+        }}
+        className="
+          fixed
+          top-40
+          left-1/2
+          -translate-x-1/2
+          z-100
+          origin-center
+        "
+      >
+        <Link href="/">
+          <img
+            src="/images/mb_font.png"
+            alt="MINDBEND"
+            className="w-[80vw] scale-160 lg:scale-100 md:w-[70vw] h-auto object-contain cursor-pointer opacity-95 z-100"
+          />
+        </Link>
+      </motion.div>
+
       {/* HERO SECTION */}
       <section className="relative h-screen overflow-hidden">
         {/* BACKGROUND VIDEO (NOT STICKY, ZOOMED-OUT) */}
@@ -91,33 +141,6 @@ const Hero = () => {
         >
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
-
-        {/* SINGLE LOGO (ANIMATES → STICKS IN NAV) */}
-        <motion.div
-          style={{
-            scaleX,
-            scaleY,
-            x,
-            y,
-            pointerEvents: linkEnabled ? "auto" : "none",
-          }}
-          className="
-            fixed
-            top-40
-            left-1/2
-            -translate-x-1/2
-            z-100
-            origin-center
-          "
-        >
-          <Link href="/">
-            <img
-              src="/images/mb_font.png"
-              alt="MINDBEND"
-              className="w-[80vw] scale-160 lg:scale-100 md:w-[70vw] h-auto object-contain cursor-pointer opacity-95"
-            />
-          </Link>
-        </motion.div>
 
         {/* BOTTOM LEFT TEXT (ALWAYS VISIBLE) */}
         <div className="absolute bottom-8 sm:bottom-10 left-6 sm:left-10 z-30 max-w-md">
@@ -136,7 +159,8 @@ const Hero = () => {
         </div>
       </section>
 
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-[#020205] to-transparent pointer-events-none z-10" />
+      {/* BLUR GRADIENT OVERLAY - MOVED OUTSIDE SECTION */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-[#020205] to-transparent pointer-events-none z-0" />
     </div>
   );
 };
