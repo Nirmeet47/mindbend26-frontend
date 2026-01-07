@@ -1,6 +1,4 @@
 import HomeBg from "@/components/ui/ParticleBG";
-import Hero from "@/components/homepageComp/Hero";
-import AlternativeHero from "@/components/homepageComp/AlternativeHero";
 import About from "@/components/homepageComp/About";
 import Theme from "@/components/homepageComp/Theme";
 import Countdown from "@/components/homepageComp/Countdown";
@@ -8,7 +6,7 @@ import EventsSection from "@/components/homepageComp/events";
 import Sponsors from "@/components/homepageComp/Sponsors";
 import Footer from "@/components/homepageComp/Footer";
 import Navbar from "@/components/layoutComp/Navbar";
-import AlternativeHero2 from "@/components/homepageComp/AlternativeHero2";
+import Hero from "@/components/homepageComp/Hero";
 
 export default function Page() {
   return (
@@ -20,13 +18,8 @@ export default function Page() {
 
       {/* Scrollable content */}
       <div className="relative z-10">
-        {/* Alternative Hero Section */}
-        {/* <AlternativeHero /> */}
-
-        <AlternativeHero2 />
-
         {/* Hero Section with model and text */}
-        {/* <Hero /> */}
+        <Hero />
 
         {/* About Section */}
         <About />

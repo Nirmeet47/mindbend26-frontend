@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const targetDate = new Date("2026-03-15T00:00:00"); // CHANGE YOUR EVENT DATE
+const targetDate = new Date("2026-02-27T00:00:00"); // CHANGE YOUR EVENT DATE
 
 const Countdown = () => {
   const [timeLeft, setTimeLeft] = useState({

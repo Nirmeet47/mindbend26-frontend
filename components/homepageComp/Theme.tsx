@@ -78,7 +78,7 @@ export default function Theme() {
           <source src="/videos/Home_theme.mp4" type="video/mp4" />
         </video>
         {/* Dark Overlay for text readability */}
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-black/10"></div>
       </div>
 
       {/* CONTENT CONTAINER */}

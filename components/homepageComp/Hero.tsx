@@ -1,158 +1,144 @@
 "use client";
 
-import React, { Suspense, useRef, useEffect, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useGLTF, Text, Float, Environment } from "@react-three/drei";
-import * as THREE from "three";
+import React, { useRef, useState, useEffect, useMemo } from "react";
+import Link from "next/link";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+} from "framer-motion";
 
-function HeroScene({ isMobile }: { isMobile: boolean }) {
-  const { scene } = useGLTF("/models/ralph_-_detroit_become_human.glb");
-  const { viewport } = useThree();
-  const modelRef = useRef<THREE.Group>(null);
-  const titleGroupRef = useRef<THREE.Group>(null);
+const Hero = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [vw, setVw] = useState(1200); // fallback to avoid zero on first render
 
-  // 1. Dynamic Scaling Logic
-  // Mobile uses viewport-relative units, Desktop uses fixed units
-  const mainTitleSize = isMobile ? viewport.width * 0.18 : 6; 
-  const subTitleSize = isMobile ? viewport.width * 0.06 : 2;
-  const modelScale = isMobile ? viewport.width * 0.6 : 7;
-  
-  // 2. Position Adjustments
-  // Mobile needs the model higher (-6) vs Desktop (-12)
-  const modelPositionY = isMobile ? -8.1 : -16.5; 
-  const titleZ = isMobile ? -1 : -10; // Desktop depth vs Mobile flatness
-  const titleY = isMobile ? 3 : 4;
+  // Capture viewport width safely
+  useEffect(() => {
+    const update = () => setVw(window.innerWidth);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
-  useFrame((state) => {
-    const { x, y } = state.mouse;
-    
-    // Smooth Model Rotation
-    if (modelRef.current) {
-      modelRef.current.rotation.y = THREE.MathUtils.lerp(modelRef.current.rotation.y, x * 0.4, 0.05);
-      modelRef.current.rotation.x = THREE.MathUtils.lerp(modelRef.current.rotation.x, -y * 0.1, 0.05);
+  // Scroll tracking
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Clamp scroll so animation locks
+  const progress = useTransform(scrollYProgress, (v) => Math.min(v / 1.7, 1));
+
+  /* ==============================
+      LOGO MOTION
+    ============================== */
+
+  // Responsive target positions for logo lock point (size stays constant up to 1500px)
+  const target = useMemo(() => {
+    // Use a reference vw so final navbar logo pixel-size remains the same
+    // for all screens at and below 1500px (use 1500 as the max reference).
+    const refVW = Math.min(vw, 1500);
+    const END_SCALE = vw < 640 ? 0.35 : 0.2; // responsive scale: 0.35 below 640px, 0.20 otherwise
+    // small screens use ~80vw, medium/large use ~70vw.
+    if (vw < 640) {
+      const halfFinal = ((0.8 * END_SCALE) / 2) * refVW; // use refVW to freeze final size <=1500
+      const leftPad = 15; // px desired left padding inside navbar (reduced)
+      return { x: -vw / 2 + halfFinal + leftPad, y: -150 };
     }
-    
-    // Mouse Parallax (Only active/visible on Desktop layout)
-    if (titleGroupRef.current && !isMobile) {
-      titleGroupRef.current.position.x = THREE.MathUtils.lerp(titleGroupRef.current.position.x, -x * 1.2, 0.05);
-      titleGroupRef.current.position.y = THREE.MathUtils.lerp(titleGroupRef.current.position.y, -y * 0.5, 0.05);
+    if (vw < 1024) {
+      const halfFinal = ((0.7 * END_SCALE) / 2) * refVW; // medium
+      const leftPad = 30; // px (reduced)
+      return { x: -vw / 2 + halfFinal + leftPad, y: -160 };
     }
+    // large (desktop)
+    const halfFinal = ((0.7 * END_SCALE) / 2) * refVW;
+    const leftPad = 12;
+    return { x: -vw / 2 + halfFinal + leftPad, y: -180 };
+  }, [vw]);
+
+  // Responsive END_SCALE
+  const END_SCALE = useMemo(() => (vw < 640 ? 0.30 : 0.2 ), [vw]);
+
+  // Move from center → top-left navbar
+  const x = useTransform(progress, [0, 0.3], [0, target.x]);
+  const y = useTransform(progress, [0, 0.3], [0, target.y]);
+
+  // Keep final scale consistent across breakpoints
+  const scaleX = useTransform(progress, [0, 0.3], [1.25, END_SCALE]);
+  const scaleY = useTransform(progress, [0, 0.3], [1, END_SCALE]);
+
+  // Enable link only after logo finishes moving
+  const [linkEnabled, setLinkEnabled] = useState(false);
+  useMotionValueEvent(progress, "change", (v) => {
+    setLinkEnabled(v >= 0.3);
   });
 
   return (
-    <>
-      <group ref={titleGroupRef}>
-        <Float speed={1.2} rotationIntensity={0.1} floatIntensity={0.2}>
-          <group position={[0, titleY, titleZ]}>
-            <Text fontSize={mainTitleSize} color="#ffffff" textAlign="center">
-              MINDBEND
-              <meshStandardMaterial emissive="#00ffff" emissiveIntensity={2} toneMapped={false} />
-            </Text>
-            <Text
-              fontSize={subTitleSize}
-              color="#00ffff"
-              // Offset to the right on Desktop, centered on Mobile
-              position={isMobile ? [2, -1, 0.5] : [10, -3.5, 0.5]}
-              fontStyle="italic"
-            >
-              2026
-            </Text>
-          </group>
-        </Float>
-      </group>
-
-      <primitive
-        ref={modelRef}
-        object={scene}
-        scale={modelScale}
-        position={[0, modelPositionY, 9]}
-      />
-    </>
-  );
-}
-
-export default function Hero() {
-  const [scrollOpacity, setScrollOpacity] = useState(1);
-  const [isMobile, setIsMobile] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  // Handle Responsive Detection
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    
-    const handleScroll = () => {
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect();
-        const progress = Math.max(0, Math.min(1, 1 - -rect.top / window.innerHeight));
-        setScrollOpacity(progress);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  return (
-    <section 
-      ref={sectionRef} 
-      className="relative h-screen w-full bg-[#020205]" 
-      style={{ opacity: scrollOpacity }}
+    <div
+      ref={containerRef}
+      className="relative h-[100vh] bg-transparent text-white "
     >
-      <Canvas camera={{ position: [0, 0, 15], fov: 45 }} dpr={[1, 2]}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1.5} color="#00ffff" />
-        <Suspense fallback={null}>
-          <HeroScene isMobile={isMobile} />
-          <Environment preset="night" />
-        </Suspense>
-      </Canvas>
+      {/* HERO SECTION */}
+      <section className="relative h-screen overflow-hidden">
+        {/* BACKGROUND VIDEO (NOT STICKY, ZOOMED-OUT) */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute lg:top-0 top-1/2 lg:translate-y-8 -translate-y-1/2 left-1/2 -translate-x-1/2 w-full lg:w-[88%] h-[40%] lg:h-full md:h-1/2 object-cover scale-100 lg:scale-60 opacity-70 z-0"
+        >
+          <source src="/videos/hero.mp4" type="video/mp4" />
+        </video>
 
-      {/* SYMBIONT Overlay */}
-      <div className={`absolute inset-0 flex flex-col p-8 md:p-12 pointer-events-none z-20 
-        ${isMobile ? "justify-end items-center text-center" : "justify-between items-end text-right"}`}>
-        
-        <div className={`text-white mt-auto max-w-md ${isMobile ? "mb-10" : ""}`}>
-          <h2 className={`font-black text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)] tracking-wide animate-fadeIn
-            ${isMobile ? "text-5xl" : "text-6xl lg:text-7xl"}`} 
-            style={{ fontFamily: "Barlow Condensed, sans-serif" }}>
-            SYMBIONT
+        {/* SINGLE LOGO (ANIMATES → STICKS IN NAV) */}
+        <motion.div
+          style={{
+            scaleX,
+            scaleY,
+            x,
+            y,
+            pointerEvents: linkEnabled ? "auto" : "none",
+          }}
+          className="
+            fixed
+            top-40
+            left-1/2
+            -translate-x-1/2
+            z-100
+            origin-center
+          "
+        >
+          <Link href="/">
+            <img
+              src="/images/mb_font.png"
+              alt="MINDBEND"
+              className="w-[80vw] scale-160 lg:scale-100 md:w-[70vw] h-auto object-contain cursor-pointer opacity-95"
+            />
+          </Link>
+        </motion.div>
+
+        {/* BOTTOM LEFT TEXT (ALWAYS VISIBLE) */}
+        <div className="absolute bottom-8 sm:bottom-10 left-6 sm:left-10 z-30 max-w-md">
+          <p
+            className="text-[10px] tracking-[0.2em] uppercase mb-4 opacity-70"
+            style={{ fontFamily: "Space Grotesk, sans-serif" }}
+          >
+            The 2026 edition of
+          </p>
+          <h2
+            className="text-3xl md:text-3xl font-light leading-tight"
+            style={{ fontFamily: "Space Grotesk, sans-serif" }}
+          >
+            Gujarat&apos;s largest Techno-Managerial fest
           </h2>
-          
-          <p className="text-sm md:text-xl font-medium tracking-widest text-blue-200 mt-2 uppercase animate-slideUp" 
-             style={{ fontFamily: "Space Grotesk, sans-serif" }}>
-            The Cognitive Genesis
-          </p>
-          
-          <div className={`h-px bg-linear-to-r from-cyan-500 to-transparent my-4 opacity-50 animate-slideUp 
-            ${isMobile ? "w-32 mx-auto via-cyan-500 to-transparent" : "w-full ml-auto"}`}></div>
-          
-          <p className="text-xs md:text-sm opacity-60 leading-relaxed italic animate-slideUp" 
-             style={{ fontFamily: "Space Grotesk, sans-serif" }}>
-            Forging the Future of Indian Intelligence
-          </p>
         </div>
-      </div>
+      </section>
 
-      {/* Smooth Bottom Fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-[#020205] to-transparent pointer-events-none z-10" />
-
-      <style jsx>{`
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { 
-          from { opacity: 0; transform: translateY(20px); } 
-          to { opacity: 1; transform: translateY(0); } 
-        }
-        .animate-fadeIn { animation: fadeIn 1.2s ease-out forwards; }
-        .animate-slideUp { opacity: 0; animation: slideUp 0.8s ease-out forwards; }
-        .animate-slideUp:nth-child(2) { animation-delay: 0.2s; }
-        .animate-slideUp:nth-child(3) { animation-delay: 0.4s; }
-        .animate-slideUp:nth-child(4) { animation-delay: 0.6s; }
-      `}</style>
-    </section>
+    </div>
   );
-}
+};
+
+export default Hero;

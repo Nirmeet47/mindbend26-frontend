@@ -96,35 +96,36 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 w-full z-100 px-6 md:px-10 py-4 md:py-6 flex justify-between items-center mix-blend-difference text-white"
+        className="fixed top-0 left-0 w-full z-40 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center mix-blend-difference text-white"
         style={{ fontFamily: "Barlow Condensed, sans-serif" }}
       >
         {isHome ? (
-          <div className="w-24 md:w-32 h-8" />
+          <div className="w-20 md:w-28 h-8" />
         ) : (
-          <Link
-            href="/"
-            className="text-2xl md:text-3xl font-black tracking-wider hover:scale-110 transition-transform duration-300"
-          >
-            MINDBEND
+          <Link href="/" className="flex items-center">
+            <img
+              src="/images/mb_font.png"
+              alt="MINDBEND"
+              className="h-6 md:h-7 object-contain select-none"
+            />
           </Link>
         )}
         <div className="flex items-center gap-4 md:gap-10">
           <Link
             href="/login"
-            className="hidden sm:flex items-center gap-2 text-[12px] md:text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
+            className="hidden sm:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
           >
             LOGIN
           </Link>
           <Link
             href="/user/dashboard"
-            className="hidden sm:flex items-center gap-2 text-[12px] md:text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
+            className="hidden sm:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
           >
             PROFILE
           </Link>
           <button
             onClick={() => setIsOpen(true)}
-            className="text-[12px] md:text-[15px] font-bold tracking-[0.2em] uppercase hover:scale-110 hover:text-zinc-400 transition-all duration-300 cursor-pointer"
+            className="text-[15px] font-bold tracking-[0.2em] uppercase hover:scale-110 hover:text-zinc-400 transition-all duration-300 cursor-pointer"
           >
             MENU [+]
           </button>
