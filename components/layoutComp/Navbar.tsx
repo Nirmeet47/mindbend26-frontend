@@ -201,14 +201,14 @@ export default function Navbar() {
               transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
               className="fixed top-0 right-0 h-screen w-full md:w-125 lg:w-1/2 bg-[#050505] z-120 border-l border-white/5 flex flex-col text-white shadow-2xl"
             >
-              <div className="p-6 md:p-12 flex justify-between items-center border-b border-white/5">
+              <div className="p-6 md:p-10 flex justify-between items-center border-b border-white/5">
                 <ScrambleText
                   text="©MINDBEND_2026"
-                  className="text-[10px] font-mono text-zinc-600"
+                  className="text-[13px] font-mono text-zinc-600"
                 />
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-[10px] font-mono tracking-widest hover:text-red-500 transition-colors uppercase"
+                  className="text-[13px] font-mono tracking-widest hover:text-red-500 transition-colors uppercase"
                 >
                   <ScrambleText text="CLOSE [X]" />
                 </button>
