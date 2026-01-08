@@ -30,7 +30,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           {/* Navigation Links */}
           <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 mb-12">
-            {["About", "Sponsors", "Contact", "Team", "Events"].map((item) => (
+            {["Technical", "Managerial", "Workshops", "Sponsors"].map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}

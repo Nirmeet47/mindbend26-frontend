@@ -10,6 +10,7 @@ import {
   useTransform,
   useVelocity,
 } from "framer-motion";
+import Image from "next/image";
 
 // Custom wrap function to replace @motionone/utils
 const wrap = (min: number, max: number, v: number) => {
@@ -17,20 +18,7 @@ const wrap = (min: number, max: number, v: number) => {
   return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
 };
 
-const sponsors = [
-  "Stripe",
-  "Shield AI",
-  "PsiQuantum",
-  "ByteDance",
-  "OpenAI",
-  "Microsoft",
-  "Google",
-  "Amazon",
-  "Meta",
-  "Tesla",
-  "SpaceX",
-  "Apple",
-];
+const sponsorLogos = Array.from({ length: 31 }, (_, i) => `/images/sponsors/${i + 1}.png`);
 
 export default function Sponsors() {
   return (
@@ -45,7 +33,7 @@ export default function Sponsors() {
           className="text-4xl md:text-7xl font-extrabold text-white text-center mb-4 tracking-wide uppercase"
           style={{ fontFamily: "Barlow Condensed, sans-serif" }}
         >
-          Our Sponsors
+          Past Year Sponsors
         </h2>
         <div className="h-0.5 w-20 md:w-48 bg-cyan-500 mx-auto mb-6 opacity-50"></div>
 
@@ -59,8 +47,8 @@ export default function Sponsors() {
 
       <div className="relative flex flex-nowrap overflow-hidden">
         <ParallaxText baseVelocity={-2}>
-          {sponsors.map((sponsor, index) => (
-            <SponsorBox key={index} name={sponsor} />
+          {sponsorLogos.map((src, index) => (
+            <SponsorBox key={index} src={src} />
           ))}
         </ParallaxText>
       </div>
@@ -119,20 +107,22 @@ function ParallaxText({ children, baseVelocity = 100 }: ParallaxProps) {
   );
 }
 
-function SponsorBox({ name }: { name: string }) {
+function SponsorBox({ src }: { src: string }) {
   return (
     <div
-      className="relative shrink-0 w-40 h-24 md:w-64 md:h-32 bg-zinc-950 border border-zinc-800 
+      className="relative shrink-0 w-40 h-24 md:w-64 md:h-32 bg-zinc-900 border border-zinc-800 
                     flex items-center justify-center overflow-hidden group"
     >
       <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-      <h3
-        className="relative z-10 text-lg md:text-xl font-bold text-white/70 group-hover:text-white transition-colors duration-300 uppercase tracking-widest"
-        style={{ fontFamily: "Barlow Condensed, sans-serif" }}
-      >
-        {name}
-      </h3>
+      <Image
+        src={src}
+        alt="Sponsor logo"
+        fill
+        sizes="(max-width: 768px) 160px, 256px"
+        className="relative z-10 object-contain p-6"
+        priority
+      />
 
       <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-cyan-500/50" />
       <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-cyan-500/50" />
