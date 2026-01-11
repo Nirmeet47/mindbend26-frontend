@@ -85,9 +85,16 @@ export default function ProfilePage() {
 
     if (activeTab === "teams" && teams.length === 0) {
       setLoading(true)
+      console.log("Fetching teams data...")
       api.get("/users/teams")
-        .then((res) => setTeams(res.data?.data?.teams || []))
-        .catch((err) => setError(err?.response?.data?.message || "Failed to load teams"))
+        .then((res) => {
+          console.log("Teams API response:", res.data)
+          setTeams(res.data?.data?.teams || [])
+        })
+        .catch((err) => {
+          console.error("Teams API error:", err?.response?.data || err)
+          setError(err?.response?.data?.message || "Failed to load teams")
+        })
         .finally(() => setLoading(false))
     }
     if (activeTab === "events" && registeredEvents.length === 0) {

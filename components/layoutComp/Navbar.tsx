@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
 
 const SCRAMBLE_CHARS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!<>-_\\/[]{}—=+*^?#________";
@@ -66,6 +67,7 @@ export default function Navbar() {
   const lastScrollY = useRef(0);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const { isAuthenticated, isLoading } = useAuth();
 
   // Track scroll position and direction
   useEffect(() => {
@@ -151,18 +153,24 @@ export default function Navbar() {
           </Link>
         )}
         <div className="flex items-center gap-4 md:gap-10">
-          <Link
-            href="/login"
-            className="hidden sm:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
-          >
-            LOGIN
-          </Link>
-          <Link
-            href="/user/dashboard"
-            className="hidden sm:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
-          >
-            PROFILE
-          </Link>
+          {/* Show LOGIN or PROFILE based on auth state */}
+          {!isLoading && (
+            isAuthenticated ? (
+              <Link
+                href="/user/dashboard"
+                className="hidden sm:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
+              >
+                PROFILE
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="hidden sm:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
+              >
+                LOGIN
+              </Link>
+            )
+          )}
           <button
             onClick={() => setIsOpen(true)}
             className="text-[15px] font-bold tracking-[0.2em] uppercase hover:scale-110 hover:text-zinc-400 transition-all duration-300 cursor-pointer"
