@@ -80,6 +80,7 @@ export type DetailedTeam = {
     venue?: string
     eventDate?: string
     isTeamEvent: boolean
+    whatsappGrpLink?: string
   }
   leader: { _id: string, name: string; email: string }
   members: {

@@ -6,6 +6,7 @@ import { Users, Crown, Calendar, Trophy, AlertCircle, CheckCircle, Loader2, Arro
 import { useState, useEffect } from 'react';
 import { eventTeamApi } from '@/lib/eventTeam';
 import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from '@/components/ui/TechDecorations';
+import toast from 'react-hot-toast';
 
 interface TeamData {
   _id: string;
@@ -86,6 +87,14 @@ export default function JoinTeamPage() {
       
       if (data?.team) {
         setSuccess(true);
+        
+        // Show WhatsApp group link if available
+        if (data.whatsappGroupLink) {
+          toast.success(`Successfully joined the team! Join the WhatsApp group: ${data.whatsappGroupLink}`, {
+            duration: 10000,
+            position: 'top-center',
+          });
+        }
         
         // Redirect to dashboard after 2 seconds
         setTimeout(() => {

@@ -589,6 +589,32 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
                         <h3 className="text-lg font-bold text-white font-orbitron uppercase tracking-wider">Leader Controls</h3>
                       </div>
 
+                      {/* WhatsApp Group Link */}
+                      {team.eventId?.whatsappGrpLink && (
+                        <div className="mb-3">
+                          <label className="text-[#33ABB9]/80 text-xs uppercase tracking-wider mb-2 block font-mono">WhatsApp Group</label>
+                          <div className="flex flex-col sm:flex-row gap-2">
+                            <input
+                              type="text"
+                              value={team.eventId.whatsappGrpLink}
+                              readOnly
+                              className="flex-1 bg-black/50 border border-white/20 px-3 py-2 text-white font-mono text-sm focus:border-[#33ABB9]/50 focus:outline-none transition-colors"
+                            />
+                            <a
+                              href={team.eventId.whatsappGrpLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group/btn relative px-4 py-2 bg-green-600/60 hover:bg-green-500/20 border border-green-500/50 text-green-400 font-bold tracking-wider uppercase transition-all overflow-hidden text-sm shrink-0"
+                            >
+                              <span className="relative z-10 flex items-center gap-1">
+                                Join Group
+                              </span>
+                              <div className="absolute inset-0 bg-green-500/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
+                            </a>
+                          </div>
+                        </div>
+                      )}
+
                       {/* Invite Link */}
                       <div className="mb-3">
                         <label className="text-[#33ABB9]/80 text-xs uppercase tracking-wider mb-2 block font-mono">Invite Link</label>
