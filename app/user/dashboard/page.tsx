@@ -9,6 +9,7 @@ import dynamic from "next/dynamic"
 import ProfileHeader from "../../../components/userComp/profile-header"
 import { useMemo } from "react"
 import RegisteredEventsTab from "../../../components/userComp/registered-events-tab"
+import Navbar from "../../../components/layoutComp/Navbar"
 import WorkshopsTab from "../../../components/userComp/workshops-tab"
 import TeamsTab from "../../../components/userComp/teams-tab"
 import AccommodationTab from "../../../components/userComp/accommodation-tab"
@@ -46,8 +47,19 @@ export default function ProfilePage() {
   const [registeredWorkshops, setRegisteredWorkshops] = useState<any[]>([])
   const [accommodations, setAccommodations] = useState<any[]>([])
 
+  // State to track fetched data to prevent duplicate calls
+  const [fetchedData, setFetchedData] = useState({
+    profile: false,
+    teams: false,
+    events: false,
+    workshops: false,
+    accommodation: false
+  })
+
   // Redirect to /login if not authenticated (rely on API 401)
   useEffect(() => {
+    if (fetchedData.profile) return
+    
     const fetchProfile = async () => {
       setLoading(true)
       setError("")
@@ -64,6 +76,7 @@ export default function ProfilePage() {
           joinedDate: user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "",
           isProfileCompleted: user?.isProfile_completed || false,
         })
+        setFetchedData(prev => ({ ...prev, profile: true }))
       } catch (err: any) {
         if (err?.response?.status === 401) {
           router.replace("/login")
@@ -75,21 +88,20 @@ export default function ProfilePage() {
       }
     }
     fetchProfile()
-  }, [])
+  }, [fetchedData.profile])
 
-  // Fetch data for each tab only when selected
+  // Fetch data for each tab only when selected and not already fetched
   useEffect(() => {
+    if (!fetchedData.profile) return // Wait for profile to load first
     
-    // const token = typeof window !== "undefined" ? localStorage.getItem("mb_admin_token") : null
-    // if (!token) return
-
-    if (activeTab === "teams" && teams.length === 0) {
+    if (activeTab === "teams" && !fetchedData.teams) {
       setLoading(true)
       console.log("Fetching teams data...")
       api.get("/users/teams")
         .then((res) => {
           console.log("Teams API response:", res.data)
           setTeams(res.data?.data?.teams || [])
+          setFetchedData(prev => ({ ...prev, teams: true }))
         })
         .catch((err) => {
           console.error("Teams API error:", err?.response?.data || err)
@@ -97,31 +109,41 @@ export default function ProfilePage() {
         })
         .finally(() => setLoading(false))
     }
-    if (activeTab === "events" && registeredEvents.length === 0) {
+    
+    if (activeTab === "events" && !fetchedData.events) {
       setLoading(true)
       api.get("/users/registered-events")
         .then((res) => {
           setRegisteredEvents(res.data?.data?.events || []);
           setPendingInvites(res.data?.data?.pendingInvites || []);
+          setFetchedData(prev => ({ ...prev, events: true }))
         })
         .catch((err) => setError(err?.response?.data?.message || "Failed to load events"))
         .finally(() => setLoading(false))
     }
-    if (activeTab === "workshops" && registeredWorkshops.length === 0) {
+    
+    if (activeTab === "workshops" && !fetchedData.workshops) {
       setLoading(true)
       api.get("/workshops/my-registrations")
-        .then((res) => setRegisteredWorkshops(res.data?.data?.workshops || []))
+        .then((res) => {
+          setRegisteredWorkshops(res.data?.data?.workshops || [])
+          setFetchedData(prev => ({ ...prev, workshops: true }))
+        })
         .catch((err) => setError(err?.response?.data?.message || "Failed to load workshops"))
         .finally(() => setLoading(false))
     }
-    if (activeTab === "accommodation" && accommodations.length === 0) {
+    
+    if (activeTab === "accommodation" && !fetchedData.accommodation) {
       setLoading(true)
       api.get("/users/accommodation")
-        .then((res) => setAccommodations(res.data?.data?.accommodations || []))
+        .then((res) => {
+          setAccommodations(res.data?.data?.accommodations || [])
+          setFetchedData(prev => ({ ...prev, accommodation: true }))
+        })
         .catch((err) => setError(err?.response?.data?.message || "Failed to load accommodation"))
         .finally(() => setLoading(false))
     }
-  }, [activeTab])
+  }, [activeTab, fetchedData])
 
   // Profile completion check
   const isProfileComplete = useMemo(() => {
@@ -129,13 +151,15 @@ export default function ProfilePage() {
   }, [userData])
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen bg-[#030303] text-white overflow-x-hidden selection:bg-[#33ABB9] selection:text-white font-rajdhani tracking-wide relative"
-    >
+    <>
+      <Navbar />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+        className="min-h-screen bg-[#030303] text-white overflow-x-hidden selection:bg-[#33ABB9] selection:text-white font-rajdhani tracking-wide relative"
+      >
       {/* Background 3D Scene - Reduced opacity */}
       <div className="fixed inset-0 z-0 opacity-20 pointer-events-none mix-blend-screen">
         <BackgroundScene />
@@ -154,7 +178,17 @@ export default function ProfilePage() {
       />
 
       <div className="relative z-10 py-12 px-4">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto mt-8 sm:mt-12 md:mt-8">
+        {/* Show loading while profile is being fetched */}
+        {loading && !fetchedData.profile ? (
+          <div className="flex justify-center items-center min-h-[50vh]">
+            <div className="text-center">
+              <div className="text-[#33ABB9] text-xl mb-4">Loading Profile...</div>
+              <div className="w-8 h-8 border-2 border-[#33ABB9] border-t-transparent rounded-full animate-spin mx-auto"></div>
+            </div>
+          </div>
+        ) : (
+          <>
         {/* Header with User Info */}
         <ProfileHeader
           userData={userData}
@@ -245,6 +279,16 @@ export default function ProfilePage() {
 
         {/* Tab Content */}
         <div>
+          {/* Show loading for specific tabs */}
+          {loading && activeTab !== "overview" && (
+            <div className="flex justify-center items-center py-12">
+              <div className="text-center">
+                <div className="text-[#33ABB9] text-lg mb-4">Loading {activeTab}...</div>
+                <div className="w-6 h-6 border-2 border-[#33ABB9] border-t-transparent rounded-full animate-spin mx-auto"></div>
+              </div>
+            </div>
+          )}
+          
           {/* Overview Tab */}
           {activeTab === "overview" && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -256,15 +300,15 @@ export default function ProfilePage() {
           )}
 
           {/* Registered Events Tab */}
-          {activeTab === "events" && (
+          {activeTab === "events" && !loading && (
             <RegisteredEventsTab events={registeredEvents} />
           )}
 
           {/* Workshops Tab */}
-          {activeTab === "workshops" && <WorkshopsTab workshops={registeredWorkshops} />}
+          {activeTab === "workshops" && !loading && <WorkshopsTab workshops={registeredWorkshops} />}
 
           {/* Teams Tab */}
-          {activeTab === "teams" && (
+          {activeTab === "teams" && !loading && (
             <TeamsTab
               teams={teams}
               loading={loading}
@@ -294,10 +338,13 @@ export default function ProfilePage() {
           )}
 
           {/* Accommodation Tab */}
-          {activeTab === "accommodation" && <AccommodationTab accommodations={accommodations} />}
+          {activeTab === "accommodation" && !loading && <AccommodationTab accommodations={accommodations} />}
         </div>
+      </>
+        )}
       </div>
       </div>
     </motion.div>
+    </>
   )
 }

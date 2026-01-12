@@ -90,13 +90,13 @@ export default function ProfileHeader({
             </div>
 
             <div className="flex flex-row md:flex-col items-center md:items-end gap-2 shrink-0 justify-center md:justify-end">
-              <div className="flex flex-1 flex-row md:flex-col gap-2 w-full md:w-36">
+              <div className="flex flex-1 flex-row md:flex-col gap-2 w-auto md:w-36 justify-center md:justify-end">
                 <button
                   onClick={() => {
                     setShowEditProfile(!showEditProfile)
                     setEditData(userData)
                   }}
-                  className="relative flex-1 flex items-center gap-1 px-3 py-2 text-[#33ABB9] hover:bg-[#33ABB9]/10 transition-all text-xs uppercase tracking-normal font-semibold border border-gray-700/30 bg-black/20 whitespace-nowrap w-full"
+                  className="relative flex items-center gap-1 px-3 py-2 text-[#33ABB9] hover:bg-[#33ABB9]/10 transition-all text-xs uppercase tracking-normal font-semibold border border-gray-700/30 bg-black/20 whitespace-nowrap w-auto md:w-36"
                 >
                   {/* Corner Accents */}
                   <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]/60" />
@@ -106,7 +106,7 @@ export default function ProfileHeader({
                 </button>
                 <button
                   onClick={() => setShowResetPassword(!showResetPassword)}
-                  className="relative flex-1 flex items-center gap-1 px-3 py-2 text-[#33ABB9] hover:bg-[#33ABB9]/10 transition-all text-xs uppercase tracking-normal font-semibold border border-gray-700/30 bg-black/20 whitespace-nowrap w-full"
+                  className="relative flex items-center gap-1 px-3 py-2 text-[#33ABB9] hover:bg-[#33ABB9]/10 transition-all text-xs uppercase tracking-normal font-semibold border border-gray-700/30 bg-black/20 whitespace-nowrap w-auto md:w-36"
                 >
                   {/* Corner Accents */}
                   <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]/60" />

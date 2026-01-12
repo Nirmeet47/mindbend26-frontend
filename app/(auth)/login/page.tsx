@@ -45,7 +45,7 @@ export default function LoginPage() {
       //   localStorage.setItem("mb_admin_token", token);
         setSuccess("Login successful! Redirecting...");
         setTimeout(() => {
-          router.push("/");
+          router.push("/user/dashboard"); // Redirect to user dashboard after login
         }, 1000);
     } catch (err: any) {
       setError(

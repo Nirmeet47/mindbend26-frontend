@@ -134,12 +134,12 @@ export default function Navbar() {
         initial={{ y: 0 }}
         animate={{ y: scrollDirection === "down" && scrollY > 50 ? -100 : 0 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={`fixed top-0 left-0 w-full z-40 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center mix-blend-difference text-white transition-all duration-300 ${
+        className={`fixed left-0 w-full z-40 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center mix-blend-difference text-white transition-all duration-300 mt-2 sm:mt-0 ${
           hasScrolledPast50vh && scrollY > 100
             ? "backdrop-blur-lg bg-black/20"
             : ""
         }`}
-        style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+        style={{ fontFamily: "Barlow Condensed, sans-serif", top: 0 }}
       >
         {isHome ? (
           <div className="w-20 md:w-28 h-8" />
@@ -153,19 +153,19 @@ export default function Navbar() {
           </Link>
         )}
         <div className="flex items-center gap-4 md:gap-10">
-          {/* Show LOGIN or PROFILE based on auth state */}
-          {!isLoading && (
+          {/* Show LOGIN or PROFILE based on auth state, visible on all screens unless menu is open */}
+          {!isOpen && !isLoading && (
             isAuthenticated ? (
               <Link
                 href="/user/dashboard"
-                className="hidden sm:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
+                className="flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
               >
                 PROFILE
               </Link>
             ) : (
               <Link
                 href="/login"
-                className="hidden sm:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
+                className="flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
               >
                 LOGIN
               </Link>
@@ -212,12 +212,46 @@ export default function Navbar() {
               </div>
 
               <div className="flex-1 overflow-y-auto p-6 md:px-16 md:py-12 space-y-8 md:space-y-10 no-scrollbar">
+                {/* Mobile Profile/Login Button */}
+                <div className="sm:hidden space-y-4 border-b border-white/10 pb-6">
+                  {!isLoading && (
+                    isAuthenticated ? (
+                      <Link
+                        href="/user/dashboard"
+                        className="group flex w-full items-center px-2 md:px-4 py-2 md:py-3 transition-all duration-300 hover:bg-white hover:translate-x-4"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <h2
+                          className="text-2xl md:text-4xl font-light group-hover:text-black uppercase tracking-wide"
+                          style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+                        >
+                          <ScrambleText text="PROFILE" />
+                        </h2>
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/login"
+                        className="group flex w-full items-center px-2 md:px-4 py-2 md:py-3 transition-all duration-300 hover:bg-white hover:translate-x-4"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <h2
+                          className="text-2xl md:text-4xl font-light group-hover:text-black uppercase tracking-wide"
+                          style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+                        >
+                          <ScrambleText text="LOGIN" />
+                        </h2>
+                      </Link>
+                    )
+                  )}
+                </div>
+                
                 {menuData.map((section, idx) => (
                   <div key={idx} className="space-y-4">
                     {section.isHyperlink ? (
                       <Link
                         href={section.href || "#"}
                         className="group flex w-full items-center px-2 md:px-4 py-2 md:py-3 transition-all duration-300 hover:bg-white hover:translate-x-4"
+                        onClick={() => setIsOpen(false)}
                       >
                         <h2
                           className="text-2xl md:text-4xl font-light group-hover:text-black uppercase tracking-wide"
@@ -247,6 +281,7 @@ export default function Navbar() {
                             key={sIdx}
                             href={sub.href}
                             className="group relative flex items-center gap-4 py-2 px-4 transition-all duration-300 hover:bg-white hover:translate-x-2"
+                            onClick={() => setIsOpen(false)}
                           >
                             <span className="font-mono text-[12px] text-zinc-600 group-hover:text-black">
                               {sub.id}
