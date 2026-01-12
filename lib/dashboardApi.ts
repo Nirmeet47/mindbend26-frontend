@@ -14,7 +14,9 @@ export const eventsApi = {
   listAdmin: (payload = { page: 1, limit: 20 }) =>
     api.post("/events/admin/all", payload),
   getAdmin: (id: string) => api.get(`/events/admin/${id}`),
-  create: (body: any) => api.post("/events/create", body),
+  create: (body: any) => api.post("/events/create", body, {
+    headers: { "Content-Type": "multipart/form-data" },
+  }),
   update: (id: string, body: any) => api.put(`/events/update/${id}`, body, {
     headers: { "Content-Type": "multipart/form-data" },
   }),

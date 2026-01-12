@@ -10,43 +10,42 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Plus, X, Upload } from "lucide-react";
 
-interface EditEventModalProps {
-  event: Event;
+interface AddEventModalProps {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export default function EditEventModal({ event, open, onClose, onSuccess }: EditEventModalProps) {
+export default function AddEventModal({ open, onClose, onSuccess }: AddEventModalProps) {
   const [form, setForm] = useState({
-    name: event.name || "",
-    type: event.type || "technical" as "technical" | "managerial",
-    slug: event.slug || "",
-    isTeamEvent: event.isTeamEvent || false,
-    minTeamSize: event.minTeamSize || 1,
-    maxTeamSize: event.maxTeamSize || 1,
-    prizeMoney: event.prizeMoney || 0,
-    entryFee: event.entryFee || 0,
-    aboutEvent: event.aboutEvent || "",
-    eventDate: event.eventDate ? event.eventDate.slice(0, 10) : "",
-    registrationDeadline: event.registrationDeadline ? event.registrationDeadline.slice(0, 10) : "",
-    venue: event.venue || "",
-    hideEvent: event.hideEvent || false,
-    stopRegistration: event.stopRegistration || false,
-    contact: event.contact || [] as { name: string; whatsappNo: string }[],
-    whatsappGrpLink: event.whatsappGrpLink || "",
-    unstopLink: event.unstopLink || "",
-    psLink: event.psLink || "",
+    name: "",
+    type: "technical" as "technical" | "managerial",
+    slug: "",
+    isTeamEvent: false,
+    minTeamSize: 1,
+    maxTeamSize: 1,
+    prizeMoney: 0,
+    entryFee: 0,
+    aboutEvent: "",
+    eventDate: "",
+    registrationDeadline: "",
+    venue: "",
+    eventPhoto: "",
+    hideEvent: false,
+    stopRegistration: false,
+    contact: [] as { name: string; whatsappNo: string }[],
+    whatsappGrpLink: "",
+    unstopLink: "",
+    psLink: "",
     prizeDistribution: {
-      first: event.prizeDistribution?.first || 0,
-      second: event.prizeDistribution?.second || 0,
-      third: event.prizeDistribution?.third || 0,
+      first: 0,
+      second: 0,
+      third: 0,
     },
-    rules: event.rules || [] as string[],
+    rules: [] as string[],
   });
-  
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>(event.eventPhoto || "");
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -131,26 +130,53 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
     setError("");
     
     try {
-      if (imageFile) {
-        const formData = new FormData();
-        Object.entries(form).forEach(([key, value]) => {
-          if (key !== 'eventPhoto') {
-            if (key === 'prizeDistribution' || key === 'contact' || key === 'rules') {
-              formData.append(key, JSON.stringify(value));
-            } else {
-              formData.append(key, String(value));
-            }
+      const formData = new FormData();
+      Object.entries(form).forEach(([key, value]) => {
+        if (key !== 'eventPhoto') {
+          if (key === 'prizeDistribution' || key === 'contact' || key === 'rules') {
+            formData.append(key, JSON.stringify(value));
+          } else {
+            formData.append(key, String(value));
           }
-        });
+        }
+      });
+      
+      if (imageFile) {
         formData.append('eventPhoto', imageFile);
-        await eventsApi.update(event._id, formData);
-      } else {
-        await eventsApi.update(event._id, form);
       }
+      
+      await eventsApi.create(formData);
       onSuccess();
       onClose();
+      
+      // Reset form
+      setForm({
+        name: "",
+        type: "technical",
+        slug: "",
+        isTeamEvent: false,
+        minTeamSize: 1,
+        maxTeamSize: 1,
+        prizeMoney: 0,
+        entryFee: 0,
+        aboutEvent: "",
+        eventDate: "",
+        registrationDeadline: "",
+        venue: "",
+        eventPhoto: "",
+        hideEvent: false,
+        stopRegistration: false,
+        contact: [],
+        whatsappGrpLink: "",
+        unstopLink: "",
+        psLink: "",
+        prizeDistribution: { first: 0, second: 0, third: 0 },
+        rules: [],
+      });
+      setImageFile(null);
+      setImagePreview("");
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Failed to update event");
+      setError(err?.response?.data?.message || "Failed to create event");
     } finally {
       setLoading(false);
     }
@@ -161,10 +187,10 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-            Edit Event: {event.name}
+            Add New Event
           </DialogTitle>
           <DialogDescription>
-            Update the event details and configurations.
+            Create a new event with all necessary details and configurations.
           </DialogDescription>
         </DialogHeader>
 
@@ -472,7 +498,7 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="eventPhoto">Upload New Event Image</Label>
+              <Label htmlFor="eventPhoto">Upload Event Image</Label>
               <div className="flex items-center space-x-2">
                 <Input
                   id="eventPhoto"
@@ -483,7 +509,6 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
                 />
                 <Upload className="w-5 h-5 text-gray-400" />
               </div>
-              <p className="text-xs text-gray-500">Leave empty to keep current image</p>
             </div>
           </div>
 
@@ -556,7 +581,7 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Updating..." : "Update Event"}
+              {loading ? "Creating..." : "Create Event"}
             </Button>
           </div>
         </form>
