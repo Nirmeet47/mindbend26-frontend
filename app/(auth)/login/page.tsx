@@ -1,12 +1,31 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import axios, { AxiosError } from "axios";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import api from "../../../lib/api";
 import { useRouter } from "next/navigation";
+
+type ApiErrorResponse = {
+  success?: boolean;
+  message?: string;
+  errors?: Array<{ field?: string; message?: string; value?: unknown }>;
+  errorCode?: string;
+};
+
+const getApiErrorMessage = (err: unknown, fallback: string) => {
+  if (!axios.isAxiosError(err)) return fallback;
+
+  const axErr = err as AxiosError<ApiErrorResponse>;
+  const data = axErr.response?.data;
+
+  const firstErrorMsg = Array.isArray(data?.errors)
+    ? data?.errors?.[0]?.message
+    : undefined;
+  return firstErrorMsg || data?.message || fallback;
+};
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,27 +49,58 @@ export default function LoginPage() {
   const [resetSuccess, setResetSuccess] = useState("");
   const [showResetPasswordField, setShowResetPasswordField] = useState(false);
   const [showResetConfirmField, setShowResetConfirmField] = useState(false);
+  const [otpSecondsLeft, setOtpSecondsLeft] = useState(120);
+  const [otpExpired, setOtpExpired] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendError, setResendError] = useState("");
+  const [resendSuccess, setResendSuccess] = useState("");
+  const otpTimerRef = useRef<number | null>(null);
   const router = useRouter();
 
-  // --- LOGIC PRESERVED FROM ORIGINAL ---
+  const formatOtpTime = (s: number) => {
+    const mm = String(Math.floor(s / 60)).padStart(2, "0");
+    const ss = String(s % 60).padStart(2, "0");
+    return `${mm}:${ss}`;
+  };
+
+  const startOtpTimer = () => {
+    if (otpTimerRef.current) window.clearInterval(otpTimerRef.current);
+    setOtpSecondsLeft(120);
+    setOtpExpired(false);
+    otpTimerRef.current = window.setInterval(() => {
+      setOtpSecondsLeft((prev) => {
+        if (prev <= 1) {
+          if (otpTimerRef.current) window.clearInterval(otpTimerRef.current);
+          otpTimerRef.current = null;
+          setOtpExpired(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  useEffect(() => {
+    if (showResetPassword) startOtpTimer();
+    return () => {
+      if (otpTimerRef.current) window.clearInterval(otpTimerRef.current);
+      otpTimerRef.current = null;
+    };
+  }, [showResetPassword]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
     setLoading(true);
     try {
-      const res = await api.post("/auth/login", { email, password });
-      // const token = res.data?.data?.token;
-      // if (token) {
-      //   localStorage.setItem("mb_admin_token", token);
-        setSuccess("Login successful! Redirecting...");
-        setTimeout(() => {
-          router.push("/user/dashboard"); // Redirect to user dashboard after login
-        }, 1000);
-    } catch (err: any) {
-      setError(
-        err?.response?.data?.message || "Login failed. Please try again."
-      );
+      await api.post("/auth/login", { email, password });
+      setSuccess("Login successful! Redirecting...");
+      setTimeout(() => {
+        router.push("/user/dashboard"); // Redirect to user dashboard after login
+      }, 1000);
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, "Login failed. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -69,16 +119,33 @@ export default function LoginPage() {
       setShowResetPassword(true);
       setShowForgotPassword(false);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const axErr = err as AxiosError<{ message?: string }>;
-        setForgotError(
-          axErr.response?.data?.message || "Failed to send reset link."
-        );
-      } else {
-        setForgotError("Failed to send reset link.");
-      }
+      setForgotError(getApiErrorMessage(err, "Failed to send reset OTP."));
     } finally {
       setForgotLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setResendError("");
+    setResendSuccess("");
+    setResetError("");
+    setResetSuccess("");
+
+    if (!forgotEmail) {
+      setResendError("Missing email. Please go back and enter your email again.");
+      return;
+    }
+
+    setResendLoading(true);
+    try {
+      await api.post("/auth/forgot-password", { email: forgotEmail });
+      setResendSuccess("A new OTP has been sent to your email.");
+      setResetOTP("");
+      startOtpTimer();
+    } catch (err: unknown) {
+      setResendError(getApiErrorMessage(err, "Failed to resend OTP."));
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -86,6 +153,14 @@ export default function LoginPage() {
     e.preventDefault();
     setResetError("");
     setResetSuccess("");
+    setResendError("");
+    setResendSuccess("");
+
+    if (otpExpired) {
+      setResetError("OTP expired. Please resend OTP to continue.");
+      return;
+    }
+
     if (resetNewPassword !== resetConfirmPassword) {
       setResetError("Passwords do not match");
       return;
@@ -108,16 +183,10 @@ export default function LoginPage() {
         setResetNewPassword("");
         setResetConfirmPassword("");
         setForgotEmail("");
+        setResetSuccess("");
       }, 2000);
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const axErr = err as AxiosError<{ message?: string }>;
-        setResetError(
-          axErr.response?.data?.message || "Failed to reset password."
-        );
-      } else {
-        setResetError("Failed to reset password.");
-      }
+      setResetError(getApiErrorMessage(err, "Failed to reset password."));
     } finally {
       setResetLoading(false);
     }
@@ -278,7 +347,36 @@ export default function LoginPage() {
                     placeholder="6-digit OTP"
                     className="w-full px-8 py-4 bg-[#16161c] border border-blue-500/20 rounded-full text-white outline-none text-center font-bold tracking-[0.4em]"
                     required
+                    disabled={otpExpired}
                   />
+
+                  <div className="flex items-center justify-between px-2 -mt-1">
+                    {!otpExpired ? (
+                      <p className="text-xs text-gray-500">
+                        OTP expires in{" "}
+                        <span className="text-gray-300 tabular-nums">
+                          {formatOtpTime(otpSecondsLeft)}
+                        </span>
+                      </p>
+                    ) : (
+                      <p className="text-xs text-amber-300">OTP expired.</p>
+                    )}
+
+                    {otpExpired && (
+                      <button
+                        type="button"
+                        onClick={handleResendOtp}
+                        disabled={resendLoading}
+                        className="text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-60"
+                      >
+                        {resendLoading ? "Resending..." : "Resend OTP"}
+                      </button>
+                    )}
+                  </div>
+
+                  {resendError && <p className="text-red-400 text-xs px-6">{resendError}</p>}
+                  {resendSuccess && <p className="text-blue-400 text-xs px-6">{resendSuccess}</p>}
+
                   <div className="relative">
                     <input
                       type={showResetPasswordField ? "text" : "password"}
@@ -320,12 +418,52 @@ export default function LoginPage() {
                   {resetError && (
                     <p className="text-red-400 text-xs px-6">{resetError}</p>
                   )}
+                  {resetSuccess && (
+                    <p className="text-blue-400 text-xs px-6">{resetSuccess}</p>
+                  )}
+
+                  {/* Replace the existing submit button with this wrapped version */}
+                  <div className="relative group">
+                    <button
+                      type="submit"
+                      disabled={resetLoading || !!resetSuccess || otpExpired}
+                      title={otpExpired ? "OTP expired. Resend OTP to continue." : undefined}
+                      aria-describedby={otpExpired ? "otp-expired-tooltip" : undefined}
+                      className="w-full py-4 bg-blue-500 text-black font-bold rounded-full cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      {resetLoading ? "Resetting..." : resetSuccess ? "Done" : "Reset Password"}
+                    </button>
+
+                    {otpExpired && (
+                      <div
+                        id="otp-expired-tooltip"
+                        role="tooltip"
+                        className="pointer-events-none absolute left-1/2 -translate-x-1/2 -top-3 -translate-y-full
+                                   whitespace-nowrap rounded-xl border border-white/10 bg-black/80 px-3 py-2 text-xs text-gray-200
+                                   opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                      >
+                        OTP expired. Click “Resend OTP” to get a new code.
+                      </div>
+                    )}
+                  </div>
+
                   <button
-                    type="submit"
-                    disabled={resetLoading}
-                    className="w-full py-4 bg-blue-500 text-black font-bold rounded-full"
+                    type="button"
+                    onClick={() => {
+                      setShowResetPassword(false);
+                      setShowForgotPassword(false);
+                      setResetError("");
+                      setResetSuccess("");
+                      setResendError("");
+                      setResendSuccess("");
+                      setOtpExpired(false);
+                      setOtpSecondsLeft(120);
+                      if (otpTimerRef.current) window.clearInterval(otpTimerRef.current);
+                      otpTimerRef.current = null;
+                    }}
+                    className="w-full text-gray-500 text-sm cursor-pointer"
                   >
-                    {resetLoading ? "Resetting..." : "Reset Password"}
+                    Back to Login
                   </button>
                 </form>
               )}

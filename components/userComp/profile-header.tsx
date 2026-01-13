@@ -61,6 +61,7 @@ export default function ProfileHeader({
           onClick={() => {
             if (confirm('Are you sure you want to logout?')) {
               logout();
+              router.push("/login");
             }
           }}
         >

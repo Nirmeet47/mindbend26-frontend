@@ -18,7 +18,18 @@ const wrap = (min: number, max: number, v: number) => {
   return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
 };
 
-const sponsorLogos = Array.from({ length: 31 }, (_, i) => `/images/sponsors/${i + 1}.png`);
+type SponsorLogoItem = { src: string; darkOnBlack: boolean };
+
+// Mark ONLY the logos that disappear on black (1-based index: 1..31).
+const DARK_LOGO_INDEXES = new Set<number>([4, 8, 17, 29]);
+
+const sponsorLogos: SponsorLogoItem[] = Array.from({ length: 31 }, (_, i) => {
+  const idx = i + 1;
+  return {
+    src: `/images/sponsors/${idx}.png`,
+    darkOnBlack: DARK_LOGO_INDEXES.has(idx),
+  };
+});
 
 export default function Sponsors() {
   return (
@@ -46,9 +57,9 @@ export default function Sponsors() {
       </motion.div>
 
       <div className="relative flex flex-nowrap overflow-hidden">
-        <ParallaxText baseVelocity={-2}>
-          {sponsorLogos.map((src, index) => (
-            <SponsorBox key={index} src={src} />
+        <ParallaxText baseVelocity={-0.8}>
+          {sponsorLogos.map(({ src, darkOnBlack }, index) => (
+            <SponsorLogo key={index} src={src} darkOnBlack={darkOnBlack} />
           ))}
         </ParallaxText>
       </div>
@@ -107,27 +118,16 @@ function ParallaxText({ children, baseVelocity = 100 }: ParallaxProps) {
   );
 }
 
-function SponsorBox({ src }: { src: string }) {
+function SponsorLogo({ src, darkOnBlack }: { src: string; darkOnBlack: boolean }) {
   return (
-    <div
-      className="relative shrink-0 w-40 h-24 md:w-64 md:h-32 bg-zinc-900 border border-zinc-800 
-                    flex items-center justify-center overflow-hidden group"
-    >
-      <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
+    <div className="relative shrink-0 w-36 h-16 md:w-56 md:h-24">
       <Image
         src={src}
         alt="Sponsor logo"
         fill
-        sizes="(max-width: 768px) 160px, 256px"
-        className="relative z-10 object-contain p-6"
-        priority
+        sizes="(max-width: 768px) 144px, 224px"
+        className={`object-contain opacity-90 hover:opacity-100 transition-opacity duration-300 ${darkOnBlack ? '[filter:drop-shadow(0_2px_10px_rgba(255,255,255,0.3))_drop-shadow(0_0_1px_rgba(255,255,255,0.7))]' : ''}`}
       />
-
-      <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-cyan-500/50" />
-      <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-cyan-500/50" />
-
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,white_2px,white_4px)]" />
     </div>
   );
 }
