@@ -15,6 +15,8 @@ export interface Event {
   eventPhoto: string;
   registrationDeadline: string;
   rules: string[];
+  structuredRules: StructuredRule[];
+  structure: StructuredRule[];
   prizeDistribution: PrizeDistribution;
   hideEvent: boolean;
   stopRegistration: boolean;
@@ -24,6 +26,11 @@ export interface Event {
   psLink: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface StructuredRule {
+  heading: string;
+  content: string[];
 }
 
 export type EventStatus = 'OPEN' | 'CLOSED' | 'HIDDEN';

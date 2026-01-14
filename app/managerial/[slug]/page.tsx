@@ -286,6 +286,8 @@ export default function EventDetailPage() {
           minTeamSize={event.minTeamSize}
           maxTeamSize={event.maxTeamSize}
           rules={event.rules}
+          structuredRules={event.structuredRules}
+          structure={event.structure}
           contact={event.contact}
           whatsappGrpLink={event.whatsappGrpLink}
         />

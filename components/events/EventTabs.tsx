@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { MessageCircle, Users, Calendar } from 'lucide-react';
 import { useState } from 'react';
-import { EventContact } from '@/types';
+import { EventContact, StructuredRule } from '@/types';
 import Link from 'next/link';
 
 type TabType = 'about' | 'structure' | 'rules' | 'contact';
@@ -14,6 +14,8 @@ interface EventTabsProps {
   minTeamSize?: number;
   maxTeamSize?: number;
   rules?: string[];
+  structuredRules?: StructuredRule[];
+  structure?: StructuredRule[];
   contact?: EventContact[];
   whatsappGrpLink?: string;
 }
@@ -24,6 +26,8 @@ const EventTabs: React.FC<EventTabsProps> = ({
   minTeamSize,
   maxTeamSize,
   rules,
+  structuredRules,
+  structure,
   contact,
   whatsappGrpLink
 }) => {
@@ -36,8 +40,8 @@ const EventTabs: React.FC<EventTabsProps> = ({
         <div className="flex flex-wrap gap-2 md:gap-8 overflow-x-auto pb-1 scrollbar-hide">
           {[
             { id: 'about', label: 'About' },
-            ...((isTeamEvent != null || isTeamEvent != undefined) ? [{ id: 'structure', label: 'Structure' }] : []),
-            ...(rules && rules.length > 0 ? [{ id: 'rules', label: 'Protocol' }] : []),
+            ...(structure && structure.length > 0 ? [{ id: 'structure', label: 'Structure' }] : []),
+            ...(rules && rules.length > 0 || structuredRules && structuredRules.length > 0 ? [{ id: 'rules', label: 'Protocol' }] : []),
             ...(contact && contact.length > 0 ? [{ id: 'contact', label: 'Contact' }] : []),
             ].map((tab) => (
             <button
@@ -103,36 +107,108 @@ const EventTabs: React.FC<EventTabsProps> = ({
         {/* Structure Tab */}
         {activeTab === 'structure' && (
           <div className="space-y-8">
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white/5 border border-white/10 p-8 relative group">
-                  <div className="absolute top-0 right-0 p-2 opacity-50">
-                    <Users className="w-8 h-8 text-white/20" />
-                  </div>
-                  <h4 className="text-xl font-bold mb-4 font-orbitron text-[#00F0FF]">Event Format</h4>
-                  <p className="text-gray-400 font-rajdhani text-lg">
-                    This is a <span className="text-white font-bold">{isTeamEvent ? 'SQUAD-BASED' : 'SOLO_OPERATIVE'}</span> task.
-                    {isTeamEvent && ` Squad size parameters: ${minTeamSize}-${maxTeamSize} units.`}
-                  </p>
-                </div>
-                <div className="bg-white/5 border border-white/10 p-8 relative group">
-                  <div className="absolute top-0 right-0 p-2 opacity-50">
-                    <Calendar className="w-8 h-8 text-white/20" />
-                  </div>
-                  <h4 className="text-xl font-bold mb-4 font-orbitron text-[#00F0FF]">Timeline_Sequence</h4>
-                  <p className="text-gray-400 font-rajdhani text-lg">
-                    Temporal coordinates and execution schedule will be transmitted to registered operatives.
-                  </p>
-                </div>
+            {structure && structure.length > 0 ? (
+              <div className="space-y-8">
+                {structure.map((section, sectionIndex) => (
+                  <motion.div
+                    key={sectionIndex}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: sectionIndex * 0.1 }}
+                    className="space-y-6"
+                  >
+                    {/* Section Heading */}
+                    <div className="text-center mb-6">
+                      <h3 className="text-3xl font-bold text-[#00F0FF] font-orbitron tracking-wider uppercase">
+                        {section.heading}
+                      </h3>
+                      <div className="w-40 h-0.5 bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent mx-auto mt-3"></div>
+                    </div>
+                    
+                    {/* Section Content */}
+                    <div className="space-y-4">
+                      {section.content.map((content, contentIndex) => (
+                        <motion.div
+                          key={contentIndex}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: (sectionIndex * section.content.length + contentIndex) * 0.05 }}
+                          className="bg-white/5 border border-white/10 p-6 hover:bg-white/8 transition-all group"
+                        >
+                          <div className="text-gray-300 font-rajdhani text-lg leading-relaxed whitespace-pre-line">
+                            {content}
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-            </div>
+            ) : (
+              <div className="bg-white/5 border border-white/10 p-8 rounded-lg text-center border-dashed">
+                <p className="text-gray-400 font-share-tech-mono">Event structure data not available.</p>
+              </div>
+            )}
           </div>
         )}
 
         {/* Rules Tab */}
         {activeTab === 'rules' && (
-          <div className="space-y-6">
-            {rules && rules.length > 0 ? (
+          <div className="space-y-8">
+            {/* Structured Rules (with headings) */}
+            {structuredRules && structuredRules.length > 0 && (
+              <div className="space-y-8">
+                {structuredRules.map((section, sectionIndex) => (
+                  <motion.div
+                    key={sectionIndex}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: sectionIndex * 0.1 }}
+                    className="space-y-4"
+                  >
+                    {/* Section Heading */}
+                    <div className="text-center mb-6">
+                      <h3 className="text-2xl font-bold text-[#00F0FF] font-orbitron tracking-wider uppercase">
+                        {section.heading}
+                      </h3>
+                      <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent mx-auto mt-2"></div>
+                    </div>
+                    
+                    {/* Section Rules */}
+                    <div className="grid gap-3">
+                      {section.content.map((rule, contentIndex) => (
+                        <motion.div
+                          key={contentIndex}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: (sectionIndex * section.content.length + contentIndex) * 0.05 }}
+                          className="bg-white/5 border-l-4 border-cyan-500/30 p-4 pl-6 hover:bg-white/10 hover:border-cyan-400 transition-all group flex items-start gap-4"
+                        >
+                          <span className="font-share-tech-mono text-[#00F0FF] opacity-50 text-sm mt-1">
+                            {String(contentIndex + 1).padStart(2, '0')} //
+                          </span>
+                          <p className="text-lg font-rajdhani font-medium leading-tight group-hover:text-white text-gray-300">
+                            {rule}
+                          </p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {/* Separator if both structured and simple rules exist */}
+            {structuredRules && structuredRules.length > 0 && rules && rules.length > 0 && (
+              <div className="flex items-center my-8">
+                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-gray-600"></div>
+                <span className="px-4 text-gray-500 font-share-tech-mono text-sm">ADDITIONAL RULES</span>
+                <div className="flex-1 h-px bg-gradient-to-l from-transparent via-gray-600 to-gray-600"></div>
+              </div>
+            )}
+
+            {/* Simple Rules */}
+            {rules && rules.length > 0 && (
               <div className="grid gap-3">
                 {rules.map((rule, i) => (
                   <motion.div
@@ -145,11 +221,16 @@ const EventTabs: React.FC<EventTabsProps> = ({
                     <span className="font-share-tech-mono text-[#00F0FF] opacity-50 text-sm mt-1">
                       {String(i + 1).padStart(2, '0')} //
                     </span>
-                    <p className="text-lg font-rajdhani font-medium leading-tight group-hover:text-white text-gray-300">{rule}</p>
+                    <p className="text-lg font-rajdhani font-medium leading-tight group-hover:text-white text-gray-300">
+                      {rule}
+                    </p>
                   </motion.div>
                 ))}
               </div>
-            ) : (
+            )}
+
+            {/* No rules message */}
+            {(!rules || rules.length === 0) && (!structuredRules || structuredRules.length === 0) && (
               <div className="bg-white/5 border border-white/10 p-8 rounded-lg text-center border-dashed">
                 <p className="text-gray-400 font-share-tech-mono">Protocols encrypting... Standby.</p>
               </div>

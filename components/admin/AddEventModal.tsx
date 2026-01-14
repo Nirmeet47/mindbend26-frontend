@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { eventsApi } from "../../lib/dashboardApi";
-import { Event } from "@/types";
+import { Event, StructuredRule } from "@/types";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Plus, X, Upload } from "lucide-react";
+import { Plus, X, Upload, ChevronUp, ChevronDown } from "lucide-react";
 
 interface AddEventModalProps {
   open: boolean;
@@ -43,6 +43,8 @@ export default function AddEventModal({ open, onClose, onSuccess }: AddEventModa
       third: 0,
     },
     rules: [] as string[],
+    structuredRules: [] as StructuredRule[],
+    structure: [] as StructuredRule[],
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
@@ -124,6 +126,99 @@ export default function AddEventModal({ open, onClose, onSuccess }: AddEventModa
     });
   }
 
+  function addStructuredRuleSection() {
+    setForm((prev) => ({
+      ...prev,
+      structuredRules: [...(prev.structuredRules || []), { heading: "", content: [""] }],
+    }));
+  }
+
+  function removeStructuredRuleSection(index: number) {
+    setForm((prev) => ({
+      ...prev,
+      structuredRules: prev.structuredRules.filter((_, i) => i !== index),
+    }));
+  }
+
+  function updateStructuredRuleHeading(sectionIndex: number, heading: string) {
+    setForm((prev) => {
+      const updatedStructuredRules = [...(prev.structuredRules || [])];
+      updatedStructuredRules[sectionIndex].heading = heading;
+      return { ...prev, structuredRules: updatedStructuredRules };
+    });
+  }
+
+  function addStructuredRuleContent(sectionIndex: number) {
+    setForm((prev) => {
+      const updatedStructuredRules = [...(prev.structuredRules || [])];
+      updatedStructuredRules[sectionIndex].content.push("");
+      return { ...prev, structuredRules: updatedStructuredRules };
+    });
+  }
+
+  function updateStructuredRuleContent(sectionIndex: number, contentIndex: number, value: string) {
+    setForm((prev) => {
+      const updatedStructuredRules = [...(prev.structuredRules || [])];
+      updatedStructuredRules[sectionIndex].content[contentIndex] = value;
+      return { ...prev, structuredRules: updatedStructuredRules };
+    });
+  }
+
+  function removeStructuredRuleContent(sectionIndex: number, contentIndex: number) {
+    setForm((prev) => {
+      const updatedStructuredRules = [...(prev.structuredRules || [])];
+      updatedStructuredRules[sectionIndex].content = updatedStructuredRules[sectionIndex].content.filter((_, i) => i !== contentIndex);
+      return { ...prev, structuredRules: updatedStructuredRules };
+    });
+  }
+
+  // Structure management functions
+  function addStructureSection() {
+    setForm((prev) => ({
+      ...prev,
+      structure: [...(prev.structure || []), { heading: "", content: [""] }],
+    }));
+  }
+
+  function removeStructureSection(index: number) {
+    setForm((prev) => ({
+      ...prev,
+      structure: prev.structure.filter((_, i) => i !== index),
+    }));
+  }
+
+  function updateStructureHeading(sectionIndex: number, heading: string) {
+    setForm((prev) => {
+      const updatedStructure = [...(prev.structure || [])];
+      updatedStructure[sectionIndex].heading = heading;
+      return { ...prev, structure: updatedStructure };
+    });
+  }
+
+  function addStructureContent(sectionIndex: number) {
+    setForm((prev) => {
+      const updatedStructure = [...(prev.structure || [])];
+      updatedStructure[sectionIndex].content.push("");
+      return { ...prev, structure: updatedStructure };
+    });
+  }
+
+  function updateStructureContent(sectionIndex: number, contentIndex: number, value: string) {
+    setForm((prev) => {
+      const updatedStructure = [...(prev.structure || [])];
+      updatedStructure[sectionIndex].content[contentIndex] = value;
+      return { ...prev, structure: updatedStructure };
+    });
+  }
+
+  function removeStructureContent(sectionIndex: number, contentIndex: number) {
+    setForm((prev) => {
+      const updatedStructure = [...(prev.structure || [])];
+      updatedStructure[sectionIndex].content = updatedStructure[sectionIndex].content.filter((_, i) => i !== contentIndex);
+      return { ...prev, structure: updatedStructure };
+    });
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -133,7 +228,7 @@ export default function AddEventModal({ open, onClose, onSuccess }: AddEventModa
       const formData = new FormData();
       Object.entries(form).forEach(([key, value]) => {
         if (key !== 'eventPhoto') {
-          if (key === 'prizeDistribution' || key === 'contact' || key === 'rules') {
+          if (key === 'prizeDistribution' || key === 'contact' || key === 'rules' || key === 'structuredRules' || key === 'structure') {
             formData.append(key, JSON.stringify(value));
           } else {
             formData.append(key, String(value));
@@ -172,6 +267,8 @@ export default function AddEventModal({ open, onClose, onSuccess }: AddEventModa
         psLink: "",
         prizeDistribution: { first: 0, second: 0, third: 0 },
         rules: [],
+        structuredRules: [],
+        structure: [],
       });
       setImageFile(null);
       setImagePreview("");
@@ -516,29 +613,197 @@ export default function AddEventModal({ open, onClose, onSuccess }: AddEventModa
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Event Rules</h3>
-              <Button type="button" onClick={addRule} variant="outline" size="sm">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Rule
-              </Button>
-            </div>
-            
-            {form.rules?.map((rule, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <Input
-                  value={rule}
-                  onChange={(e) => handleRuleChange(index, e.target.value)}
-                  placeholder={`Rule ${index + 1}`}
-                />
-                <Button
-                  type="button"
-                  onClick={() => removeRule(index)}
-                  variant="destructive"
-                  size="sm"
-                >
-                  <X className="w-4 h-4" />
+              <div className="flex gap-2">
+                <Button type="button" onClick={addRule} variant="outline" size="sm">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Simple Rule
+                </Button>
+                <Button type="button" onClick={addStructuredRuleSection} variant="outline" size="sm">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Section
                 </Button>
               </div>
-            ))}
+            </div>
+
+            {/* Simple Rules */}
+            {form.rules?.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="text-md font-medium text-gray-800 dark:text-gray-200">Simple Rules</h4>
+                {form.rules.map((rule, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <Input
+                      value={rule}
+                      onChange={(e) => handleRuleChange(index, e.target.value)}
+                      placeholder={`Rule ${index + 1}`}
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => removeRule(index)}
+                      variant="destructive"
+                      size="sm"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Structured Rules */}
+            {form.structuredRules?.length > 0 && (
+              <div className="space-y-4">
+                <h4 className="text-md font-medium text-gray-800 dark:text-gray-200">Structured Rules (Sections)</h4>
+                {form.structuredRules.map((section, sectionIndex) => (
+                  <div key={sectionIndex} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 mr-2">
+                        <Label htmlFor={`section-heading-${sectionIndex}`}>Section Heading</Label>
+                        <Input
+                          id={`section-heading-${sectionIndex}`}
+                          value={section.heading}
+                          onChange={(e) => updateStructuredRuleHeading(sectionIndex, e.target.value)}
+                          placeholder="e.g., JUDGING CRITERIA, GENERAL RULES"
+                          className="font-semibold"
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        onClick={() => removeStructuredRuleSection(sectionIndex)}
+                        variant="destructive"
+                        size="sm"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label>Rules in this section</Label>
+                        <Button
+                          type="button"
+                          onClick={() => addStructuredRuleContent(sectionIndex)}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <Plus className="w-4 h-4 mr-1" />
+                          Add Rule
+                        </Button>
+                      </div>
+                      
+                      {section.content.map((content, contentIndex) => (
+                        <div key={contentIndex} className="flex items-center space-x-2">
+                          <Textarea
+                            value={content}
+                            onChange={(e) => updateStructuredRuleContent(sectionIndex, contentIndex, e.target.value)}
+                            placeholder={`Rule ${contentIndex + 1} in ${section.heading || 'this section'}`}
+                            rows={2}
+                            className="resize-none"
+                          />
+                          <Button
+                            type="button"
+                            onClick={() => removeStructuredRuleContent(sectionIndex, contentIndex)}
+                            variant="destructive"
+                            size="sm"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {form.rules?.length === 0 && form.structuredRules?.length === 0 && (
+              <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+                <p>No rules added yet. Click "Add Simple Rule" for basic rules or "Add Section" for organized rule sections.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Event Structure */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Event Structure</h3>
+              <Button type="button" onClick={addStructureSection} variant="outline" size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Structure Section
+              </Button>
+            </div>
+
+            {form.structure?.length > 0 && (
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Add sections like "Event Rounds", "Technical Specifications", "Team Specifications", etc.
+                </p>
+                {form.structure.map((section, sectionIndex) => (
+                  <div key={sectionIndex} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 mr-2">
+                        <Label htmlFor={`structure-heading-${sectionIndex}`}>Section Heading</Label>
+                        <Input
+                          id={`structure-heading-${sectionIndex}`}
+                          value={section.heading}
+                          onChange={(e) => updateStructureHeading(sectionIndex, e.target.value)}
+                          placeholder="e.g., Event Rounds, Technical Specifications, Team Specifications"
+                          className="font-semibold"
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        onClick={() => removeStructureSection(sectionIndex)}
+                        variant="destructive"
+                        size="sm"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label>Content in this section</Label>
+                        <Button
+                          type="button"
+                          onClick={() => addStructureContent(sectionIndex)}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <Plus className="w-4 h-4 mr-1" />
+                          Add Content
+                        </Button>
+                      </div>
+                      
+                      {section.content.map((content, contentIndex) => (
+                        <div key={contentIndex} className="flex items-center space-x-2">
+                          <Textarea
+                            value={content}
+                            onChange={(e) => updateStructureContent(sectionIndex, contentIndex, e.target.value)}
+                            placeholder={`Content ${contentIndex + 1} for ${section.heading || 'this section'}`}
+                            rows={3}
+                            className="resize-none"
+                          />
+                          <Button
+                            type="button"
+                            onClick={() => removeStructureContent(sectionIndex, contentIndex)}
+                            variant="destructive"
+                            size="sm"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {form.structure?.length === 0 && (
+              <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+                <p>No structure sections added yet. Click "Add Structure Section" to organize event information like rounds, specifications, etc.</p>
+              </div>
+            )}
           </div>
 
           {/* Event Visibility */}
