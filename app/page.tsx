@@ -78,7 +78,7 @@ export default function Page() {
           })
         }}
       />
-      
+
       <main className="relative min-h-[200vh]">
         {/* Fixed background with only particles */}
         <Navbar />
