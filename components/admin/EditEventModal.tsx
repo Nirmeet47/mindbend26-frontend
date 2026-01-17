@@ -42,7 +42,7 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
       second: event.prizeDistribution?.second || 0,
       third: event.prizeDistribution?.third || 0,
     },
-    rules: event.rules || [] as string[],
+    rules: event.rules || [] as { heading: string; content: string }[],
     structuredRules: event.structuredRules || [] as StructuredRule[],
     structure: event.structure || [] as StructuredRule[],
   });
@@ -108,7 +108,7 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
   function addRule() {
     setForm((prev) => ({
       ...prev,
-      rules: [...(prev.rules || []), ""],
+      rules: [...(prev.rules || []), { heading: "", content: "" }],
     }));
   }
 
@@ -119,10 +119,10 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
     }));
   }
 
-  function handleRuleChange(index: number, value: string) {
+  function handleRuleChange(index: number, field: 'heading' | 'content', value: string) {
     setForm((prev) => {
       const updatedRules = [...(prev.rules || [])];
-      updatedRules[index] = value;
+      updatedRules[index] = { ...updatedRules[index], [field]: value };
       return { ...prev, rules: updatedRules };
     });
   }
@@ -603,20 +603,32 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
               <div className="space-y-2">
                 <h4 className="text-md font-medium text-gray-800 dark:text-gray-200">Simple Rules</h4>
                 {form.rules.map((rule, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <Input
-                      value={rule}
-                      onChange={(e) => handleRuleChange(index, e.target.value)}
-                      placeholder={`Rule ${index + 1}`}
-                    />
-                    <Button
-                      type="button"
-                      onClick={() => removeRule(index)}
-                      variant="destructive"
-                      size="sm"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
+                  <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Rule {index + 1}</span>
+                      <Button
+                        type="button"
+                        onClick={() => removeRule(index)}
+                        variant="destructive"
+                        size="sm"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <div className="space-y-2">
+                      <Input
+                        value={rule.heading}
+                        onChange={(e) => handleRuleChange(index, 'heading', e.target.value)}
+                        placeholder="Rule heading (e.g., ROBOT SPECIFICATION:)"
+                        className="font-semibold"
+                      />
+                      <Textarea
+                        value={rule.content}
+                        onChange={(e) => handleRuleChange(index, 'content', e.target.value)}
+                        placeholder="Rule content..."
+                        rows={3}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
