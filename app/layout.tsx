@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from 'react-hot-toast';
+import Analytics from '@/components/Analytics';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
     "robotics events",
     "innovation fest",
     "startup competition",
-    "tech fest India 2025",
+    "tech fest India 2026",
     "Ecogenesis theme",
     "Bharat roots revolution",
     "15000 participants",
@@ -72,7 +73,7 @@ export const metadata: Metadata = {
     siteName: "Mindbend 2026",
     title: "Mindbend 2026 - Gujarat's Largest Techno-Managerial Fest | SVNIT Surat",
     description:
-      "Join Gujarat's biggest tech fest! 15,000+ participants, ₹7L+ prizes. Technical competitions, hackathons, workshops, MUN, esports & celebrity guest lectures. April 6-8, 2025 at SVNIT Surat.",
+      "Join Gujarat's biggest tech fest! 15,000+ participants, ₹7L+ prizes. Technical competitions, hackathons, workshops, MUN, esports & celebrity guest lectures. Feb 27-Mar 1, 2026 at SVNIT Surat.",
     images: [
       {
         url: "/images/mb_logo.png",
@@ -132,10 +133,11 @@ export const metadata: Metadata = {
   
   // Verification for search engines
   verification: {
-    // Add your verification codes here when available
-    // google: "your-google-verification-code",
-    // yandex: "your-yandex-verification-code",
-    // bing: "your-bing-verification-code",
+    // google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION, // Add if you get HTML tag from Google
+    other: {
+      "msvalidate.01": process.env.NEXT_PUBLIC_BING_ID || "",
+      "google-analytics": process.env.NEXT_PUBLIC_GA_ID || "",
+    },
   },
   
   // Other metadata
@@ -146,7 +148,7 @@ export const metadata: Metadata = {
     "apple-mobile-web-app-title": "Mindbend 2026",
     "format-detection": "telephone=no",
     "theme-color": "#000000",
-    "event-date": "2025-04-06",
+    "event-date": "2026-02-27",
     "event-location": "SVNIT Surat, Gujarat, India",
     "event-type": "Technology Festival",
   },
@@ -302,7 +304,8 @@ export default function RootLayout({
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      ><Analytics />
+        
         {children}
         <Toaster 
           position="top-right"

@@ -13,7 +13,7 @@ interface EventTabsProps {
   isTeamEvent?: boolean;
   minTeamSize?: number;
   maxTeamSize?: number;
-  rules?: string[];
+  rules?: { heading: string; content: string }[];
   structuredRules?: StructuredRule[];
   structure?: StructuredRule[];
   contact?: EventContact[];
@@ -32,6 +32,13 @@ const EventTabs: React.FC<EventTabsProps> = ({
   whatsappGrpLink
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('about');
+
+  // Utility to auto-break after each period+space
+  function autoBreakSentences(text: string) {
+    return text.split(/(?<=\.)\ +/).map((sentence, idx, arr) =>
+      idx < arr.length - 1 ? sentence + ' ' : sentence
+    ).map((sentence, idx) => <span key={idx}>{sentence}<br /></span>);
+  }
 
   return (
     <section className="max-w-7xl mx-auto px-4 pb-12">
@@ -209,21 +216,32 @@ const EventTabs: React.FC<EventTabsProps> = ({
 
             {/* Simple Rules */}
             {rules && rules.length > 0 && (
-              <div className="grid gap-3">
+              <div className="space-y-8">
                 {rules.map((rule, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="bg-white/5 border-l-4 border-cyan-500/30 p-4 pl-6 hover:bg-white/10 hover:border-cyan-400 transition-all group flex items-start gap-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    className="space-y-4"
                   >
-                    <span className="font-share-tech-mono text-[#00F0FF] opacity-50 text-sm mt-1">
-                      {String(i + 1).padStart(2, '0')} //
-                    </span>
-                    <p className="text-lg font-rajdhani font-medium leading-tight group-hover:text-white text-gray-300">
-                      {rule}
-                    </p>
+                    {/* Rule Heading */}
+                    <div className="text-center mb-6">
+                      <h3 className="text-2xl font-bold text-[#00F0FF] font-orbitron tracking-wider uppercase">
+                        {rule.heading}
+                      </h3>
+                      <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent mx-auto mt-2"></div>
+                    </div>
+                    
+                    {/* Rule Content */}
+                    <div className="bg-white/5 border-l-4 border-cyan-500/30 p-4 pl-6 hover:bg-white/10 hover:border-cyan-400 transition-all group flex items-start gap-4">
+                      <span className="font-share-tech-mono text-[#00F0FF] opacity-50 text-sm mt-1">
+                        {String(i + 1).padStart(2, '0')} //
+                      </span>
+                      <p className="text-lg font-rajdhani font-medium leading-tight group-hover:text-white text-gray-300">
+                        {autoBreakSentences(rule.content)}
+                      </p>
+                    </div>
                   </motion.div>
                 ))}
               </div>

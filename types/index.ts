@@ -14,7 +14,7 @@ export interface Event {
   venue: string;
   eventPhoto: string;
   registrationDeadline: string;
-  rules: string[];
+  rules: { heading: string; content: string }[];
   structuredRules: StructuredRule[];
   structure: StructuredRule[];
   prizeDistribution: PrizeDistribution;
