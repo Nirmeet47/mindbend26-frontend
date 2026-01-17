@@ -334,7 +334,10 @@ export default function WorkshopDetailPage() {
           isTeamEvent={false}
           minTeamSize={1}
           maxTeamSize={1}
-          rules={workshop.prerequisites}
+          rules={workshop.prerequisites.map((prerequisite: string, index: number) => ({
+            heading: `Prerequisite ${index + 1}`,
+            content: prerequisite
+          }))}
           contact={workshop.contact}
           whatsappGrpLink={workshop.whatsappGrpLink}
         />
