@@ -24,15 +24,20 @@ export default function Theme() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const { scrollYProgress } = useScroll({
-    target: contentRef,
-    offset: ["start center", "end center"],
+    target: containerRef,
+    offset: ["start start", "end end"],
   });
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.onChange((progress) => {
-      // Calculate which paragraph to show based on scroll progress
-      // 0 to 1 maps to 3 paragraphs
-      const index = Math.min(Math.floor(progress * 3), 2);
+      // Evenly distribute 3 paragraphs across the full section
+      // 0-0.33: paragraph 0, 0.33-0.66: paragraph 1, 0.66-1: paragraph 2
+      let index = 0;
+      if (progress > 0.66) {
+        index = 2;
+      } else if (progress > 0.33) {
+        index = 1;
+      }
       setActiveIndex(index);
     });
 
@@ -103,12 +108,18 @@ export default function Theme() {
             style={{ fontFamily: "Space Grotesk, sans-serif" }}
           >
             <h2
-              className="text-2xl sm:text-3xl md:text-3xl font-black text-transparent bg-clip-text bg-linear-to-r tracking-widest from-blue-400 to-cyan-300 drop-shadow-[0_0_15px_rgba(0,255,255,0.5)]"
-              style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+              className="text-3xl sm:text-4xl md:text-5xl font-black tracking-widest drop-shadow-[0_0_25px_rgba(0,242,255,0.8)]"
+              style={{
+                fontFamily: "Barlow Condensed, sans-serif",
+                background: 'linear-gradient(135deg, #00f2ff 0%, #00d4ff 50%, #00b8ff 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}
             >
               SYMBIONT
             </h2>
-            <p className="text-sm sm:text-lg md:text-xl font-medium tracking-widest text-blue-200 mt-1 uppercase">
+            <p className="text-base sm:text-xl md:text-2xl font-semibold tracking-wider text-cyan-300 mt-2 uppercase drop-shadow-[0_0_10px_rgba(0,242,255,0.4)]">
               The Cognitive Genesis
             </p>
           </div>
@@ -132,7 +143,7 @@ export default function Theme() {
                 }
                 transition={{ duration: 0.6, ease: "easeInOut" }}
               >
-                <p className="text-gray-200 text-md md:text-xl leading-relaxed font-light">
+                <p className="text-white text-lg md:text-2xl leading-relaxed font-normal drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
                   {paragraph.content}
                 </p>
               </motion.div>
