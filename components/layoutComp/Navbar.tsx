@@ -149,8 +149,8 @@ export default function Navbar() {
         }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         className={`fixed left-0 w-full z-40 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center mix-blend-difference text-white transition-all duration-300 mt-2 sm:mt-0 ${hasScrolledPast50vh && scrollY > 100
-            ? "backdrop-blur-lg bg-black/20"
-            : ""
+          ? "bg-black/20"
+          : ""
           }`}
         style={{ fontFamily: "Barlow Condensed, sans-serif", top: 0 }}
       >

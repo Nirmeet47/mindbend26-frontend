@@ -74,32 +74,13 @@ interface ParallaxProps {
 
 function ParallaxText({ children, baseVelocity = 100 }: ParallaxProps) {
   const baseX = useMotionValue(0);
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, {
-    damping: 50,
-    stiffness: 400,
-  });
-
-  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], {
-    clamp: false,
-  });
 
   // We wrap between -25% and -50% to keep the marquee seamless
   // This assumes we have enough children to fill the screen
   const x = useTransform(baseX, (v) => `${wrap(-25, -50, v)}%`);
 
-  const directionFactor = useRef<number>(1);
   useAnimationFrame((t, delta) => {
-    let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
-
-    if (velocityFactor.get() < 0) {
-      directionFactor.current = -1;
-    } else if (velocityFactor.get() > 0) {
-      directionFactor.current = 1;
-    }
-
-    moveBy += directionFactor.current * moveBy * velocityFactor.get();
+    const moveBy = baseVelocity * (delta / 1000);
     baseX.set(baseX.get() + moveBy);
   });
 

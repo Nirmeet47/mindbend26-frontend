@@ -280,7 +280,7 @@ const Hero = () => {
           top-40
           left-1/2
           -translate-x-1/2
-          z-100
+          z-[100]
           origin-center
         "
       >
@@ -288,7 +288,7 @@ const Hero = () => {
           <img
             src="/images/mb_font.png"
             alt="MINDBEND"
-            className="w-[80vw] scale-160 lg:scale-100 md:w-[70vw] h-auto object-contain cursor-pointer opacity-95 z-100"
+            className="w-[80vw] scale-160 lg:scale-100 md:w-[70vw] h-auto object-contain cursor-pointer opacity-95 z-[100]"
           />
         </Link>
       </motion.div>
