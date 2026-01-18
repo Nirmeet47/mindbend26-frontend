@@ -161,7 +161,7 @@ const About = () => {
         >
           <div className="max-w-xl">
             <h3
-              className="text-white text-5xl md:text-7xl font-black mb-4 tracking-wide uppercase"
+              className="text-white text-5xl md:text-7xl font-black mb-12 tracking-wide uppercase leading-snug"
               style={{ fontFamily: "Barlow Condensed, sans-serif" }}
             >
               ABOUT{" "}

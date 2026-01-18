@@ -62,6 +62,7 @@ const ScrambleText = ({
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(0);
   const [scrollDirection, setScrollDirection] = useState<"up" | "down">("up");
   const [hasScrolledPast50vh, setHasScrolledPast50vh] = useState(false);
   const lastScrollY = useRef(0);
@@ -82,10 +83,14 @@ export default function Navbar() {
 
   // Track scroll position and direction
   useEffect(() => {
+    const handleResize = () => {
+      setViewportHeight(window.innerHeight);
+    };
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const viewportHeight = window.innerHeight;
-      const halfViewport = viewportHeight / 2;
+      const currentViewportHeight = window.innerHeight;
+      const halfViewport = currentViewportHeight / 2;
 
       // Determine scroll direction
       if (currentScrollY > lastScrollY.current) {
@@ -105,8 +110,15 @@ export default function Navbar() {
       lastScrollY.current = currentScrollY;
     };
 
+    // Initial set
+    setViewportHeight(window.innerHeight);
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const menuData = [
@@ -154,7 +166,7 @@ export default function Navbar() {
           }`}
         style={{ fontFamily: "Barlow Condensed, sans-serif", top: 0 }}
       >
-        {isHome ? (
+        {isHome && scrollY < (viewportHeight * 0.7 || 800) ? (
           <div className="w-20 md:w-28 h-8" />
         ) : (
           <Link href="/" className="flex items-center">
