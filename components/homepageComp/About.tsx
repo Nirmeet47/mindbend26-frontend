@@ -65,7 +65,7 @@ const About = () => {
 
         {/* Metadata Grid */}
         <div
-          className="absolute top-10 md:top-30 left-0 w-full px-6 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-[10px] md:text-xs text-gray-500 tracking-widest uppercase"
+          className="absolute top-10 md:top-30 left-0 w-full px-6 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-[10px] md:text-xs text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-300 tracking-widest uppercase font-semibold"
           style={{ fontFamily: "Space Grotesk, sans-serif" }}
         >
           <div className="space-y-1">
@@ -74,7 +74,7 @@ const About = () => {
           </div>
 
           <div
-            className="hidden lg:block text-center text-sm md:text-md max-w-sm lowercase italic text-gray-500"
+            className="hidden lg:block text-center text-sm md:text-md max-w-sm lowercase italic"
             style={{ fontFamily: "Space Grotesk, sans-serif" }}
           >
             <p>
@@ -84,7 +84,7 @@ const About = () => {
           </div>
 
           <div
-            className="text-right text-gray-500 text-sm md:text-xl"
+            className="text-right text-sm md:text-xl"
             style={{ fontFamily: "Space Grotesk, sans-serif" }}
           >
             31ST EDITION
@@ -92,22 +92,38 @@ const About = () => {
         </div>
 
         {/* Main Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="z-10 px-4 sm:px-6 md:px-8"
-        >
+        <div className="z-10 px-4 sm:px-6 md:px-8">
           <h1
             className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-light tracking-tight leading-tight mb-2 sm:mb-4"
             style={{ fontFamily: "Space Grotesk, sans-serif" }}
           >
-            <span className="text-white">Elite Innovation</span>
+            <motion.span
+              initial={{ x: -100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.8 }}
+              className="text-white inline-block"
+            >
+              Elite Innovation
+            </motion.span>
             <br />
-            <span className="text-white">Opportunities.</span>
-            <span className="text-gray-600 ml-2">Symbiont.</span>
+            <motion.span
+              initial={{ x: -100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-white inline-block"
+            >
+              Opportunities.
+            </motion.span>
+            <motion.span
+              initial={{ x: 100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-300 ml-2 inline-block"
+            >
+              Symbiont.
+            </motion.span>
           </h1>
-        </motion.div>
+        </div>
 
         {/* Subtitle */}
         <motion.p
