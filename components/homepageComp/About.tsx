@@ -68,14 +68,14 @@ const About = () => {
           className="absolute top-10 md:top-30 left-0 w-full px-6 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-[10px] md:text-xs text-gray-500 tracking-widest uppercase"
           style={{ fontFamily: "Space Grotesk, sans-serif" }}
         >
-          <div className="space-y-1">
+          <div className="space-y-1" style={{ color: '#00d3f2' }}>
             <p>SVNIT SURAT PRESENTS</p>
             <p>GLOBAL EVENT / 2026 EDITION</p>
           </div>
 
           <div
-            className="hidden lg:block text-center text-sm md:text-md max-w-sm lowercase italic text-gray-500"
-            style={{ fontFamily: "Space Grotesk, sans-serif" }}
+            className="hidden lg:block text-center text-sm md:text-md max-w-sm lowercase italic"
+            style={{ fontFamily: "Space Grotesk, sans-serif", color: '#00b9da' }}
           >
             <p>
               where tradition fuels progress, shaping a sustainable and dynamic
@@ -84,8 +84,8 @@ const About = () => {
           </div>
 
           <div
-            className="text-right text-gray-500 text-sm md:text-xl"
-            style={{ fontFamily: "Space Grotesk, sans-serif" }}
+            className="text-right text-sm md:text-xl"
+            style={{ fontFamily: "Space Grotesk, sans-serif", color: '#00d3f2' }}
           >
             31ST EDITION
           </div>
@@ -105,7 +105,7 @@ const About = () => {
             <span className="text-white">Elite Innovation</span>
             <br />
             <span className="text-white">Opportunities.</span>
-            <span className="text-gray-600 ml-2">Symbiont.</span>
+            <span className="ml-2" style={{ color: '#00d3f2' }}>Symbiont.</span>
           </h1>
         </motion.div>
 
@@ -172,29 +172,82 @@ const About = () => {
             </p>
 
             {/* Metrics */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12 md:mt-16">
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-12 md:mt-16"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.2
+                  }
+                }
+              }}
+            >
               {[
-                { value: 15, prefix: "", suffix: "k+", label: "Footfall" },
-                { value: 1300, prefix: "₹", suffix: "k+", label: "Prize Pool" },
-                { value: 4, prefix: "", suffix: "k+", label: "Teams" },
+                { value: 15000, prefix: "", suffix: "+", label: "Participants" },
+                { value: 7, prefix: "₹", suffix: " Lakh+", label: "Prize Pool" },
               ].map((item, i) => (
-                <div key={i}>
-                  <div
-                    className="text-white text-4xl md:text-5xl font-extrabold"
-                    style={{ fontFamily: "Barlow Condensed, sans-serif" }}
-                  >
-                    <Counter
-                      to={item.value}
-                      prefix={item.prefix}
-                      suffix={item.suffix}
-                    />
+                <motion.div
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, y: 50, scale: 0.8 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                      transition: {
+                        type: "spring",
+                        damping: 12,
+                        stiffness: 100
+                      }
+                    }
+                  }}
+                  whileHover={{
+                    scale: 1.05,
+                    transition: { type: "spring", stiffness: 300 }
+                  }}
+                  className="relative group"
+                >
+                  {/* Glow effect on hover */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                  />
+
+                  <div className="relative">
+                    <motion.div
+                      className="text-white text-4xl md:text-5xl font-extrabold"
+                      style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+                      whileHover={{
+                        color: "#00d3f2",
+                        transition: { duration: 0.3 }
+                      }}
+                    >
+                      <Counter
+                        to={item.value}
+                        prefix={item.prefix}
+                        suffix={item.suffix}
+                      />
+                    </motion.div>
+                    <motion.div
+                      className="text-gray-400 text-xs md:text-sm tracking-widest uppercase mt-2"
+                      whileHover={{
+                        color: "#00b9da",
+                        x: 5,
+                        transition: { duration: 0.2 }
+                      }}
+                    >
+                      {item.label}
+                    </motion.div>
                   </div>
-                  <div className="text-gray-400 text-xs md:text-sm tracking-widest uppercase">
-                    {item.label}
-                  </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       </section>
