@@ -111,16 +111,10 @@ export const metadata: Metadata = {
     },
   },
 
-  // Icons configuration
+  // Icons - Next.js automatically serves favicon.ico from public folder
   icons: {
-    icon: [
-      { url: "/images/mb_logo.png", sizes: "32x32", type: "image/png" },
-      { url: "/images/mb_logo.png", sizes: "16x16", type: "image/png" },
-    ],
-    apple: [
-      { url: "/images/mb_logo.png", sizes: "180x180", type: "image/png" },
-    ],
-    shortcut: "/images/mb_logo.png",
+    icon: "/favicon.ico",
+    apple: "/images/mb_logo.png",
   },
 
   // Manifest for PWA
