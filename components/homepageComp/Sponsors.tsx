@@ -57,7 +57,7 @@ export default function Sponsors() {
       </motion.div>
 
       <div className="relative flex flex-nowrap overflow-hidden">
-        <ParallaxText baseVelocity={-0.8}>
+        <ParallaxText baseVelocity={0.3}>
           {sponsorLogos.map(({ src, darkOnBlack }, index) => (
             <SponsorLogo key={index} src={src} darkOnBlack={darkOnBlack} />
           ))}

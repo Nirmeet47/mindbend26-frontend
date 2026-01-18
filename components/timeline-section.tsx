@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 interface TimelineEvent {
     year: string;
@@ -32,116 +32,126 @@ const events: TimelineEvent[] = [
     }
 ];
 
+const CYAN_GLOW = '#00f2ff';
+
 export default function TimelineSection() {
     const containerRef = useRef<HTMLDivElement>(null);
+    const [scrollProgress, setScrollProgress] = useState(0);
+
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start end", "end start"]
     });
 
-    const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
+    useEffect(() => {
+        const handleScroll = () => {
+            if (!containerRef.current) return;
+            const rect = containerRef.current.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+
+            const start = rect.top - viewportHeight / 2;
+            const totalHeight = rect.height;
+            const progress = Math.max(0, Math.min(100, (-start / totalHeight) * 100));
+
+            setScrollProgress(progress);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Generate curved path
+    const pathData = events.map((_, i) => {
+        const yStart = i * 400;
+        const yMid = yStart + 200;
+        const yEnd = yStart + 400;
+        const xMid = i % 2 === 0 ? 150 : 50;
+        return `Q ${xMid} ${yMid}, 100 ${yEnd}`;
+    }).join(' ');
+
+    const fullPath = `M 100 0 ${pathData}`;
 
     return (
         <section
             ref={containerRef}
             className="relative py-32 overflow-hidden bg-[#020205]"
         >
-            {/* Flowing White Line with Curls - Extended to reach the end */}
-            <svg
-                className="absolute left-0 top-0 w-full h-full pointer-events-none"
-                viewBox="0 0 1000 3400"
-                preserveAspectRatio="none"
+            {/* Background Decorative Elements */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+                <div className="sticky top-0 h-screen overflow-hidden">
+                    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/5 blur-[150px] rounded-full" />
+                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 blur-[150px] rounded-full" style={{ backgroundColor: `${CYAN_GLOW}10` }} />
+                </div>
+            </div>
+
+            {/* Header - Above Timeline */}
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true, amount: 0.5 }}
+                className="text-center mb-20 relative z-10"
             >
-                {/* Main flowing path - EXTENDED to reach all the way to the bottom */}
-                <motion.path
-                    d="M 100 50 Q 700 150, 300 450 Q 50 650, 600 850 Q 950 1050, 350 1350 Q 150 1550, 700 1750 Q 900 1950, 500 2150 Q 300 2350, 600 2550 Q 800 2750, 400 2950 Q 200 3100, 500 3250 L 500 3350"
-                    stroke="rgba(255, 255, 255, 0.5)"
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                    style={{ pathLength }}
-                    initial={{ pathLength: 0 }}
-                />
-
-                {/* Decorative curls and loops */}
-                <motion.circle
-                    cx="500"
-                    cy="300"
-                    r="40"
-                    stroke="rgba(255, 255, 255, 0.2)"
-                    strokeWidth="1.5"
-                    fill="none"
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: [0, 0.5, 0], scale: [0, 1, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
-                />
-
-                <motion.path
-                    d="M 600 600 Q 650 550, 700 600 Q 650 650, 600 600"
-                    stroke="rgba(255, 255, 255, 0.25)"
-                    strokeWidth="1.5"
-                    fill="none"
-                    strokeLinecap="round"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0.6, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-                />
-
-                <motion.circle
-                    cx="350"
-                    cy="1100"
-                    r="30"
-                    stroke="rgba(255, 255, 255, 0.2)"
-                    strokeWidth="1.5"
-                    fill="none"
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: [0, 0.5, 0], scale: [0, 1, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, delay: 2 }}
-                />
-
-                <motion.path
-                    d="M 700 1500 Q 750 1450, 800 1500 Q 750 1550, 700 1500"
-                    stroke="rgba(255, 255, 255, 0.25)"
-                    strokeWidth="1.5"
-                    fill="none"
-                    strokeLinecap="round"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0.6, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: 2.5 }}
-                />
-
-                {/* Spiral curl */}
-                <motion.path
-                    d="M 400 1900 Q 450 1850, 500 1900 Q 450 1950, 400 1900 Q 430 1920, 470 1900"
-                    stroke="rgba(255, 255, 255, 0.2)"
-                    strokeWidth="1.5"
-                    fill="none"
-                    strokeLinecap="round"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0.5, 0] }}
-                    transition={{ duration: 3.5, repeat: Infinity, delay: 3 }}
-                />
-            </svg>
+                <h2 className="text-7xl md:text-9xl font-black tracking-tight mb-4 text-white">
+                    Our Journey
+                </h2>
+                <p className="text-lg mb-12" style={{ color: `${CYAN_GLOW}B3`, fontFamily: 'Space Grotesk, sans-serif' }}>
+                    Three decades of innovation and excellence
+                </p>
+            </motion.div>
 
             <div className="max-w-7xl mx-auto px-6 relative z-10">
-                {/* Header - Hidden initially, appears on scroll */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    viewport={{ once: true, amount: 0.5 }}
-                    className="text-center mb-32"
-                >
-                    <h2 className="text-7xl md:text-9xl font-black tracking-tight mb-4" style={{ color: '#00d3f2' }}>
-                        Our Journey
-                    </h2>
-                    <p className="text-lg" style={{ color: 'rgba(0, 211, 242, 0.7)', fontFamily: 'Space Grotesk, sans-serif' }}>
-                        Three decades of innovation and excellence
-                    </p>
-                </motion.div>
+
+                {/* The Curved Track Container */}
+                <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[200px] pointer-events-none">
+                    <svg
+                        viewBox={`0 0 200 ${events.length * 400}`}
+                        preserveAspectRatio="none"
+                        className="w-full h-full overflow-visible"
+                    >
+                        <defs>
+                            <linearGradient id="curveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style={{ stopColor: CYAN_GLOW, stopOpacity: 0.1 }} />
+                                <stop offset="50%" style={{ stopColor: '#003399', stopOpacity: 0.3 }} />
+                                <stop offset="100%" style={{ stopColor: CYAN_GLOW, stopOpacity: 0.1 }} />
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        {/* Static Background Path */}
+                        <path
+                            d={fullPath}
+                            stroke="url(#curveGrad)"
+                            strokeWidth="2"
+                            fill="none"
+                            className="opacity-20"
+                        />
+
+                        {/* Animated Progress Path */}
+                        <path
+                            d={fullPath}
+                            stroke={CYAN_GLOW}
+                            strokeWidth="3"
+                            fill="none"
+                            strokeDasharray="100"
+                            strokeDashoffset={100 - scrollProgress}
+                            pathLength="100"
+                            filter="url(#glow)"
+                            className="transition-all duration-300 ease-out"
+                            strokeLinecap="round"
+                        />
+                    </svg>
+                </div>
 
                 {/* Timeline Events */}
-                <div className="relative space-y-56">
+                <div className="relative space-y-0">
                     {events.map((event, index) => (
                         <TimelineEvent
                             key={index}
@@ -161,86 +171,100 @@ interface TimelineEventProps {
 }
 
 function TimelineEvent({ event, index }: TimelineEventProps) {
-    const ref = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["start end", "end start"]
-    });
+    const [isVisible, setIsVisible] = useState(false);
+    const domRef = useRef<HTMLDivElement>(null);
 
-    // Only show after scrolling - starts invisible
-    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.7, 0.9], [0, 1, 1, 0]);
-    const y = useTransform(scrollYProgress, [0, 0.2, 0.7, 0.9], [100, 0, 0, -100]);
-    const scale = useTransform(scrollYProgress, [0, 0.2, 0.7, 0.9], [0.8, 1, 1, 0.8]);
+    useEffect(() => {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) setIsVisible(true);
+                else if (entry.boundingClientRect.top > 0) setIsVisible(false);
+            });
+        }, {
+            threshold: 0.2,
+            rootMargin: "-10% 0px -10% 0px"
+        });
 
-    // Alternate positioning
-    const isLeft = index % 2 === 0;
-    const x = useTransform(
-        scrollYProgress,
-        [0, 0.2, 0.7, 0.9],
-        isLeft ? [-150, 0, 0, 150] : [150, 0, 0, -150]
-    );
+        if (domRef.current) observer.observe(domRef.current);
+        return () => {
+            if (domRef.current) observer.unobserve(domRef.current);
+        };
+    }, []);
+
+    const isEven = index % 2 === 0;
+    const sideClass = isEven ? 'md:pr-24 lg:pr-32' : 'md:pl-24 lg:pl-32 order-last';
 
     return (
-        <motion.div
-            ref={ref}
-            style={{ opacity, y, scale, x }}
-            className={`relative ${isLeft ? 'text-left md:ml-0' : 'text-right md:ml-auto'} max-w-2xl`}
+        <div
+            ref={domRef}
+            className={`relative flex items-center justify-between w-full h-[400px] transition-all duration-1000 ease-in-out
+                ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-12'}`}
         >
-            {/* Year - Large Background - Bluish */}
-            <motion.div
-                className="mb-6"
-                whileHover={{ scale: 1.05 }}
-            >
-                <span
-                    className="text-9xl md:text-[12rem] font-black"
-                    style={{
-                        color: 'rgba(0, 185, 218, 0.15)',
-                        WebkitTextStroke: '1px rgba(0, 211, 242, 0.2)',
-                    }}
-                >
-                    {event.year}
-                </span>
-            </motion.div>
+            {/* The Anchor Node on the curve */}
+            <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
+                <div className={`relative flex items-center justify-center transition-all duration-1000 delay-300 ${isVisible ? 'scale-100' : 'scale-0'}`}>
+                    <div className="absolute w-16 h-16 rounded-full blur-xl animate-pulse" style={{ backgroundColor: `${CYAN_GLOW}1A` }} />
+                    <div className="w-4 h-4 rounded-full bg-white z-20 border-2" style={{
+                        borderColor: CYAN_GLOW,
+                        boxShadow: `0 0 15px ${CYAN_GLOW}`
+                    }} />
 
-            {/* Title - Bluish */}
-            <motion.h3
-                className="text-6xl md:text-8xl font-black mb-6 leading-tight"
-                style={{ color: '#00d3f2' }}
-                whileHover={{ x: isLeft ? 10 : -10 }}
-                transition={{ type: "spring", stiffness: 300 }}
-            >
-                {event.title}
-            </motion.h3>
+                    {/* Connector line to card */}
+                    <div
+                        className={`absolute h-[1px] transition-all duration-1000 delay-500
+                            ${isEven ? 'right-full origin-right' : 'left-full origin-left'}
+                            ${isVisible ? 'w-12 md:w-24 opacity-40' : 'w-0 opacity-0'}`}
+                        style={{
+                            background: `linear-gradient(to ${isEven ? 'left' : 'right'}, ${CYAN_GLOW}, transparent)`
+                        }}
+                    />
+                </div>
 
-            {/* Description - Light Blue */}
-            <motion.p
-                className="text-xl md:text-2xl leading-relaxed max-w-xl"
-                style={{ color: '#00b9da', fontFamily: 'Space Grotesk, sans-serif' }}
-                whileHover={{ color: '#00d3f2' }}
-            >
-                {event.description}
-            </motion.p>
+                {/* Year Label */}
+                <div className={`absolute top-8 whitespace-nowrap font-mono text-xs tracking-[0.4em] font-bold transition-all duration-1000 delay-300
+                    ${isVisible ? 'opacity-100' : 'opacity-0'}
+                    ${isEven ? 'right-8 text-right' : 'left-8 text-left'}`}>
+                    <span style={{ color: CYAN_GLOW }}>{event.year}</span>
+                </div>
+            </div>
 
-            {/* Decorative White Line */}
-            <motion.div
-                className={`h-px w-40 mt-8 ${!isLeft && 'ml-auto'}`}
-                style={{ backgroundColor: 'rgba(0, 185, 218, 0.4)' }}
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                viewport={{ once: true }}
-                style={{ transformOrigin: isLeft ? 'left' : 'right' }}
-            />
+            {/* Content Card */}
+            <div className={`w-[45%] md:w-[40%] group ${sideClass}`}>
+                <div className={`p-6 md:p-10 rounded-3xl border transition-all duration-1000 delay-100 backdrop-blur-xl relative overflow-hidden
+                    ${isVisible
+                        ? 'bg-white/5 border-white/10 shadow-[40px_40px_80px_rgba(0,0,0,0.4)] translate-x-0'
+                        : `bg-transparent border-transparent ${isEven ? 'translate-x-10' : '-translate-x-10'}`}`}>
 
-            {/* Dot on the line */}
-            <motion.div
-                className={`absolute ${isLeft ? 'left-0' : 'right-0'} top-1/2 w-3 h-3 rounded-full shadow-lg`}
-                style={{ backgroundColor: '#00d3f2', boxShadow: '0 0 20px rgba(0, 211, 242, 0.5)' }}
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.4 }}
-                viewport={{ once: true }}
-            />
-        </motion.div>
+                    {/* Corner accent */}
+                    <div className="absolute top-0 right-0 w-16 h-16 border-t border-r rounded-tr-3xl" style={{ borderColor: `${CYAN_GLOW}4D` }} />
+
+                    <h3
+                        className="text-2xl md:text-4xl font-serif mb-4 leading-tight text-white transition-colors duration-500"
+                        style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+                    >
+                        {event.title}
+                    </h3>
+
+                    <p className="text-blue-100/60 leading-relaxed font-light text-sm md:text-lg" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+                        {event.description}
+                    </p>
+
+                    <div className="mt-8 flex items-center gap-4 group-hover:gap-6 transition-all">
+                        <div className="px-3 py-1 rounded border text-[10px] tracking-tighter uppercase font-bold"
+                            style={{
+                                backgroundColor: `${CYAN_GLOW}1A`,
+                                borderColor: `${CYAN_GLOW}33`,
+                                color: CYAN_GLOW
+                            }}>
+                            Milestone {index + 1}
+                        </div>
+                        <div className="h-[1px] flex-grow bg-white/10" />
+                    </div>
+                </div>
+            </div>
+
+            {/* Spacer */}
+            <div className="w-[45%] md:w-[40%] hidden md:block" />
+        </div>
     );
 }
