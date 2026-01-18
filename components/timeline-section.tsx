@@ -36,30 +36,14 @@ const CYAN_GLOW = '#00f2ff';
 
 export default function TimelineSection() {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [scrollProgress, setScrollProgress] = useState(0);
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
-        offset: ["start end", "end start"]
+        offset: ["start center", "end center"]
     });
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (!containerRef.current) return;
-            const rect = containerRef.current.getBoundingClientRect();
-            const viewportHeight = window.innerHeight;
-
-            const start = rect.top - viewportHeight / 2;
-            const totalHeight = rect.height;
-            const progress = Math.max(0, Math.min(100, (-start / totalHeight) * 100));
-
-            setScrollProgress(progress);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    // Transform scroll progress to path length (0 to 100)
+    const pathLength = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
     // Generate curved path
     const pathData = events.map((_, i) => {
@@ -135,17 +119,19 @@ export default function TimelineSection() {
                         />
 
                         {/* Animated Progress Path */}
-                        <path
+                        <motion.path
                             d={fullPath}
                             stroke={CYAN_GLOW}
                             strokeWidth="3"
                             fill="none"
-                            strokeDasharray="100"
-                            strokeDashoffset={100 - scrollProgress}
-                            pathLength="100"
+                            pathLength="1"
+                            strokeDasharray="1"
+                            strokeDashoffset={useTransform(pathLength, [0, 100], [1, 0])}
                             filter="url(#glow)"
-                            className="transition-all duration-300 ease-out"
                             strokeLinecap="round"
+                            style={{
+                                strokeDashoffset: useTransform(pathLength, [0, 100], [1, 0])
+                            }}
                         />
                     </svg>
                 </div>
