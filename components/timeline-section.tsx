@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
+import EventCard from './EventCard';
 
 interface TimelineEvent {
     year: string;
@@ -32,7 +33,7 @@ const events: TimelineEvent[] = [
     }
 ];
 
-const CYAN_GLOW = '#00f2ff';
+const CYAN_GLOW = '#33ABB9';
 
 export default function TimelineSection() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -59,7 +60,7 @@ export default function TimelineSection() {
     return (
         <section
             ref={containerRef}
-            className="relative py-32 overflow-hidden bg-[#020205]"
+            className="relative py-32 overflow-hidden"
         >
             {/* Background Decorative Elements */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
@@ -219,36 +220,19 @@ function TimelineEvent({ event, index }: TimelineEventProps) {
 
             {/* Content Card */}
             <div className={`w-full max-w-sm md:max-w-none md:w-[40%] group ${sideClass}`}>
-                <div className={`p-6 md:p-10 rounded-3xl border transition-all duration-1000 delay-100 backdrop-blur-xl relative overflow-hidden
+                <div className={`transition-all duration-1000 delay-100 relative
                     ${isVisible
-                        ? 'bg-white/5 border-white/10 shadow-[40px_40px_80px_rgba(0,0,0,0.4)] translate-x-0'
-                        : `bg-transparent border-transparent ${isEven ? 'translate-x-10' : '-translate-x-10'}`}`}>
-
-                    {/* Corner accent */}
-                    <div className="absolute top-0 right-0 w-16 h-16 border-t border-r rounded-tr-3xl" style={{ borderColor: `${CYAN_GLOW}4D` }} />
-
-                    <h3
-                        className="text-2xl md:text-4xl font-serif mb-4 leading-tight text-white transition-colors duration-500"
-                        style={{ fontFamily: 'Space Grotesk, sans-serif' }}
-                    >
-                        {event.title}
-                    </h3>
-
-                    <p className="text-blue-100/60 leading-relaxed font-light text-sm md:text-lg" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-                        {event.description}
-                    </p>
-
-                    <div className="mt-8 flex items-center gap-4 group-hover:gap-6 transition-all">
-                        <div className="px-3 py-1 rounded border text-[10px] tracking-tighter uppercase font-bold"
-                            style={{
-                                backgroundColor: `${CYAN_GLOW}1A`,
-                                borderColor: `${CYAN_GLOW}33`,
-                                color: CYAN_GLOW
-                            }}>
-                            Milestone {index + 1}
-                        </div>
-                        <div className="h-[1px] flex-grow bg-white/10" />
-                    </div>
+                        ? 'opacity-100 translate-x-0'
+                        : `opacity-0 ${isEven ? 'translate-x-10' : '-translate-x-10'}`}`}>
+                    <EventCard
+                        title={event.title}
+                        aboutEvent={event.description}
+                        date={event.year}
+                        prizeLabel="Milestone"
+                        prize={(index + 1).toString().padStart(2, '0')}
+                        slug="#"
+                        showExploreButton={false}
+                    />
                 </div>
             </div>
 

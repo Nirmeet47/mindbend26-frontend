@@ -47,7 +47,7 @@ export default function Theme() {
   return (
     <section
       ref={containerRef}
-      className="relative h-[250vh] bg-black"
+      className="relative h-[250vh]"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         {/* Top dotted line with shine animation (mirrors countdown divider styling) */}

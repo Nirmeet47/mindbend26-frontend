@@ -51,8 +51,7 @@ const About = () => {
   return (
     <>
       {/* Hero Section - Elite Opportunities */}
-      <section className="relative min-h-[55vh] md:min-h-[90vh] w-full bg-black z-10 flex items-center justify-center overflow-hidden py-20">
-        <div className="absolute top-0 left-0 right-0 h-28 bg-linear-to-b from-[#020205] to-transparent pointer-events-none z-0" />
+      <section className="relative min-h-[55vh] md:min-h-[90vh] w-full z-10 flex items-center justify-center overflow-hidden py-20">
 
         {/* Decorative Grid Pattern - Hidden on small mobile */}
         <div className="absolute bottom-8 right-4 md:right-15 opacity-40 md:opacity-100">
@@ -139,7 +138,7 @@ const About = () => {
       </section>
 
       {/* About Section with Video Background */}
-      <section className="relative min-h-[85vh] md:min-h-screen w-full overflow-hidden z-10 bg-black flex items-center">
+      <section className="relative min-h-[85vh] md:min-h-screen w-full overflow-hidden z-10 flex items-center">
         {/* Background Video - Adjusted for mobile */}
         <video
           autoPlay
