@@ -62,6 +62,7 @@ const ScrambleText = ({
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(0);
   const [scrollDirection, setScrollDirection] = useState<"up" | "down">("up");
   const [hasScrolledPast50vh, setHasScrolledPast50vh] = useState(false);
   const lastScrollY = useRef(0);
@@ -82,10 +83,14 @@ export default function Navbar() {
 
   // Track scroll position and direction
   useEffect(() => {
+    const handleResize = () => {
+      setViewportHeight(window.innerHeight);
+    };
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const viewportHeight = window.innerHeight;
-      const halfViewport = viewportHeight / 2;
+      const currentViewportHeight = window.innerHeight;
+      const halfViewport = currentViewportHeight / 2;
 
       // Determine scroll direction
       if (currentScrollY > lastScrollY.current) {
@@ -105,8 +110,15 @@ export default function Navbar() {
       lastScrollY.current = currentScrollY;
     };
 
+    // Initial set
+    setViewportHeight(window.innerHeight);
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const menuData = [
@@ -144,7 +156,7 @@ export default function Navbar() {
       <motion.nav
         initial={{ y: isHome ? -100 : 0, opacity: isHome ? 0 : 1 }}
         animate={{
-          y: scrollDirection === "down" && scrollY > 50 ? -100 : (showNavbar ? 0 : -100),
+          y: showNavbar && scrollY <= 50 ? 0 : -100,
           opacity: showNavbar ? 1 : 0
         }}
         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -154,7 +166,7 @@ export default function Navbar() {
           }`}
         style={{ fontFamily: "Barlow Condensed, sans-serif", top: 0 }}
       >
-        {isHome ? (
+        {isHome && scrollY < (viewportHeight * 0.7 || 800) ? (
           <div className="w-20 md:w-28 h-8" />
         ) : (
           <Link href="/" className="flex items-center">
@@ -171,14 +183,14 @@ export default function Navbar() {
             isAuthenticated ? (
               <Link
                 href="/user/dashboard"
-                className="flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
+                className="hidden md:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
               >
                 PROFILE
               </Link>
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
+                className="hidden md:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
               >
                 LOGIN
               </Link>
@@ -186,7 +198,7 @@ export default function Navbar() {
           )}
           <button
             onClick={() => setIsOpen(true)}
-            className="text-[15px] font-bold tracking-[0.2em] uppercase hover:scale-110 hover:text-zinc-400 transition-all duration-300 cursor-pointer"
+            className="text-[15px] font-bold tracking-[0.2em] uppercase hover:scale-110 hover:text-zinc-400 transition-all duration-300 cursor-pointer whitespace-nowrap"
           >
             MENU [+]
           </button>

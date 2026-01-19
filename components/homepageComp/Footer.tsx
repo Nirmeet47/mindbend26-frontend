@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
-    <footer className="relative w-full bg-black pt-10">
+    <footer className="relative w-full pt-10">
       {/* Map Section */}
       <div className="relative w-full h-62.5 md:h-100 px-4 md:px-10 overflow-hidden mb-12">
         <iframe

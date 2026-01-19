@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import { Toaster } from 'react-hot-toast';
 import Analytics from '@/components/Analytics';
 import "./globals.css";
@@ -12,6 +12,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mindbend-svnit.org";
@@ -64,7 +70,7 @@ export const metadata: Metadata = {
   generator: "Next.js",
   referrer: "origin-when-cross-origin",
   category: "Technology",
-  
+
   // Open Graph metadata for social sharing
   openGraph: {
     type: "website",
@@ -76,7 +82,7 @@ export const metadata: Metadata = {
       "Join Gujarat's biggest tech fest! 15,000+ participants, ₹7L+ prizes. Technical competitions, hackathons, workshops, MUN, esports & celebrity guest lectures. Feb 27-Mar 1, 2026 at SVNIT Surat.",
     images: [
       {
-        url: "/images/mb_logo.png",
+        url: `${siteUrl}/images/mb_logo.png`,
         width: 1200,
         height: 630,
         alt: "Mindbend 2026 - Gujarat's Largest Techno-Managerial Fest at SVNIT Surat",
@@ -84,18 +90,18 @@ export const metadata: Metadata = {
       },
     ],
   },
-  
+
   // Twitter Card metadata
   twitter: {
     card: "summary_large_image",
     title: "Mindbend 2026 - Gujarat's Largest Techno-Managerial Fest",
     description:
       "15,000+ participants | ₹7L+ prizes | Technical & Managerial competitions | Hackathons | Workshops | Feb 27-Mar 1, 2026 | SVNIT Surat",
-    images: ["/images/mb_logo.png"],
+    images: [`${siteUrl}/images/mb_logo.png`],
     creator: "@mindbend_nitsurat",
     site: "@mindbend_nitsurat",
   },
-  
+
   // Robots directives
   robots: {
     index: true,
@@ -110,27 +116,21 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  
-  // Icons configuration
+
+  // Icons - Next.js automatically serves favicon.ico from public folder
   icons: {
-    icon: [
-      { url: "/images/mb_logo.png", sizes: "32x32", type: "image/png" },
-      { url: "/images/mb_logo.png", sizes: "16x16", type: "image/png" },
-    ],
-    apple: [
-      { url: "/images/mb_logo.png", sizes: "180x180", type: "image/png" },
-    ],
-    shortcut: "/images/mb_logo.png",
+    icon: "/favicon.ico",
+    apple: "/images/mb_logo.png",
   },
-  
+
   // Manifest for PWA
   manifest: "/manifest.json",
-  
+
   // Alternate languages (if applicable)
   alternates: {
     canonical: siteUrl,
   },
-  
+
   // Verification for search engines
   verification: {
     // google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION, // Add if you get HTML tag from Google
@@ -139,7 +139,7 @@ export const metadata: Metadata = {
       "google-analytics": process.env.NEXT_PUBLIC_GA_ID || "",
     },
   },
-  
+
   // Other metadata
   other: {
     "mobile-web-app-capable": "yes",
@@ -229,7 +229,7 @@ export default function RootLayout({
       },
       {
         "@type": "Offer",
-        name: "Workshop Registration", 
+        name: "Workshop Registration",
         availability: "https://schema.org/InStock",
         price: "200",
         priceCurrency: "INR",
@@ -279,7 +279,7 @@ export default function RootLayout({
       "@type": "PostalAddress",
       streetAddress: "Ichchhanath, SVNIT Campus",
       addressLocality: "Surat",
-      addressRegion: "Gujarat", 
+      addressRegion: "Gujarat",
       postalCode: "395007",
       addressCountry: "IN",
     },
@@ -303,11 +303,11 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased`}
       ><Analytics />
-        
+
         {children}
-        <Toaster 
+        <Toaster
           position="top-right"
           toastOptions={{
             style: {

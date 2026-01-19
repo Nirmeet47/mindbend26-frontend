@@ -16,12 +16,16 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
-    return [
-      {
-        source: '/api/proxy/:path*', // The fake path on frontend
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`, // The real backend
-      },
-    ];
+    // Only add rewrite if API URL is defined
+    if (process.env.NEXT_PUBLIC_API_URL) {
+      return [
+        {
+          source: '/api/proxy/:path*', // The fake path on frontend
+          destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`, // The real backend
+        },
+      ];
+    }
+    return [];
   },
 };
 

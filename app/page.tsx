@@ -7,6 +7,7 @@ import Sponsors from "@/components/homepageComp/Sponsors";
 import Footer from "@/components/homepageComp/Footer";
 import Navbar from "@/components/layoutComp/Navbar";
 import Hero from "@/components/homepageComp/Hero";
+import TimelineSection from "@/components/timeline-section";
 import { Metadata } from 'next';
 
 // SEO-optimized metadata for homepage
@@ -35,11 +36,20 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     url: "https://mindbend.svnit.ac.in",
+    images: [
+      {
+        url: "https://mindbend-svnit.org/images/mb_logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Mindbend 2026 Logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Mindbend 2026 - Gujarat's Largest Techno-Managerial Fest",
     description: "15,000+ participants | ₹7L+ prizes | Technical & Managerial competitions | Feb 27-Mar 1, 2026 | SVNIT Surat",
+    images: ["https://mindbend-svnit.org/images/mb_logo.png"],
   }
 };
 
@@ -103,6 +113,10 @@ export default function Page() {
 
           <section aria-label="Festival Theme">
             <Theme />
+          </section>
+
+          <section aria-label="Our Journey Timeline">
+            <TimelineSection />
           </section>
 
           <section aria-label="Events and Competitions">
