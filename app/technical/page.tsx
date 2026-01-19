@@ -33,7 +33,7 @@ function Technical() {
           .then((res) => { 
             const events = res.data?.data?.events || [];
             // Sort events by prize money in descending order (highest prize first)
-            const sortedEvents = events.sort((a, b) => Number(b.prizeMoney) - Number(a.prizeMoney));
+            const sortedEvents = events.sort((a: Event, b: Event) => Number(b.prizeMoney) - Number(a.prizeMoney));
             setEvents(sortedEvents);
           })
           .catch(() => setError('Failed to load events'))
