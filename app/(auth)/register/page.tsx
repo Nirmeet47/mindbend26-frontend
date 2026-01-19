@@ -42,8 +42,41 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [, setFormError] = useState("");
-  const [, setFormSuccess] = useState("");
+  const [nameTouched, setNameTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+
+  const nameTrimmed = username.trim();
+  const nameAllowedChars = /^[A-Za-z\s\-']+$/;
+  const isNameLenValid = nameTrimmed.length >= 2 && nameTrimmed.length <= 50;
+  const isNameCharsValid = nameTrimmed.length > 0 && nameAllowedChars.test(nameTrimmed);
+
+  const isPasswordLenValid = password.length >= 8 && password.length <= 128;
+  const hasUpper = /[A-Z]/.test(password);
+  const hasLower = /[a-z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecial = /[^A-Za-z0-9]/.test(password);
+  const isPasswordComplexValid = hasUpper && hasLower && hasNumber && hasSpecial;
+
+  const nameError = (() => {
+    if (!nameTouched) return null;
+    if (nameTrimmed.length === 0) return null;
+    if (!isNameLenValid) return "Name must be between 2 and 50 characters";
+    if (!isNameCharsValid) return "Name can only contain letters, spaces, hyphens, and apostrophes";
+    return null;
+  })();
+
+  const passwordError = (() => {
+    if (!passwordTouched) return null;
+    if (password.length === 0) return null;
+    if (!isPasswordLenValid) return "Password must be between 8 and 128 characters";
+    if (!isPasswordComplexValid) {
+      return "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character";
+    }
+    return null;
+  })();
+
+  const [, setFormError] = useState<string | null>(null);
+  const [, setFormSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSendOTP = async (e: React.FormEvent) => {
@@ -69,14 +102,36 @@ export default function RegisterPage() {
     e.preventDefault();
     setFormError("");
     setFormSuccess("");
+
+    setNameTouched(true);
+    setPasswordTouched(true);
+
+    if (!isNameLenValid) {
+      const msg = "Name must be between 2 and 50 characters";
+      setFormError(msg);
+      showErrorToast(msg);
+      return;
+    }
+    if (!isNameCharsValid) {
+      const msg = "Name can only contain letters, spaces, hyphens, and apostrophes";
+      setFormError(msg);
+      showErrorToast(msg);
+      return;
+    }
     if (password !== confirmPassword) {
       const msg = "Passwords do not match";
       setFormError(msg);
       showErrorToast(msg);
       return;
     }
-    if (password.length < 6) {
-      const msg = "Password must be at least 6 characters long";
+    if (!isPasswordLenValid) {
+      const msg = "Password must be between 8 and 128 characters";
+      setFormError(msg);
+      showErrorToast(msg);
+      return;
+    }
+    if (!isPasswordComplexValid) {
+      const msg = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character";
       setFormError(msg);
       showErrorToast(msg);
       return;
@@ -271,7 +326,7 @@ export default function RegisterPage() {
                   )}
                 </div>
 
-                <div className={isStep2 ? "max-h-180 overflow-hidden pr-2 pb-10" : undefined}>
+                <div className={isStep2 ? "max-h-180 overflow-y-auto pr-2 pb-2" : undefined}>
                   <form
                     onSubmit={currentStep === 1 ? handleSendOTP : handleVerifyAndRegister}
                     className="space-y-4"
@@ -315,12 +370,21 @@ export default function RegisterPage() {
                         <input
                           type="text"
                           value={username}
-                          onChange={(e) => setUsername(e.target.value)}
-                          placeholder="Username"
-                          className="w-full pl-40 pr-3 py-11 bg-[#0a0e1a]/50 border border-[#07acca]/40 text-[#e6fbff] placeholder-[#07acca]/40 outline-none focus:border-[#4bdcff] focus:bg-[#0a0e1a]/80 transition-all font-mono text-3xl"
+                          onChange={(e) => {
+                            if (!nameTouched) setNameTouched(true);
+                            setUsername(e.target.value);
+                          }}
+                          placeholder="Name"
+                          className="w-full pl-40 pr-3 py-9 bg-[#0a0e1a]/50 border border-[#07acca]/40 text-[#e6fbff] placeholder-[#07acca]/40 outline-none focus:border-[#4bdcff] focus:bg-[#0a0e1a]/80 transition-all font-mono text-3xl"
                           required
                         />
                       </div>
+
+                      {nameError && (
+                        <div className="px-4 py-3 border font-mono text-2xl bg-amber-500/10 border-amber-400/40 text-amber-200">
+                          <span className="text-[#4bdcff]">NOTE:</span> {nameError}
+                        </div>
+                      )}
 
                       <div className="relative group">
                         <div
@@ -332,9 +396,12 @@ export default function RegisterPage() {
                         <input
                           type={showPassword ? "text" : "password"}
                           value={password}
-                          onChange={(e) => setPassword(e.target.value)}
+                          onChange={(e) => {
+                            if (!passwordTouched) setPasswordTouched(true);
+                            setPassword(e.target.value);
+                          }}
                           placeholder="Password"
-                          className="w-full pl-40 pr-24 py-11 bg-[#0a0e1a]/50 border border-[#07acca]/40 text-[#e6fbff] placeholder-[#07acca]/40 outline-none focus:border-[#4bdcff] focus:bg-[#0a0e1a]/80 transition-all font-mono text-3xl"
+                          className="w-full pl-40 pr-24 py-9 bg-[#0a0e1a]/50 border border-[#07acca]/40 text-[#e6fbff] placeholder-[#07acca]/40 outline-none focus:border-[#4bdcff] focus:bg-[#0a0e1a]/80 transition-all font-mono text-3xl"
                           required
                         />
                         <button
@@ -346,6 +413,12 @@ export default function RegisterPage() {
                           {showPassword ? <EyeOff size={40} /> : <Eye size={40} />}
                         </button>
                       </div>
+
+                      {passwordError && (
+                        <div className="px-4 py-3 border font-mono text-2xl bg-amber-500/10 border-amber-400/40 text-amber-200">
+                          <span className="text-[#4bdcff]">NOTE:</span> {passwordError}
+                        </div>
+                      )}
 
                       <div className="relative group">
                         <div
@@ -359,7 +432,7 @@ export default function RegisterPage() {
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder="Confirm Password"
-                          className="w-full pl-40 pr-24 py-11 bg-[#0a0e1a]/50 border border-[#07acca]/40 text-[#e6fbff] placeholder-[#07acca]/40 outline-none focus:border-[#4bdcff] focus:bg-[#0a0e1a]/80 transition-all font-mono text-3xl"
+                          className="w-full pl-40 pr-24 py-9 bg-[#0a0e1a]/50 border border-[#07acca]/40 text-[#e6fbff] placeholder-[#07acca]/40 outline-none focus:border-[#4bdcff] focus:bg-[#0a0e1a]/80 transition-all font-mono text-3xl"
                           required
                         />
                         <button
@@ -384,7 +457,7 @@ export default function RegisterPage() {
                           value={otp}
                           onChange={(e) => setOtp(e.target.value)}
                           placeholder="6-DIGIT OTP"
-                          className="w-full pl-40 pr-3 py-11 bg-[#0a0e1a]/50 border border-[#07acca]/40 text-[#e6fbff] placeholder-[#07acca]/40 outline-none focus:border-[#4bdcff] focus:bg-[#0a0e1a]/80 transition-all font-mono text-3xl tracking-[0.35em] text-center"
+                          className="w-full pl-40 pr-3 py-9 bg-[#0a0e1a]/50 border border-[#07acca]/40 text-[#e6fbff] placeholder-[#07acca]/40 outline-none focus:border-[#4bdcff] focus:bg-[#0a0e1a]/80 transition-all font-mono text-3xl tracking-[0.35em] text-center"
                           required
                           maxLength={6}
                         />
@@ -401,7 +474,7 @@ export default function RegisterPage() {
                           setFormSuccess("");
                           setCurrentStep(1);
                         }}
-                        className="w-full bg-transparent border-2 border-[#07acca] hover:bg-[#07acca]/10 hover:border-[#4bdcff] text-[#bdf3ff] font-bold py-11 transition-all duration-200 uppercase tracking-widest text-3xl font-mono"
+                        className="w-full bg-transparent border-2 border-[#07acca] hover:bg-[#07acca]/10 hover:border-[#4bdcff] text-[#bdf3ff] font-bold py-10   transition-all duration-200 uppercase tracking-widest text-3xl font-mono"
                         style={{ clipPath: "polygon(0 0, 100% 0, 95% 100%, 0 100%)" }}
                       >
                         BACK
@@ -410,7 +483,7 @@ export default function RegisterPage() {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-[#07acca]/15 border-2 border-[#07acca] hover:bg-[#07acca]/25 hover:border-[#4bdcff] text-[#e6fbff] font-bold py-11 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest text-3xl font-mono relative overflow-hidden group"
+                        className="w-full bg-[#07acca]/15 border-2 border-[#07acca] hover:bg-[#07acca]/25 hover:border-[#4bdcff] text-[#e6fbff] font-bold py-10  transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest text-3xl font-mono relative overflow-hidden group"
                         style={{ clipPath: "polygon(5% 0, 100% 0, 100% 100%, 0 100%)" }}
                       >
                         <div className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
@@ -432,7 +505,7 @@ export default function RegisterPage() {
                     </div>
                   )}
                       <div className="text-center pt-2">
-                      <p className="text-[#07acca]/60 text-3xl font-mono">
+                      <p className="text-[#07acca]/60 text-2xl font-mono">
                         ALREADY HAVE AN ACCOUNT?{' '}
                         <a
                           href="/login"
