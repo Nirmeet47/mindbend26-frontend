@@ -183,14 +183,14 @@ export default function Navbar() {
             isAuthenticated ? (
               <Link
                 href="/user/dashboard"
-                className="flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
+                className="hidden md:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
               >
                 PROFILE
               </Link>
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
+                className="hidden md:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
               >
                 LOGIN
               </Link>
@@ -198,7 +198,7 @@ export default function Navbar() {
           )}
           <button
             onClick={() => setIsOpen(true)}
-            className="text-[15px] font-bold tracking-[0.2em] uppercase hover:scale-110 hover:text-zinc-400 transition-all duration-300 cursor-pointer"
+            className="text-[15px] font-bold tracking-[0.2em] uppercase hover:scale-110 hover:text-zinc-400 transition-all duration-300 cursor-pointer whitespace-nowrap"
           >
             MENU [+]
           </button>

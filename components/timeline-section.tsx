@@ -87,8 +87,8 @@ export default function TimelineSection() {
 
             <div className="max-w-7xl mx-auto px-6 relative z-10">
 
-                {/* The Curved Track Container */}
-                <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[200px] pointer-events-none">
+                {/* The Curved Track Container (Desktop Only) */}
+                <div className="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[200px] pointer-events-none">
                     <svg
                         viewBox={`0 0 200 ${events.length * 400}`}
                         preserveAspectRatio="none"
@@ -136,6 +136,9 @@ export default function TimelineSection() {
                     </svg>
                 </div>
 
+                {/* Mobile Straight Line - REMOVED for Centered Layout */}
+                {/* <div className="md:hidden absolute left-6 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#00f2ff]/30 to-transparent"></div> */}
+
                 {/* Timeline Events */}
                 <div className="relative space-y-0">
                     {events.map((event, index) => (
@@ -178,16 +181,16 @@ function TimelineEvent({ event, index }: TimelineEventProps) {
     }, []);
 
     const isEven = index % 2 === 0;
-    const sideClass = isEven ? 'md:pr-24 lg:pr-32' : 'md:pl-24 lg:pl-32 order-last';
+    const sideClass = isEven ? 'md:pr-24 lg:pr-32' : 'md:pl-24 lg:pl-32 md:order-last';
 
     return (
         <div
             ref={domRef}
-            className={`relative flex items-center justify-between w-full h-[400px] transition-all duration-1000 ease-in-out
+            className={`relative flex flex-col md:flex-row items-center justify-between w-full min-h-[400px] md:h-[400px] transition-all duration-1000 ease-in-out py-10 md:py-0
                 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-12'}`}
         >
             {/* The Anchor Node on the curve */}
-            <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
+            <div className={`relative md:absolute md:left-1/2 md:-translate-x-1/2 flex items-center justify-center z-20 mb-8 md:mb-0`}>
                 <div className={`relative flex items-center justify-center transition-all duration-1000 delay-300 ${isVisible ? 'scale-100' : 'scale-0'}`}>
                     <div className="absolute w-16 h-16 rounded-full blur-xl animate-pulse" style={{ backgroundColor: `${CYAN_GLOW}1A` }} />
                     <div className="w-4 h-4 rounded-full bg-white z-20 border-2" style={{
@@ -209,13 +212,13 @@ function TimelineEvent({ event, index }: TimelineEventProps) {
                 {/* Year Label */}
                 <div className={`absolute top-8 whitespace-nowrap font-mono text-xs tracking-[0.4em] font-bold transition-all duration-1000 delay-300
                     ${isVisible ? 'opacity-100' : 'opacity-0'}
-                    ${isEven ? 'right-8 text-right' : 'left-8 text-left'}`}>
+                    left-1/2 -translate-x-1/2 md:translate-x-0 ${isEven ? 'md:right-8 md:text-right md:left-auto' : 'md:left-8 md:text-left'}`}>
                     <span style={{ color: CYAN_GLOW }}>{event.year}</span>
                 </div>
             </div>
 
             {/* Content Card */}
-            <div className={`w-[45%] md:w-[40%] group ${sideClass}`}>
+            <div className={`w-full max-w-sm md:max-w-none md:w-[40%] group ${sideClass}`}>
                 <div className={`p-6 md:p-10 rounded-3xl border transition-all duration-1000 delay-100 backdrop-blur-xl relative overflow-hidden
                     ${isVisible
                         ? 'bg-white/5 border-white/10 shadow-[40px_40px_80px_rgba(0,0,0,0.4)] translate-x-0'
