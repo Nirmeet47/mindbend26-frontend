@@ -6,15 +6,15 @@ import { motion, useScroll } from "framer-motion";
 const paragraphs = [
   {
     content:
-      "The Cognitive Genesis marks the birth of a future where humans and artificial intelligence grow together as partners, blending human insight with machine precision.",
+      "The Cognitive Genesis marks the birth of a future where humans and artificial intelligence grow together as partners, blending human insight with machine precision. It celebrates the dawn of a new era where technology amplifies human potential rather than replacing it.",
   },
   {
     content:
-      "Rooted in India’s values and innovation, the theme envisions an indigenous, ethical intelligence shaped by purpose, responsibility, and self-reliance.",
+      "Rooted in India's timeless values and pioneering innovation, the theme envisions an indigenous, ethical intelligence shaped by purpose, responsibility, and self-reliance. It draws inspiration from our rich heritage while embracing the limitless possibilities of tomorrow.",
   },
   {
     content:
-      "It is not about machines replacing people, but about India redefining intelligence through collaboration, balance, and visionary progress.",
+      "Symbiont is not about machines replacing people, but about India redefining intelligence through collaboration, balance, and visionary progress. It represents the harmonious coexistence of tradition and technology, creating a sustainable path forward.",
   },
 ];
 
@@ -82,13 +82,13 @@ export default function Theme() {
       </div>
 
       {/* CONTENT CONTAINER */}
-      <div className="relative z-20 md:h-screen flex flex-col justify-between px-4 sm:px-8 md:px-16 py-8 sm:py-10 md:py-0">
+      <div className="relative z-20 md:h-screen flex flex-col justify-between px-6 sm:px-10 py-8 sm:py-10 md:py-0">
         {/* HEADING - TOP */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="shrink-0 px-6 sm:px-12 md:px-20 pt-6 sm:pt-10 md:pt-16 z-1"
+          className="shrink-0 pt-6 sm:pt-10 md:pt-16 z-1"
         >
           <h2
             className="text-3xl sm:text-5xl md:text-7xl font-bold text-white uppercase tracking-wide"
@@ -117,10 +117,10 @@ export default function Theme() {
         {/* PARAGRAPHS - RIGHT SIDE WITH SCROLL-TRIGGERED CHANGES */}
         <div
           ref={contentRef}
-          className="flex-1 flex items-center justify-center md:justify-end pr-0 md:pr-30 pt-4 sm:pt-6 min-h-[40vh]"
+          className="flex-1 flex items-center justify-center md:justify-end pr-0 md:pr-10 pt-4 sm:pt-6 min-h-[40vh]"
           style={{ fontFamily: "Space Grotesk, sans-serif" }}
         >
-          <div className="w-full md:w-[30vw] max-w-[90vw] sm:max-w-[70vw] md:max-w-[40vw] relative min-h-60 sm:min-h-80 md:min-h-96 px-2">
+          <div className="w-full md:w-[40vw] max-w-[90vw] sm:max-w-[70vw] md:max-w-[50vw] relative min-h-60 sm:min-h-80 md:min-h-96 px-2">
             {paragraphs.map((paragraph, index) => (
               <motion.div
                 key={index}
