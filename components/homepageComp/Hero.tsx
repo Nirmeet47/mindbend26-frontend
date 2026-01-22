@@ -305,11 +305,7 @@ const Hero = () => {
           scrollDirection === "down"
             ? { opacity: 0, y: -200 }
             : showContent
-<<<<<<< HEAD
               ? { opacity: 1, y: -20 }
-=======
-              ? { opacity: 1, y: 0 }
->>>>>>> 7c6a0458f51c2385fb2e3498d16fce5fe02ffd20
               : { opacity: 0, y: -100 }
         }
         transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -319,11 +315,7 @@ const Hero = () => {
           x,
           y,
           pointerEvents: linkEnabled ? "auto" : "none",
-<<<<<<< HEAD
           display: scrollY > (viewportHeight * 0.7) ? "none" : "block", // Hide earlier to avoid text overlap // use 0.7 if this fails
-=======
-          display: scrollY > (viewportHeight * 0.7) ? "none" : "block", // Hide earlier to avoid text overlap
->>>>>>> 7c6a0458f51c2385fb2e3498d16fce5fe02ffd20
         }}
         className="
       fixed
