@@ -68,6 +68,17 @@ export default function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const { isAuthenticated, isLoading } = useAuth();
+  const [showNavbar, setShowNavbar] = useState(!isHome);
+
+  // Hide navbar for 5 seconds on homepage (preloader duration)
+  useEffect(() => {
+    if (isHome) {
+      const timer = setTimeout(() => {
+        setShowNavbar(true);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [isHome]);
 
   // Track scroll position and direction
   useEffect(() => {
@@ -131,14 +142,16 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: 0 }}
-        animate={{ y: scrollDirection === "down" && scrollY > 50 ? -100 : 0 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={`fixed left-0 w-full z-40 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center mix-blend-difference text-white transition-all duration-300 mt-2 sm:mt-0 ${
-          hasScrolledPast50vh && scrollY > 100
-            ? "backdrop-blur-lg bg-black/20"
-            : ""
-        }`}
+        initial={{ y: isHome ? -100 : 0, opacity: isHome ? 0 : 1 }}
+        animate={{
+          y: scrollDirection === "down" && scrollY > 50 ? -100 : (showNavbar ? 0 : -100),
+          opacity: showNavbar ? 1 : 0
+        }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className={`fixed left-0 w-full z-40 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center mix-blend-difference text-white transition-all duration-300 mt-2 sm:mt-0 ${hasScrolledPast50vh && scrollY > 100
+          ? "backdrop-blur-lg bg-black/20"
+          : ""
+          }`}
         style={{ fontFamily: "Barlow Condensed, sans-serif", top: 0 }}
       >
         {isHome ? (
@@ -178,7 +191,7 @@ export default function Navbar() {
             MENU [+]
           </button>
         </div>
-      </motion.nav>
+      </motion.nav >
 
       <AnimatePresence>
         {isOpen && (
@@ -244,7 +257,7 @@ export default function Navbar() {
                     )
                   )}
                 </div>
-                
+
                 {menuData.map((section, idx) => (
                   <div key={idx} className="space-y-4">
                     {section.isHyperlink ? (
