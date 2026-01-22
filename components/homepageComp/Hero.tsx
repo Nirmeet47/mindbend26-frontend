@@ -229,7 +229,8 @@ const Hero = () => {
     if (vw < 640) {
       const halfFinal = ((0.8 * END_SCALE) / 2) * refVW; // use refVW to freeze final size <=1500
       const leftPad = 15; // px desired left padding inside navbar (reduced)
-      return { x: -vw / 2 + halfFinal + leftPad, y: -150 };
+      // Mobile: Adjusted y to -170 to shift logo up slightly for better centering between navbar and video
+      return { x: -vw / 2 + halfFinal + leftPad, y: -170 };
     }
     if (vw < 1024) {
       const halfFinal = ((0.7 * END_SCALE) / 2) * refVW; // medium
@@ -304,7 +305,7 @@ const Hero = () => {
           scrollDirection === "down"
             ? { opacity: 0, y: -200 }
             : showContent
-              ? { opacity: 1, y: 0 }
+              ? { opacity: 1, y: -20 }
               : { opacity: 0, y: -100 }
         }
         transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -314,7 +315,7 @@ const Hero = () => {
           x,
           y,
           pointerEvents: linkEnabled ? "auto" : "none",
-          display: scrollY > (viewportHeight * 0.7) ? "none" : "block", // Hide earlier to avoid text overlap
+          display: scrollY > (viewportHeight * 0.7) ? "none" : "block", // Hide earlier to avoid text overlap // use 0.7 if this fails
         }}
         className="
       fixed

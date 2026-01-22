@@ -12,24 +12,54 @@ interface TimelineEvent {
 
 const events: TimelineEvent[] = [
     {
-        year: "1995",
-        title: "Genesis",
-        description: "Born from innovation at SVNIT Surat, pioneering the techno-managerial revolution in Gujarat."
+        year: "1950s–60s",
+        title: "Foundations",
+        description: "IITs, IISc, ISRO founded: Human intelligence strengthened"
     },
     {
-        year: "2010",
-        title: "Digital Era",
-        description: "Embraced AI, robotics, and cutting-edge tech, transforming into a digital powerhouse."
+        year: "1980s",
+        title: "Computing Era",
+        description: "Computers & C-DAC: Machines assist human work"
     },
     {
-        year: "2020",
-        title: "Global Impact",
-        description: "Reached 15,000+ participants nationwide, creating a movement of innovation."
+        year: "1990s",
+        title: "IT Boom",
+        description: "Human skill meets machine efficiency"
+    },
+    {
+        year: "2009",
+        title: "Identity",
+        description: "Aadhaar: Digital identity at national scale"
+    },
+    {
+        year: "2015",
+        title: "Digital India",
+        description: "Technology empowers citizens"
+    },
+    {
+        year: "2018",
+        title: "AI Strategy",
+        description: "National AI Strategy: “AI for All” vision"
+    },
+    {
+        year: "2023",
+        title: "IndiaAI",
+        description: "IndiaAI Mission: Indigenous AI ecosystem born"
+    },
+    {
+        year: "2024",
+        title: "Adoption",
+        description: "AI adoption across governance & Indian languages"
+    },
+    {
+        year: "2025",
+        title: "Expansion",
+        description: "National AI infrastructure & research hubs expand"
     },
     {
         year: "2026",
-        title: "Future Vision",
-        description: "Leading ethical AI and sustainable tech, shaping tomorrow's indigenous innovation."
+        title: "Future",
+        description: "Nationwide AI centres & ethical AI governance"
     }
 ];
 
@@ -137,8 +167,8 @@ export default function TimelineSection() {
                     </svg>
                 </div>
 
-                {/* Mobile Straight Line - REMOVED for Centered Layout */}
-                {/* <div className="md:hidden absolute left-6 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#00f2ff]/30 to-transparent"></div> */}
+                {/* Mobile Straight Line */}
+                <div className="md:hidden absolute left-4 sm:left-8 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-[#33ABB9]/50 to-transparent"></div>
 
                 {/* Timeline Events */}
                 <div className="relative space-y-0">
@@ -187,14 +217,20 @@ function TimelineEvent({ event, index }: TimelineEventProps) {
     return (
         <div
             ref={domRef}
-            className={`relative flex flex-col md:flex-row items-center justify-between w-full min-h-[400px] md:h-[400px] transition-all duration-1000 ease-in-out py-10 md:py-0
+            className={`relative flex flex-col md:flex-row items-start md:items-center justify-between w-full min-h-[250px] md:h-[400px] transition-all duration-1000 ease-in-out py-0 md:py-0
                 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-12'}`}
         >
             {/* The Anchor Node on the curve */}
-            <div className={`relative md:absolute md:left-1/2 md:-translate-x-1/2 flex items-center justify-center z-20 mb-8 md:mb-0`}>
+            <div className={`
+                absolute md:static left-4 sm:left-8 md:left-auto 
+                -translate-x-1/2 md:translate-x-0
+                md:absolute md:left-1/2 md:-translate-x-1/2 
+                flex items-center justify-center z-20 
+                top-10 md:top-auto
+            `}>
                 <div className={`relative flex items-center justify-center transition-all duration-1000 delay-300 ${isVisible ? 'scale-100' : 'scale-0'}`}>
-                    <div className="absolute w-16 h-16 rounded-full blur-xl animate-pulse" style={{ backgroundColor: `${CYAN_GLOW}1A` }} />
-                    <div className="w-4 h-4 rounded-full bg-white z-20 border-2" style={{
+                    <div className="absolute w-12 h-12 md:w-16 md:h-16 rounded-full blur-xl animate-pulse" style={{ backgroundColor: `${CYAN_GLOW}1A` }} />
+                    <div className="w-3 h-3 md:w-4 md:h-4 rounded-full bg-white z-20 border-2" style={{
                         borderColor: CYAN_GLOW,
                         boxShadow: `0 0 15px ${CYAN_GLOW}`
                     }} />
@@ -202,8 +238,10 @@ function TimelineEvent({ event, index }: TimelineEventProps) {
                     {/* Connector line to card */}
                     <div
                         className={`absolute h-[1px] transition-all duration-1000 delay-500
-                            ${isEven ? 'right-full origin-right' : 'left-full origin-left'}
-                            ${isVisible ? 'w-12 md:w-24 opacity-40' : 'w-0 opacity-0'}`}
+                            origin-left md:origin-center
+                            left-full md:left-auto
+                            ${isEven ? 'md:right-full md:origin-right' : 'md:left-full md:origin-left'}
+                            ${isVisible ? 'w-8 md:w-24 opacity-40' : 'w-0 opacity-0'}`}
                         style={{
                             background: `linear-gradient(to ${isEven ? 'left' : 'right'}, ${CYAN_GLOW}, transparent)`
                         }}
@@ -211,15 +249,16 @@ function TimelineEvent({ event, index }: TimelineEventProps) {
                 </div>
 
                 {/* Year Label */}
-                <div className={`absolute top-8 whitespace-nowrap font-mono text-xs tracking-[0.4em] font-bold transition-all duration-1000 delay-300
+                <div className={`absolute -top-6 md:top-8 whitespace-nowrap font-mono text-xs tracking-[0.4em] font-bold transition-all duration-1000 delay-300
                     ${isVisible ? 'opacity-100' : 'opacity-0'}
-                    left-1/2 -translate-x-1/2 md:translate-x-0 ${isEven ? 'md:right-8 md:text-right md:left-auto' : 'md:left-8 md:text-left'}`}>
+                    left-1/2 -translate-x-1/2 md:translate-x-0 
+                    ${isEven ? 'md:right-8 md:text-right md:left-auto' : 'md:left-8 md:text-left'}`}>
                     <span style={{ color: CYAN_GLOW }}>{event.year}</span>
                 </div>
             </div>
 
             {/* Content Card */}
-            <div className={`w-full max-w-sm md:max-w-none md:w-[40%] group ${sideClass}`}>
+            <div className={`w-full pl-12 sm:pl-20 md:pl-0 md:max-w-none md:w-[40%] group ${sideClass}`}>
                 <div className={`transition-all duration-1000 delay-100 relative
                     ${isVisible
                         ? 'opacity-100 translate-x-0'
@@ -232,6 +271,7 @@ function TimelineEvent({ event, index }: TimelineEventProps) {
                         prize={(index + 1).toString().padStart(2, '0')}
                         slug="#"
                         showExploreButton={false}
+                        showImage={false}
                     />
                 </div>
             </div>
