@@ -14,6 +14,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+import localFont from 'next/font/local';
+const circuitForem = localFont({
+  src: "../public/fonts/CircuitForemRegular.otf",
+  variable: "--font-circuit-forem",
+});
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mindbend-svnit.org";
 
 export const metadata: Metadata = {
@@ -297,7 +303,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${circuitForem.variable} antialiased`}
       ><Analytics />
 
         {children}

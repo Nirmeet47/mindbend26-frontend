@@ -9,6 +9,7 @@ import {
   useMotionValueEvent,
 } from "framer-motion";
 import gsap from "gsap";
+import PreloaderText from "./PreloaderText";
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,150 +48,126 @@ const Hero = () => {
     const vh = window.innerHeight;
     const vw = window.innerWidth;
 
-    // Calculate final video dimensions (matching hero video CSS)
-    // lg:w-[88%] lg:h-full lg:scale-60 lg:translate-y-8
-    // On large screens: 88% width, full height, scale 0.6, translate-y 8px (0.5rem = 8px)
     const isLarge = vw >= 1024;
     const isMedium = vw >= 768;
 
     const finalWidth = isLarge ? vw * 0.88 : vw;
     const finalHeight = isLarge ? vh : isMedium ? vh * 0.5 : vh * 0.4;
     const finalScale = isLarge ? 0.6 : 1;
-    const finalY = isLarge ? 8 : 0; // translate-y-8 = 0.5rem = 8px
+    const finalY = isLarge ? 8 : 0;
 
     const ctx = gsap.context(() => {
-      // Set initial states - video container starts invisible and small
-      const initialHeight = vw >= 768 ? 100 : 75; // md+ = 90, mobile = 80
-      gsap.set(".video-container", {
-        width: 0,
-        height: initialHeight,
-        opacity: 0,
-        scale: 1,
-        y: 0,
-        visibility: "hidden",
-      });
-      gsap.set(".video-curtain", { y: "0%" });
+      // Check session storage
+      const hasSeenPreloader = sessionStorage.getItem("mindbend_preloader_seen");
 
-      // Create timeline
-      const tl = gsap.timeline({
-        delay: 1, // Show MINDBEND for 1 second first
-        defaults: { ease: "power3.out" },
-        onComplete: () => {
-          setPreloaderComplete(true);
-          setShowContent(true);
-        },
-      });
+      if (hasSeenPreloader) {
+        // FAST PATH: Skip animation, set final state immediately
+        setPreloaderComplete(true);
+        setShowContent(true);
 
-      // Phase 1: Erase IND and END letters (top to bottom)
-      tl.to(".letter-ind .letter-inner, .letter-end .letter-inner", {
-        y: "+110%",
-        duration: 0.6,
-        ease: "power2.inOut",
-      })
+        // Hide preloader elements
+        gsap.set(".preloader-text-container, .preloader-bg, .video-curtain", { autoAlpha: 0, display: "none" });
 
-        // Phase 2: Collapse IND and END width smoothly so M and B come together naturally
-        .to(
-          ".letter-ind, .letter-end",
-          {
-            width: 0,
-            duration: 0.6,
-            ease: "power2.inOut",
-          },
-          "+=0.1",
-        )
+        // Set video to final hero state
+        gsap.set(".video-container", {
+          width: finalWidth,
+          height: finalHeight,
+          scale: finalScale,
+          y: finalY,
+          opacity: 1,
+          visibility: "visible"
+        });
 
-        // Phase 3: M and B separate equally, video container appears between them
-        .to(
-          ".letter-m",
-          {
-            x: -90,
-            duration: 0.5,
-            ease: "power2.inOut",
-          },
-          "+=0.1",
-        )
-        .to(
-          ".letter-b",
-          {
-            x: 90,
-            duration: 0.5,
-            ease: "power2.inOut",
-          },
-          "<",
-        )
-        .to(
-          ".video-container",
-          {
-            width: 140,
-            opacity: 1,
-            visibility: "visible",
-            duration: 0.8,
-            ease: "power2.out",
-          },
-          "<",
-        )
+        // Remove preloader overlay from flow
+        gsap.set(".preloader-overlay", { position: "absolute" });
 
-        // Phase 4: Reveal video (white curtain slides up)
-        .to(".video-curtain", {
-          y: "-100%",
-          duration: 0.5,
-          ease: "power2.inOut",
-          onComplete: () => {
-            // Hide curtain completely to prevent thin white line
-            const curtain = document.querySelector(
-              ".video-curtain",
-            ) as HTMLElement;
-            if (curtain) {
-              curtain.style.display = "none";
-            }
-          },
-        })
+      } else {
+        // RUN ANIMATION
 
-        // Phase 5: Fade out M and B, expand video to final hero size
-        .to(".letter-m, .letter-b", {
+        // Set initial states
+        const initialHeight = vw >= 768 ? 100 : 75;
+        gsap.set(".video-container", {
+          width: 0,
+          height: initialHeight,
           opacity: 0,
-          duration: 0.4,
-          ease: "power2.out",
-        })
-        .to(
-          ".video-container",
-          {
-            width: finalWidth,
-            height: finalHeight,
-            scale: finalScale,
-            y: finalY,
-            duration: 0.8,
-            ease: "power3.inOut",
-          },
-          "<",
-        )
-        .to(
-          ".preloader-text-container",
-          {
-            opacity: 0,
-            duration: 0.3,
-          },
-          "<",
-        )
+          scale: 1,
+          y: 0,
+          visibility: "hidden",
+        });
+        gsap.set(".video-curtain", { y: "0%" });
 
-        // Phase 6: Fade out black background, change preloader to absolute positioning
-        .to(".preloader-bg", {
-          opacity: 0,
-          duration: 0.5,
-          ease: "power2.out",
-        })
-        .set(".preloader-overlay", {
-          position: "absolute",
+        // Create timeline
+        const tl = gsap.timeline({
+          delay: 1,
+          defaults: { ease: "power3.out" },
           onComplete: () => {
-            // Hide black background
-            const preloaderBg = document.querySelector(
-              ".preloader-bg",
-            ) as HTMLElement;
-            if (preloaderBg) {
-              preloaderBg.style.display = "none";
-            }
+            setPreloaderComplete(true);
+            setShowContent(true);
+            sessionStorage.setItem("mindbend_preloader_seen", "true");
           },
         });
+
+        // Phase 1: Erase IND and END letters
+        tl.to(".letter-ind .letter-inner, .letter-end .letter-inner", {
+          y: "+110%",
+          duration: 0.6,
+          ease: "power2.inOut",
+        })
+          // Phase 2: Collapse width
+          .to(
+            ".letter-ind, .letter-end",
+            { width: 0, duration: 0.6, ease: "power2.inOut" },
+            "+=0.1"
+          )
+          // Phase 3: M and B separate, video appears
+          .to(".letter-m", { x: -90, duration: 0.5, ease: "power2.inOut" }, "+=0.1")
+          .to(".letter-b", { x: 90, duration: 0.5, ease: "power2.inOut" }, "<")
+          .to(
+            ".video-container",
+            {
+              width: 140,
+              opacity: 1,
+              visibility: "visible",
+              duration: 0.8,
+              ease: "power2.out",
+            },
+            "<"
+          )
+          // Phase 4: Reveal video
+          .to(".video-curtain", {
+            y: "-100%",
+            duration: 0.5,
+            ease: "power2.inOut",
+            onComplete: () => {
+              const curtain = document.querySelector(".video-curtain") as HTMLElement;
+              if (curtain) curtain.style.display = "none";
+            },
+          })
+          // Phase 5: Fade out text, expand video
+          .to(".letter-m, .letter-b", { opacity: 0, duration: 0.4, ease: "power2.out" })
+          .to(
+            ".video-container",
+            {
+              width: finalWidth,
+              height: finalHeight,
+              scale: finalScale,
+              y: finalY,
+              duration: 0.8,
+              ease: "power3.inOut",
+            },
+            "<"
+          )
+          .to(".preloader-text-container", { opacity: 0, duration: 0.3 }, "<")
+          // Phase 6: Fade out bg
+          .to(".preloader-bg", { opacity: 0, duration: 0.5, ease: "power2.out" })
+          .set(".preloader-overlay", {
+            position: "absolute",
+            onComplete: () => {
+              const preloaderBg = document.querySelector(".preloader-bg") as HTMLElement;
+              if (preloaderBg) preloaderBg.style.display = "none";
+            },
+          });
+      }
     }, containerRef);
 
     return () => ctx.revert();
@@ -315,9 +292,11 @@ const Hero = () => {
       {/* HERO SECTION */}
       <section className="relative h-screen overflow-hidden">
         {/* PRELOADER - Contains the video that transforms into hero video */}
+        {/* Added 'invisible' to hide by default to prevent flash on returning visits */}
+        {/* GSAP will toggle autoAlpha to visible if needed */}
         <div
           ref={preloaderRef}
-          className="preloader-overlay fixed inset-0 z-50 flex items-center justify-center"
+          className="preloader-overlay fixed inset-0 z-50 flex items-center justify-center invisible"
         >
           {/* Black background - fades out at end */}
           <div className="preloader-bg absolute inset-0 bg-black" />
@@ -347,41 +326,7 @@ const Hero = () => {
           </div>
 
           {/* MINDBEND Text Animation */}
-          <div
-            className="preloader-text-container relative flex items-center justify-center z-10"
-            style={{ fontFamily: "Barlow Condensed, sans-serif" }}
-          >
-            {/* M Letter */}
-            <div className="letter-m preloader-letter text-8xl md:text-9xl font-black text-white tracking-wider z-10">
-              <div className="overflow-hidden">
-                <div className="letter-inner">M</div>
-              </div>
-            </div>
-
-            {/* IND Letters */}
-            <div className="letter-ind preloader-letter text-8xl md:text-9xl font-black text-white tracking-wider overflow-hidden">
-              <div className="overflow-hidden">
-                <div className="letter-inner">IND</div>
-              </div>
-            </div>
-
-            {/* Spacer for video (invisible, just to maintain text positioning) */}
-            <div className="video-spacer" style={{ width: 0 }} />
-
-            {/* B Letter */}
-            <div className="letter-b preloader-letter text-8xl md:text-9xl font-black text-white tracking-wider z-10">
-              <div className="overflow-hidden">
-                <div className="letter-inner">B</div>
-              </div>
-            </div>
-
-            {/* END Letters */}
-            <div className="letter-end preloader-letter text-8xl md:text-9xl font-black text-white tracking-wider overflow-hidden">
-              <div className="overflow-hidden">
-                <div className="letter-inner">END</div>
-              </div>
-            </div>
-          </div>
+          <PreloaderText />
         </div>
 
         {/* BOTTOM LEFT TEXT (ALWAYS VISIBLE) */}

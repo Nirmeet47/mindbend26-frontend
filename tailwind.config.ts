@@ -66,7 +66,8 @@ const config: Config = {
         scanline: 'scanline 2.5s linear infinite',
       },
       fontFamily: {
-        orbitron: ['var(--font-orbitron)'], // You should load this font in layout.tsx
+        orbitron: ['var(--font-orbitron)'],
+        circuit: ['var(--font-circuit-forem)'],
       },
     },
   },
