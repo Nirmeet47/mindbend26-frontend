@@ -55,7 +55,7 @@ const About = () => {
         <div className="absolute top-0 left-0 right-0 h-28 bg-linear-to-b from-[#020205] to-transparent pointer-events-none z-0" />
 
         {/* Decorative Grid Pattern - Hidden on small mobile */}
-        <div className="absolute bottom-8 right-4 md:right-15 opacity-40 md:opacity-100">
+        <div className="absolute bottom-8 right-4 md:right-8 opacity-40 md:opacity-100">
           <img
             src="/images/image.png"
             alt="grid"
@@ -65,7 +65,7 @@ const About = () => {
 
         {/* Metadata Grid */}
         <div
-          className="absolute top-10 md:top-30 left-0 w-full px-6 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-[10px] md:text-xs text-gray-500 tracking-widest uppercase"
+          className="absolute top-10 md:top-30 left-0 w-full px-6 sm:px-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-[10px] md:text-xs text-gray-500 tracking-widest uppercase"
           style={{ fontFamily: "Space Grotesk, sans-serif" }}
         >
           <div className="space-y-1">
@@ -114,7 +114,7 @@ const About = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="absolute bottom-10 left-6 md:left-32 max-w-70 md:max-w-md text-gray-400 text-[10px] md:text-sm tracking-wide leading-relaxed uppercase"
+          className="absolute bottom-10 left-6 sm:left-10 max-w-70 md:max-w-md text-gray-400 text-[10px] md:text-sm tracking-wide leading-relaxed uppercase"
           style={{ fontFamily: "Space Grotesk, sans-serif" }}
         >
           WHERE CUTTING-EDGE INNOVATION MEETS THE VISION OF TOMORROW. WE EXPLORE
@@ -129,7 +129,7 @@ const About = () => {
           autoPlay
           muted
           loop
-          className="absolute inset-0 w-full h-full object-cover opacity-40 md:opacity-100 md:scale-90 md:translate-x-20"
+          className="absolute inset-0 w-full h-full object-cover opacity-40 md:opacity-100 md:scale-90 md:translate-x-10"
         >
           <source src="/videos/Home_about.mp4" type="video/mp4" />
         </video>
@@ -141,9 +141,9 @@ const About = () => {
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-20 py-20"
+          className="relative z-10 w-full pl-6 sm:pl-8 md:pl-10 pr-6 py-20"
         >
-          <div className="max-w-xl">
+          <div className="max-w-3xl">
             <h3
               className="text-white text-5xl md:text-7xl font-black mb-4 tracking-wide uppercase"
               style={{ fontFamily: "Barlow Condensed, sans-serif" }}
@@ -161,14 +161,18 @@ const About = () => {
             >
               Mindbend is Gujarat's{" "}
               <span className="text-cyan-300 font-semibold">
-                Techno-Managerial festival
+                largest Techno-Managerial festival
               </span>
               , hosted annually by SVNIT, Surat. It stands as a grand stage
-              where intelligence meets innovation.
+              where intelligence meets innovation, bringing together brilliant
+              minds from across the nation to push the boundaries of technology
+              and creativity.
               <br />
               <br />
-              Attracting over 15,000 participants, it features workshops,
-              competitions, and engaging activities.
+              Attracting over 15,000 participants annually, it features
+              cutting-edge workshops, high-stakes competitions, inspiring guest
+              lectures, and engaging activities that shape the innovators of
+              tomorrow.
             </p>
 
             {/* Metrics */}

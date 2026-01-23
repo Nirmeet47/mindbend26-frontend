@@ -71,7 +71,7 @@ const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, 
                 </div>
 
                 {/* Image Placeholder */}
-                <div className="relative w-full h-60 mb-3 rounded-sm overflow-hidden border border-white/10 bg-black/50 group-hover:border-[#33ABB9]/30 transition-colors">
+                <div className="relative w-full h-72 mb-3 rounded-sm overflow-hidden border border-white/10 bg-black/50 group-hover:border-[#33ABB9]/30 transition-colors">
                     {image ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <Image

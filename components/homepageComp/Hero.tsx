@@ -21,6 +21,24 @@ const Hero = () => {
   const [showContent, setShowContent] = useState(false);
   const [preloaderComplete, setPreloaderComplete] = useState(false);
 
+  // Force scroll to top on page load/reload (important for preloader + hero video sync)
+  useEffect(() => {
+    // Immediately scroll to top
+    window.scrollTo(0, 0);
+
+    // Also handle browser's scroll restoration
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+
+    // Fallback: scroll again after a brief delay to ensure it takes effect
+    const timeout = setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 0);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   // Preloader animation using GSAP
   useEffect(() => {
     if (!containerRef.current) return;
@@ -42,9 +60,10 @@ const Hero = () => {
 
     const ctx = gsap.context(() => {
       // Set initial states - video container starts invisible and small
+      const initialHeight = vw >= 768 ? 100 : 75; // md+ = 90, mobile = 80
       gsap.set(".video-container", {
         width: 0,
-        height: 90,
+        height: initialHeight,
         opacity: 0,
         scale: 1,
         y: 0,
@@ -77,7 +96,7 @@ const Hero = () => {
             duration: 0.6,
             ease: "power2.inOut",
           },
-          "+=0.1"
+          "+=0.1",
         )
 
         // Phase 3: M and B separate equally, video container appears between them
@@ -88,7 +107,7 @@ const Hero = () => {
             duration: 0.5,
             ease: "power2.inOut",
           },
-          "+=0.1"
+          "+=0.1",
         )
         .to(
           ".letter-b",
@@ -97,7 +116,7 @@ const Hero = () => {
             duration: 0.5,
             ease: "power2.inOut",
           },
-          "<"
+          "<",
         )
         .to(
           ".video-container",
@@ -108,7 +127,7 @@ const Hero = () => {
             duration: 0.8,
             ease: "power2.out",
           },
-          "<"
+          "<",
         )
 
         // Phase 4: Reveal video (white curtain slides up)
@@ -119,7 +138,7 @@ const Hero = () => {
           onComplete: () => {
             // Hide curtain completely to prevent thin white line
             const curtain = document.querySelector(
-              ".video-curtain"
+              ".video-curtain",
             ) as HTMLElement;
             if (curtain) {
               curtain.style.display = "none";
@@ -143,7 +162,7 @@ const Hero = () => {
             duration: 0.8,
             ease: "power3.inOut",
           },
-          "<"
+          "<",
         )
         .to(
           ".preloader-text-container",
@@ -151,7 +170,7 @@ const Hero = () => {
             opacity: 0,
             duration: 0.3,
           },
-          "<"
+          "<",
         )
 
         // Phase 6: Fade out black background, change preloader to absolute positioning
@@ -165,7 +184,7 @@ const Hero = () => {
           onComplete: () => {
             // Hide black background
             const preloaderBg = document.querySelector(
-              ".preloader-bg"
+              ".preloader-bg",
             ) as HTMLElement;
             if (preloaderBg) {
               preloaderBg.style.display = "none";
@@ -333,14 +352,14 @@ const Hero = () => {
             style={{ fontFamily: "Barlow Condensed, sans-serif" }}
           >
             {/* M Letter */}
-            <div className="letter-m preloader-letter text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-black text-white tracking-wider z-10">
+            <div className="letter-m preloader-letter text-8xl md:text-9xl font-black text-white tracking-wider z-10">
               <div className="overflow-hidden">
                 <div className="letter-inner">M</div>
               </div>
             </div>
 
             {/* IND Letters */}
-            <div className="letter-ind preloader-letter text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-black text-white tracking-wider overflow-hidden">
+            <div className="letter-ind preloader-letter text-8xl md:text-9xl font-black text-white tracking-wider overflow-hidden">
               <div className="overflow-hidden">
                 <div className="letter-inner">IND</div>
               </div>
@@ -350,14 +369,14 @@ const Hero = () => {
             <div className="video-spacer" style={{ width: 0 }} />
 
             {/* B Letter */}
-            <div className="letter-b preloader-letter text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-black text-white tracking-wider z-10">
+            <div className="letter-b preloader-letter text-8xl md:text-9xl font-black text-white tracking-wider z-10">
               <div className="overflow-hidden">
                 <div className="letter-inner">B</div>
               </div>
             </div>
 
             {/* END Letters */}
-            <div className="letter-end preloader-letter text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-black text-white tracking-wider overflow-hidden">
+            <div className="letter-end preloader-letter text-8xl md:text-9xl font-black text-white tracking-wider overflow-hidden">
               <div className="overflow-hidden">
                 <div className="letter-inner">END</div>
               </div>
