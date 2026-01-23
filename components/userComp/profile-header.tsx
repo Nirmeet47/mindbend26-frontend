@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { LogOut, Edit2, Lock, Save, X } from "lucide-react"
 import { logout } from "@/lib/auth"
 import { motion } from "framer-motion"
+import LogoutModal from "../ui/LogoutModal";
 
 type ProfileHeaderProps = {
   userData: {
@@ -33,14 +34,17 @@ export default function ProfileHeader({
   })
   const router = useRouter();
 
-  const handleLogout = () => {
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const handleLogoutConfirm = () => {
     logout();
     router.push("/login");
+    setShowLogoutModal(false);
   }
 
   const handleSaveProfile = () => {
-    onEditProfile(editData)
-    setShowEditProfile(false)
+    onEditProfile(editData);
+    setShowEditProfile(false);
   }
 
   return (
@@ -54,16 +58,11 @@ export default function ProfileHeader({
         >
           My Profile
         </motion.h1>
-        <motion.button 
+        <motion.button
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-2 px-6 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 font-bold uppercase tracking-widest transition-all border border-red-500/30 hover:border-red-500/50 text-sm" 
-          onClick={() => {
-            if (confirm('Are you sure you want to logout?')) {
-              logout();
-              router.push("/login");
-            }
-          }}
+          className="flex items-center gap-2 px-6 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 font-bold uppercase tracking-widest transition-all border border-red-500/30 hover:border-red-500/50 text-sm"
+          onClick={() => setShowLogoutModal(true)}
         >
           <LogOut size={18} />
           Logout
@@ -251,6 +250,12 @@ export default function ProfileHeader({
           )}
         </div>
       </motion.div>
+
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogoutConfirm}
+      />
     </div>
   )
 }
