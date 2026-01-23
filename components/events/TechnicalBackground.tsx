@@ -175,15 +175,16 @@ const symbolTransforms = [
 ];
 
 const useIsLowEndDevice = () => {
-    const [isLowEnd, setIsLowEnd] = useState(false);
+    const [isLowEnd, setIsLowEnd] = useState(true);
     useEffect(() => {
         const cores = navigator.hardwareConcurrency || 4;
         // @ts-ignore 
         const ram = navigator.deviceMemory || 4;
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const isMobile = window.innerWidth < 768;
 
-        if (cores <= 4 || ram <= 4 || prefersReducedMotion) {
-            setIsLowEnd(true);
+        if (cores > 4 && ram > 4 && !prefersReducedMotion && !isMobile) {
+            setIsLowEnd(false);
         }
     }, []);
     return isLowEnd;
@@ -197,15 +198,15 @@ const VideoBackground = () => {
         if (!video) return;
 
         if (video.currentTime >= video.duration - 0.5) {
-            video.currentTime = 9; 
+            video.currentTime = 9;
             video.play();
         }
     }
-        
+
     return (
         <div className="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden bg-black">
             <div className="absolute top-0 left-0 w-full h-full bg-black opacity-20 z-1" />
-            
+
             <video
                 ref={videoRef}
                 autoPlay
@@ -265,10 +266,10 @@ const TechnicalBackground = () => {
         runSequence();
         const intervalId = setInterval(runSequence, 15000);
 
-        // return () => {
-        //     clearInterval(intervalId);
-        //     timeouts.forEach(clearTimeout);
-        // };
+        return () => {
+            clearInterval(intervalId);
+            timeouts.forEach(clearTimeout);
+        };
     }, []);
 
     // Circle styles
@@ -281,7 +282,7 @@ const TechnicalBackground = () => {
     };
 
     const isLowEnd = useIsLowEndDevice();
-    
+
     if (isLowEnd) {
         return <VideoBackground />;
     }
@@ -296,7 +297,7 @@ const TechnicalBackground = () => {
                 className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none overflow-hidden m-0"
                 style={{ background: 'black', fontFamily: "'Orbitron', sans-serif" }}
             >
-                <div 
+                <div
                     className="flex flex-col justify-center items-center select-none w-full h-full"
                     style={{ opacity: 0.8 }} // Added opacity to dim the entire animation
                 >
