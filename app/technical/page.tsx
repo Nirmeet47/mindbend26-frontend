@@ -46,12 +46,12 @@ function Technical() {
   return (
     <>
       <Navbar />
-      <div className="relative pt-24 w-full min-h-screen text-white overflow-x-hidden selection:bg-[#33ABB9]/30">
+      <div className="relative pt-32 md:pt-24 w-full min-h-screen text-white overflow-x-hidden selection:bg-[#33ABB9]/30">
         <TechnicalBackground />
         <div className="container mx-auto py-8">
           <div className="flex flex-col items-center w-full animate-fade-in">
             <h1
-              className="text-5xl sm:text-7xl md:text-8xl uppercase tracking-normal leading-[1.1] font-black mb-4"
+              className="text-4xl sm:text-6xl md:text-8xl uppercase tracking-normal leading-[1.1] font-black mb-4 text-center px-4"
               style={{
                 fontFamily: 'Barlow Condensed, sans-serif',
                 color: '#e5e7eb', // off-white

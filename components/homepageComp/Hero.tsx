@@ -318,8 +318,9 @@ const Hero = () => {
       top-40
       left-1/2
       -translate-x-1/2
-      z-[100]
+      z-[60]
       origin-center
+      pointer-events-none
       "
       >
         <motion.div style={{ opacity: fadeOutOpacity }}>
