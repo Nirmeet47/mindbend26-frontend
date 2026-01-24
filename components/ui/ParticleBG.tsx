@@ -52,7 +52,7 @@ function RisingParticles() {
 
 export default function HomeBg() {
   return (
-    <div className="fixed inset-0 z-0 bg-[#020205]">
+    <div className="fixed inset-0 z-0 bg-black">
       <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1.5} color="#00ffff" />
