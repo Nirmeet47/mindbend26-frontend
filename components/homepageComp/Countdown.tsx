@@ -60,7 +60,7 @@ const Countdown = () => {
 
       <style jsx>{`
         .countdown-section {
-          background: black;
+          background: transparent;
           padding: 60px 16px;
           display: flex;
           align-items: center;

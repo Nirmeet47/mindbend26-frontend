@@ -33,7 +33,7 @@ const sponsorLogos: SponsorLogoItem[] = Array.from({ length: 31 }, (_, i) => {
 
 export default function Sponsors() {
   return (
-    <section className="relative w-full py-16 md:py-24 bg-black overflow-hidden">
+    <section className="relative w-full py-16 md:py-24 overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -57,7 +57,7 @@ export default function Sponsors() {
       </motion.div>
 
       <div className="relative flex flex-nowrap overflow-hidden">
-        <ParallaxText baseVelocity={-0.8}>
+        <ParallaxText baseVelocity={0.3}>
           {sponsorLogos.map(({ src, darkOnBlack }, index) => (
             <SponsorLogo key={index} src={src} darkOnBlack={darkOnBlack} />
           ))}

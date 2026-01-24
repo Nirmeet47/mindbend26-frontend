@@ -28,16 +28,16 @@ function Technical() {
   useEffect(() => {
     async function fetchEvents() {
 
-        publicEventsApi
-          .listByType('technical')
-          .then((res) => { 
-            const events = res.data?.data?.events || [];
-            // Sort events by prize money in descending order (highest prize first)
-            const sortedEvents = events.sort((a: Event, b: Event) => Number(b.prizeMoney) - Number(a.prizeMoney));
-            setEvents(sortedEvents);
-          })
-          .catch(() => setError('Failed to load events'))
-          .finally(() => setLoading(false));
+      publicEventsApi
+        .listByType('technical')
+        .then((res) => {
+          const events = res.data?.data?.events || [];
+          // Sort events by prize money in descending order (highest prize first)
+          const sortedEvents = events.sort((a: Event, b: Event) => Number(b.prizeMoney) - Number(a.prizeMoney));
+          setEvents(sortedEvents);
+        })
+        .catch(() => setError('Failed to load events'))
+        .finally(() => setLoading(false));
 
     }
     fetchEvents();
@@ -46,7 +46,7 @@ function Technical() {
   return (
     <>
       <Navbar />
-      <div className="relative mt-8 w-full min-h-screen text-white overflow-x-hidden selection:bg-[#33ABB9]/30">
+      <div className="relative pt-24 w-full min-h-screen text-white overflow-x-hidden selection:bg-[#33ABB9]/30">
         <TechnicalBackground />
         <div className="container mx-auto py-8">
           <div className="flex flex-col items-center w-full animate-fade-in">
@@ -63,7 +63,7 @@ function Technical() {
             </h1>
           </div>
           {error && <p className="text-red-500 text-center">{error}</p>}
-          
+
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 px-8 md:px-12 lg:px-22 my-12">
               {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -85,23 +85,23 @@ function Technical() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 px-8 md:px-12 lg:px-22 my-12">
-            {events.map(event => (            
-                  <EventCard
-                    key={event._id}
-                    slug={`/technical/${event.slug}`}
-                    title={`${event.name}`}
-                    aboutEvent={event.aboutEvent?.substring(0, 100) + "..."}
-                    date={event.eventDate ? (() => { const d = new Date(event.eventDate); return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}th`; })() : 'Coming Soon'}
-                    prize={`₹${event.prizeMoney}`}
-                    // delay={index * 0.05}
-                    image={event.eventPhoto}
-                  />
-            ))}
-          </div>
+              {events.map(event => (
+                <EventCard
+                  key={event._id}
+                  slug={`/technical/${event.slug}`}
+                  title={`${event.name}`}
+                  aboutEvent={event.aboutEvent?.substring(0, 100) + "..."}
+                  date={event.eventDate ? (() => { const d = new Date(event.eventDate); return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}th`; })() : 'Coming Soon'}
+                  prize={`₹${event.prizeMoney}`}
+                  // delay={index * 0.05}
+                  image={event.eventPhoto}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>
-  </>
+    </>
   );
 }
 
