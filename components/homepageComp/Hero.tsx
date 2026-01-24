@@ -96,6 +96,7 @@ const Hero = () => {
           visibility: "hidden",
         });
         gsap.set(".video-curtain", { y: "0%" });
+        gsap.set(".preloader-overlay", { visibility: "visible" });
 
         // Create timeline
         const tl = gsap.timeline({
