@@ -154,15 +154,9 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: isHome ? -100 : 0, opacity: isHome ? 0 : 1 }}
-        animate={{
-          y: showNavbar && scrollY <= 10 ? 0 : -100,
-          opacity: showNavbar && scrollY <= 10 ? 1 : 0
-        }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className={`fixed left-0 w-full z-40 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center mix-blend-difference text-white transition-all duration-300 mt-2 sm:mt-0 ${hasScrolledPast50vh && scrollY > 100
-          ? "backdrop-blur-lg bg-black/20"
-          : ""
+        initial={{ y: 0, opacity: 1 }}
+        animate={{ y: 0, opacity: 1 }}
+        className={`fixed left-0 w-full z-50 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center text-white transition-all duration-300 mt-2 sm:mt-0 ${scrollY > (isHome ? viewportHeight - 100 : 10) ? "bg-black/80 backdrop-blur-md py-4 shadow-lg border-b border-white/5" : "bg-transparent py-6"
           }`}
         style={{ fontFamily: "Barlow Condensed, sans-serif", top: 0 }}
       >

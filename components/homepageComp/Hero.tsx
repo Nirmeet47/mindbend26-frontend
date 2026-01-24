@@ -96,6 +96,7 @@ const Hero = () => {
           visibility: "hidden",
         });
         gsap.set(".video-curtain", { y: "0%" });
+        gsap.set(".preloader-overlay", { visibility: "visible" });
 
         // Create timeline
         const tl = gsap.timeline({
@@ -318,8 +319,9 @@ const Hero = () => {
       top-40
       left-1/2
       -translate-x-1/2
-      z-[100]
+      z-[60]
       origin-center
+      pointer-events-none
       "
       >
         <motion.div style={{ opacity: fadeOutOpacity }}>
