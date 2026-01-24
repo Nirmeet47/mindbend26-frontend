@@ -144,7 +144,7 @@ const About = () => {
           autoPlay
           muted
           loop
-          className="absolute inset-0 w-full h-full object-cover opacity-40 md:opacity-100 md:scale-90 md:translate-x-10"
+          className="absolute inset-0 w-full h-full object-cover opacity-20 md:opacity-100 md:scale-90 md:translate-x-10"
         >
           <source src="/videos/Home_about.mp4" type="video/mp4" />
         </video>
@@ -267,9 +267,27 @@ const About = () => {
                 </motion.div>
               ))}
             </motion.div>
+
+            {/* History Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="mt-10 mb-8"
+            >
+              <a
+                href="/history"
+                className="relative inline-flex items-center gap-2 group px-6 py-3 border border-cyan-500/30 bg-cyan-950/10 hover:bg-cyan-900/20 text-cyan-400 text-sm md:text-base tracking-widest uppercase transition-all duration-300 transform hover:scale-105"
+                style={{ fontFamily: "Space Grotesk, sans-serif" }}
+              >
+                <span className="relative z-10 w-2 h-2 bg-cyan-400 rounded-full group-hover:bg-white transition-colors duration-300"></span>
+                <span className="relative z-10 group-hover:text-white transition-colors duration-300">Explore Our History</span>
+                <div className="absolute inset-0 bg-cyan-500/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 ease-out"></div>
+              </a>
+            </motion.div>
           </div>
-        </motion.div>
-      </section>
+        </motion.div >
+      </section >
     </>
   );
 };

@@ -156,8 +156,8 @@ export default function Navbar() {
       <motion.nav
         initial={{ y: isHome ? -100 : 0, opacity: isHome ? 0 : 1 }}
         animate={{
-          y: showNavbar && scrollY <= 50 ? 0 : -100,
-          opacity: showNavbar ? 1 : 0
+          y: showNavbar && scrollY <= 10 ? 0 : -100,
+          opacity: showNavbar && scrollY <= 10 ? 1 : 0
         }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         className={`fixed left-0 w-full z-40 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center mix-blend-difference text-white transition-all duration-300 mt-2 sm:mt-0 ${hasScrolledPast50vh && scrollY > 100

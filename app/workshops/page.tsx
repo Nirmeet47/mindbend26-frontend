@@ -29,7 +29,7 @@ function Workshops() {
       try {
         const response = await fetch('/api/proxy/workshops/public');
         const data = await response.json();
-        
+
         if (data.success) {
           setWorkshops(data.data.workshops || []);
         } else {
@@ -47,7 +47,7 @@ function Workshops() {
   return (
     <>
       <Navbar />
-      <div className="relative mt-8 w-full min-h-screen text-white overflow-x-hidden selection:bg-[#8B5CF6]/30">
+      <div className="relative pt-24 w-full min-h-screen text-white overflow-x-hidden selection:bg-[#8B5CF6]/30">
         <WorkshopBackground />
         <div className="container mx-auto py-8">
           <div className="flex flex-col items-center w-full animate-fade-in relative z-20">
@@ -64,7 +64,7 @@ function Workshops() {
             </h1>
           </div>
           {error && <p className="text-red-500 text-center">{error}</p>}
-          
+
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 px-8 md:px-12 lg:px-22 my-12">
               {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -86,23 +86,23 @@ function Workshops() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-20 px-8 md:px-12 lg:px-22 my-12">
-            {workshops.map(workshop => (            
-                  <WorkshopEventCard
-                    key={workshop._id}
-                    slug={`/workshops/${workshop.slug}`}
-                    title={`${workshop.name}`}
-                    aboutEvent={workshop.aboutWorkshop?.substring(0, 100) + "..."}
-                    date={workshop.workshopDate ? (() => { const d = new Date(workshop.workshopDate); return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}th`; })() : 'Coming Soon'}
-                    prize={workshop.entryFee === 0 ? 'Free' : `₹${workshop.entryFee}`}
-                    // delay={index * 0.05}
-                    image={workshop.workshopPhoto}
-                  />
-            ))}
-          </div>
+              {workshops.map(workshop => (
+                <WorkshopEventCard
+                  key={workshop._id}
+                  slug={`/workshops/${workshop.slug}`}
+                  title={`${workshop.name}`}
+                  aboutEvent={workshop.aboutWorkshop?.substring(0, 100) + "..."}
+                  date={workshop.workshopDate ? (() => { const d = new Date(workshop.workshopDate); return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}th`; })() : 'Coming Soon'}
+                  prize={workshop.entryFee === 0 ? 'Free' : `₹${workshop.entryFee}`}
+                  // delay={index * 0.05}
+                  image={workshop.workshopPhoto}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>
-  </>
+    </>
   );
 }
 
