@@ -18,6 +18,7 @@ const Hero = () => {
   const [vw, setVw] = useState(1200); // fallback to avoid zero on first render
   const [scrollY, setScrollY] = useState(0);
   const [scrollDirection, setScrollDirection] = useState<"up" | "down">("up");
+  const [viewportHeight, setViewportHeight] = useState(0);
   const lastScrollY = useRef(0);
   const [showContent, setShowContent] = useState(false);
   const [preloaderComplete, setPreloaderComplete] = useState(false);
@@ -224,7 +225,8 @@ const Hero = () => {
     if (vw < 640) {
       const halfFinal = ((0.8 * END_SCALE) / 2) * refVW; // use refVW to freeze final size <=1500
       const leftPad = 15; // px desired left padding inside navbar (reduced)
-      return { x: -vw / 2 + halfFinal + leftPad, y: -150 };
+      // Mobile: Adjusted y to -170 to shift logo up slightly for better centering between navbar and video
+      return { x: -vw / 2 + halfFinal + leftPad, y: -170 };
     }
     if (vw < 1024) {
       const halfFinal = ((0.7 * END_SCALE) / 2) * refVW; // medium
@@ -247,6 +249,39 @@ const Hero = () => {
   // Keep final scale consistent across breakpoints
   const scaleX = useTransform(progress, [0, 0.3], [1.25, END_SCALE]);
   const scaleY = useTransform(progress, [0, 0.3], [1, END_SCALE]);
+  const fadeOutOpacity = useTransform(progress, [0.8, 1], [1, 0]);
+
+
+
+  // Handle scroll direction for logo visibility (hide on scroll down like navbar)
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+        setScrollDirection("down");
+      } else {
+        setScrollDirection("up");
+      }
+
+      setScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
+    };
+
+    const handleResize = () => {
+      setViewportHeight(window.innerHeight);
+    };
+
+    // Initial set
+    setViewportHeight(window.innerHeight);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   // Enable link only after logo finishes moving
   const [linkEnabled, setLinkEnabled] = useState(false);
@@ -262,7 +297,13 @@ const Hero = () => {
       {/* SINGLE LOGO (ANIMATES → STICKS IN NAV) - MOVED OUTSIDE SECTION */}
       <motion.div
         initial={{ opacity: 0, y: -100 }}
-        animate={showContent ? { opacity: 1, y: 0 } : { opacity: 0, y: -100 }}
+        animate={
+          scrollDirection === "down"
+            ? { opacity: 0, y: -200 }
+            : showContent
+              ? { opacity: 1, y: -20 }
+              : { opacity: 0, y: -100 }
+        }
         transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
         style={{
           scaleX,
@@ -270,24 +311,28 @@ const Hero = () => {
           x,
           y,
           pointerEvents: linkEnabled ? "auto" : "none",
+          display: scrollY > (viewportHeight * 0.7) ? "none" : "block", // Hide earlier to avoid text overlap // use 0.7 if this fails
         }}
         className="
-          fixed
-          top-40
-          left-1/2
-          -translate-x-1/2
-          z-[100]
-          origin-center
-        "
+      fixed
+      top-40
+      left-1/2
+      -translate-x-1/2
+      z-[100]
+      origin-center
+      "
       >
-        <Link href="/">
-          <img
-            src="/images/mb_font.png"
-            alt="MINDBEND"
-            className="w-[80vw] scale-160 lg:scale-100 md:w-[70vw] h-auto object-contain cursor-pointer opacity-95 z-[100]"
-          />
-        </Link>
+        <motion.div style={{ opacity: fadeOutOpacity }}>
+          <Link href="/">
+            <img
+              src="/images/mb_font.png"
+              alt="MINDBEND"
+              className="w-[80vw] scale-160 lg:scale-100 md:w-[70vw] h-auto object-contain cursor-pointer opacity-95 z-[100]"
+            />
+          </Link>
+        </motion.div>
       </motion.div>
+
 
       {/* HERO SECTION */}
       <section className="relative h-screen overflow-hidden">
@@ -401,7 +446,7 @@ const Hero = () => {
 
       {/* BLUR GRADIENT OVERLAY - MOVED OUTSIDE SECTION */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-[#020205] to-transparent pointer-events-none z-0" />
-    </div>
+    </div >
   );
 };
 

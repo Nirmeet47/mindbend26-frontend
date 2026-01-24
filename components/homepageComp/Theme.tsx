@@ -24,15 +24,20 @@ export default function Theme() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const { scrollYProgress } = useScroll({
-    target: contentRef,
-    offset: ["start center", "end center"],
+    target: containerRef,
+    offset: ["start start", "end end"],
   });
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.onChange((progress) => {
-      // Calculate which paragraph to show based on scroll progress
-      // 0 to 1 maps to 3 paragraphs
-      const index = Math.min(Math.floor(progress * 3), 2);
+      // Evenly distribute 3 paragraphs across the full section
+      // 0-0.33: paragraph 0, 0.33-0.66: paragraph 1, 0.66-1: paragraph 2
+      let index = 0;
+      if (progress > 0.66) {
+        index = 2;
+      } else if (progress > 0.33) {
+        index = 1;
+      }
       setActiveIndex(index);
     });
 

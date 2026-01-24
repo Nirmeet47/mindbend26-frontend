@@ -15,6 +15,8 @@ interface EventCardProps {
     prize: string;
     delay?: number;
     image?: string;
+    prizeLabel?: string;
+    showImage?: boolean;
 }
 
 // Technical Theme Colors:
@@ -23,14 +25,14 @@ interface EventCardProps {
 // Orange: #E8823A
 
 
-const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, slug, date, prize, delay = 0, image }) => {
+const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, slug, date, prize, delay = 0, image, prizeLabel = "Prize Money", showImage = true }) => {
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay }}
-            className="relative group min-h-87.5 w-full max-w-87.5 mx-auto"
+            className="relative group min-h-min w-full max-w-87.5 mx-auto"
         >
             {/* Background Shape */}
             <div
@@ -52,7 +54,7 @@ const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, 
             <div className="absolute top-16 bottom-0 left-0 w-[1.5px] bg-linear-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
 
 
-            {/* Internal Content */}
+            {/* InternalContent */}
             <div className="relative z-10 p-4 flex flex-col h-full">
                 {/* Header */}
                 <div className="mb-3 pl-2 border-l-2 border-[#33ABB9]/50">
@@ -71,39 +73,41 @@ const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, 
                 </div>
 
                 {/* Image Placeholder */}
-                <div className="relative w-full h-72 mb-3 rounded-sm overflow-hidden border border-white/10 bg-black/50 group-hover:border-[#33ABB9]/30 transition-colors">
-                    {image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <Image
-                            src={image}
-                            alt={title}
-                            fill
-                            className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[#33ABB9]/20 font-mono text-xs uppercase tracking-widest">
-                            [ NO SIGNAL ]
-                        </div>
-                    )}
+                {showImage && (
+                    <div className="relative w-full h-60 mb-3 rounded-sm overflow-hidden border border-white/10 bg-black/50 group-hover:border-[#33ABB9]/30 transition-colors">
+                        {image ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <Image
+                                src={image}
+                                alt={title}
+                                fill
+                                className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-[#33ABB9]/20 font-mono text-xs uppercase tracking-widest">
+                                [ NO SIGNAL ]
+                            </div>
+                        )}
 
-                    {/* Image Overlay Texture */}
-                    <div className="absolute inset-0 bg-[url('/grid-pixel.png')] opacity-20 pointer-events-none mix-blend-overlay" />
-                    <div className="absolute bottom-0 left-0 right-0 h-10 bg-linear-to-t from-black/80 to-transparent" />
-                </div>
+                        {/* Image Overlay Texture */}
+                        <div className="absolute inset-0 bg-[url('/grid-pixel.png')] opacity-20 pointer-events-none mix-blend-overlay" />
+                        <div className="absolute bottom-0 left-0 right-0 h-10 bg-linear-to-t from-black/80 to-transparent" />
+                    </div>
+                )}
 
                 {/* Footer */}
                 <div className="flex items-end justify-between mt-auto">
                     <div className="flex flex-col">
-                        <span className="text-[9px] uppercase tracking-widest text-[#33ABB9] mb-1">Prize Money</span>
+                        <span className="text-[9px] uppercase tracking-widest text-[#33ABB9] mb-1">{prizeLabel}</span>
                         <span className="text-lg font-bold text-[#E8823A] font-mono">{prize}</span>
                     </div>
 
                     {showExploreButton &&
-                    <Link href={slug} className="block">
-                        <button className="group/btn relative px-5 py-2 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-xs font-bold tracking-wider uppercase transition-all overflow-hidden cursor-pointer">
-                            <span className="relative z-10">Explore</span>
-                            <div className="absolute inset-0 bg-[#33ABB9]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
-                        </button>
-                    </Link>
+                        <Link href={slug} className="block">
+                            <button className="group/btn relative px-5 py-2 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-xs font-bold tracking-wider uppercase transition-all overflow-hidden cursor-pointer">
+                                <span className="relative z-10">Explore</span>
+                                <div className="absolute inset-0 bg-[#33ABB9]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
+                            </button>
+                        </Link>
                     }
                 </div>
             </div>
