@@ -65,6 +65,7 @@ const Hero = () => {
         // FAST PATH: Skip animation, set final state immediately
         setPreloaderComplete(true);
         setShowContent(true);
+        window.dispatchEvent(new Event("preloader-complete"));
 
         // Hide preloader elements
         gsap.set(".preloader-text-container, .preloader-bg, .video-curtain", { autoAlpha: 0, display: "none" });
@@ -106,6 +107,7 @@ const Hero = () => {
             setPreloaderComplete(true);
             setShowContent(true);
             sessionStorage.setItem("mindbend_preloader_seen", "true");
+            window.dispatchEvent(new Event("preloader-complete"));
           },
         });
 

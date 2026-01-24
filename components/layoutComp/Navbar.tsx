@@ -72,12 +72,21 @@ export default function Navbar() {
   const [showNavbar, setShowNavbar] = useState(!isHome);
 
   // Hide navbar for 5 seconds on homepage (preloader duration)
+  // Sync Navbar visibility with preloader
   useEffect(() => {
     if (isHome) {
-      const timer = setTimeout(() => {
+      // Check if preloader is already done
+      const hasSeen = sessionStorage.getItem("mindbend_preloader_seen");
+      if (hasSeen) {
         setShowNavbar(true);
-      }, 5000);
-      return () => clearTimeout(timer);
+      } else {
+        // Wait for event
+        const handlePreloaderComplete = () => setShowNavbar(true);
+        window.addEventListener("preloader-complete", handlePreloaderComplete);
+        return () => window.removeEventListener("preloader-complete", handlePreloaderComplete);
+      }
+    } else {
+      setShowNavbar(true);
     }
   }, [isHome]);
 
@@ -156,7 +165,7 @@ export default function Navbar() {
       <motion.nav
         initial={{ y: 0, opacity: 1 }}
         animate={{ y: 0, opacity: 1 }}
-        className={`fixed left-0 w-full z-50 px-6 md:px-8 py-2 md:py-4 flex justify-between items-center text-white transition-all duration-300 mt-2 sm:mt-0 ${scrollY > (isHome ? viewportHeight - 100 : 10) ? "bg-black/80 backdrop-blur-md py-4 shadow-lg border-b border-white/5" : "bg-transparent py-6"
+        className={`fixed left-0 w-full z-50 px-6 md:px-8 py-2 md:py-4 justify-between items-center text-white transition-all duration-300 mt-2 sm:mt-0 ${!showNavbar ? "hidden" : "flex"} ${scrollY > (isHome ? viewportHeight - 100 : 10) ? "bg-black/80 backdrop-blur-md py-4 shadow-lg border-b border-white/5" : "bg-transparent py-6"
           }`}
         style={{ fontFamily: "Barlow Condensed, sans-serif", top: 0 }}
       >

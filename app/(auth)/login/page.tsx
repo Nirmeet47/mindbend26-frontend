@@ -226,46 +226,46 @@ export default function LoginPage() {
 
   // 1. LOGIN FORM
   const renderLoginForm = () => (
-    <form onSubmit={handleLoginSubmit} className="space-y-6">
+    <form onSubmit={handleLoginSubmit} className="space-y-5">
       {/* Email Input */}
       <div className="relative group">
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/70 group-focus-within:text-cyan-400 transition-colors">
           <Mail size={20} />
         </div>
         <input
           type="email"
           value={loginForm.email}
           onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
-          placeholder="Email Address"
-          className="w-full bg-black/50 border border-cyan-500/30 text-white pl-10 pr-4 py-3 rounded-none outline-none focus:border-cyan-400 focus:bg-cyan-950/20 transition-all font-mono placeholder-cyan-700/50"
+          placeholder="EMAIL ADDRESS"
+          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white pl-12 pr-4 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder-slate-500 font-medium tracking-wide"
           required
         />
       </div>
 
       {/* Password Input */}
       <div className="relative group">
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/70 group-focus-within:text-cyan-400 transition-colors">
           <Lock size={20} />
         </div>
         <input
           type={isPasswordVisible ? 'text' : 'password'}
           value={loginForm.password}
           onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-          placeholder="Password"
-          className="w-full bg-black/50 border border-cyan-500/30 text-white pl-10 pr-12 py-3 rounded-none outline-none focus:border-cyan-400 focus:bg-cyan-950/20 transition-all font-mono placeholder-cyan-700/50"
+          placeholder="PASSWORD"
+          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white pl-12 pr-12 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder-slate-500 font-medium tracking-wide"
           required
         />
         <button
           type="button"
           onClick={() => setIsPasswordVisible((v) => !v)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-500/60 hover:text-cyan-400 transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-cyan-400 transition-colors"
           aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
         >
           {isPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
       </div>
 
-      <div className="flex items-center justify-end text-sm">
+      <div className="flex items-center justify-end">
         <button
           type="button"
           onClick={() => {
@@ -274,7 +274,7 @@ export default function LoginPage() {
             setForgotPasswordSuccess('');
             setIsForgotPasswordOpen(true);
           }}
-          className="text-cyan-400 hover:text-cyan-200 transition-colors font-mono uppercase tracking-wider text-xs"
+          className="text-cyan-500/80 hover:text-cyan-400 text-sm font-medium transition-colors uppercase tracking-wider"
         >
           Forgot Password?
         </button>
@@ -283,20 +283,19 @@ export default function LoginPage() {
       <button
         type="submit"
         disabled={isLoginLoading}
-        className="w-full relative overflow-hidden group bg-cyan-900/20 border border-cyan-500/50 hover:border-cyan-400 text-white font-bold py-3 px-6 transition-all duration-300 uppercase tracking-widest font-mono text-lg disabled:opacity-50 disabled:cursor-not-allowed clip-path-button"
+        className="w-full bg-[#0f172a] border border-cyan-500 text-white font-bold py-4 px-6 rounded-xl hover:bg-cyan-950/30 hover:border-cyan-400 transition-all duration-300 uppercase tracking-widest text-lg shadow-[0_0_20px_-10px_rgba(6,182,212,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <div className="absolute inset-0 bg-cyan-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-        <span className="relative z-10">{isLoginLoading ? 'AUTHENTICATING...' : 'ENTER SYSTEM'}</span>
+        {isLoginLoading ? 'AUTHENTICATING...' : 'LOGIN'}
       </button>
 
-      <div className="text-center pt-4 border-t border-cyan-500/20">
-        <p className="text-cyan-600/60 text-sm font-mono uppercase">
-          New User?{' '}
+      <div className="text-center pt-2">
+        <p className="text-slate-400 text-sm font-medium">
+          New to Mindbend?{' '}
           <Link
             href="/register"
-            className="text-cyan-400 hover:text-white font-bold transition-colors ml-1"
+            className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors uppercase tracking-wide ml-1"
           >
-            Register
+            CREATE ACCOUNT
           </Link>
         </p>
       </div>
@@ -307,15 +306,15 @@ export default function LoginPage() {
   const renderForgotPasswordForm = () => (
     <form onSubmit={handleForgotPasswordSubmit} className="space-y-6">
       <div className="relative group">
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/70 group-focus-within:text-cyan-400 transition-colors">
           <Mail size={20} />
         </div>
         <input
           type="email"
           value={forgotPasswordEmail}
           onChange={(e) => setForgotPasswordEmail(e.target.value)}
-          placeholder="Enter your email"
-          className="w-full bg-black/50 border border-cyan-500/30 text-white pl-10 pr-4 py-3 rounded-none outline-none focus:border-cyan-400 focus:bg-cyan-950/20 transition-all font-mono placeholder-cyan-700/50"
+          placeholder="ENTER YOUR EMAIL"
+          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white pl-12 pr-4 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder-slate-500 font-medium tracking-wide"
           required
         />
       </div>
@@ -323,10 +322,9 @@ export default function LoginPage() {
       <button
         type="submit"
         disabled={isForgotPasswordLoading}
-        className="w-full relative overflow-hidden group bg-cyan-900/20 border border-cyan-500/50 hover:border-cyan-400 text-white font-bold py-3 px-6 transition-all duration-300 uppercase tracking-widest font-mono text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-[#0f172a] border border-cyan-500 text-white font-bold py-4 px-6 rounded-xl hover:bg-cyan-950/30 hover:border-cyan-400 transition-all duration-300 uppercase tracking-widest text-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_-10px_rgba(6,182,212,0.5)]"
       >
-        <div className="absolute inset-0 bg-cyan-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-        <span className="relative z-10">{isForgotPasswordLoading ? 'PROCESSING...' : 'SEND OTP'}</span>
+        {isForgotPasswordLoading ? 'PROCESSING...' : 'SEND OTP'}
       </button>
 
       <button
@@ -336,29 +334,29 @@ export default function LoginPage() {
           setForgotPasswordError('');
           setForgotPasswordSuccess('');
         }}
-        className="w-full text-cyan-500/60 hover:text-cyan-400 transition-colors font-mono text-sm uppercase tracking-wider mt-2"
+        className="w-full text-cyan-500/60 hover:text-cyan-400 transition-colors font-medium text-sm uppercase tracking-wider mt-2"
       >
-        BACK TO LOGIN
+        Back to Login
       </button>
     </form>
   );
 
   // 3. RESET PASSWORD FORM
   const renderResetPasswordForm = () => (
-    <form onSubmit={handleResetPassword} className="space-y-6">
+    <form onSubmit={handleResetPassword} className="space-y-5">
       <div className="relative group">
         <input
           type="text"
           value={resetOtp}
           onChange={(e) => setResetOtp(e.target.value)}
           placeholder="6-DIGIT OTP"
-          className="w-full bg-black/50 border border-cyan-500/30 text-white px-4 py-3 text-center tracking-[0.5em] text-xl rounded-none outline-none focus:border-cyan-400 focus:bg-cyan-950/20 transition-all font-mono placeholder-cyan-700/50"
+          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white px-4 py-4 text-center tracking-[0.5em] text-xl rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all font-medium placeholder-slate-500"
           required
           disabled={otpExpired}
         />
       </div>
 
-      <div className="flex items-center justify-between font-mono text-xs">
+      <div className="flex items-center justify-between font-medium text-xs">
         {!otpExpired ? (
           <p className="text-cyan-500/70">
             EXPIRES IN <span className="text-white tabular-nums">{formatOtpTime(otpSecondsLeft)}</span>
@@ -372,7 +370,7 @@ export default function LoginPage() {
             type="button"
             onClick={handleResendOtp}
             disabled={isResendLoading}
-            className="text-cyan-400 hover:text-white transition-colors disabled:opacity-50"
+            className="text-cyan-400 hover:text-white transition-colors disabled:opacity-50 uppercase tracking-wider"
           >
             {isResendLoading ? 'WAIT...' : 'RESEND OTP'}
           </button>
@@ -385,13 +383,13 @@ export default function LoginPage() {
           value={resetNewPassword}
           onChange={(e) => setResetNewPassword(e.target.value)}
           placeholder="NEW PASSWORD"
-          className="w-full bg-black/50 border border-cyan-500/30 text-white px-4 py-3 rounded-none outline-none focus:border-cyan-400 focus:bg-cyan-950/20 transition-all font-mono placeholder-cyan-700/50"
+          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white px-4 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all font-medium placeholder-slate-500"
           required
         />
         <button
           type="button"
           onClick={() => setIsResetPasswordVisible((v) => !v)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-500/60 hover:text-cyan-400 transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-cyan-400 transition-colors"
         >
           {isResetPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
@@ -403,13 +401,13 @@ export default function LoginPage() {
           value={resetConfirmPassword}
           onChange={(e) => setResetConfirmPassword(e.target.value)}
           placeholder="CONFIRM PASSWORD"
-          className="w-full bg-black/50 border border-cyan-500/30 text-white px-4 py-3 rounded-none outline-none focus:border-cyan-400 focus:bg-cyan-950/20 transition-all font-mono placeholder-cyan-700/50"
+          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white px-4 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all font-medium placeholder-slate-500"
           required
         />
         <button
           type="button"
           onClick={() => setIsResetConfirmVisible((v) => !v)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-500/60 hover:text-cyan-400 transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-cyan-400 transition-colors"
         >
           {isResetConfirmVisible ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
@@ -418,10 +416,9 @@ export default function LoginPage() {
       <button
         type="submit"
         disabled={isResetLoading || !!resetSuccess || otpExpired}
-        className="w-full relative overflow-hidden group bg-cyan-900/20 border border-cyan-500/50 hover:border-cyan-400 text-white font-bold py-3 px-6 transition-all duration-300 uppercase tracking-widest font-mono text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-[#0f172a] border border-cyan-500 text-white font-bold py-4 px-6 rounded-xl hover:bg-cyan-950/30 hover:border-cyan-400 transition-all duration-300 uppercase tracking-widest text-lg shadow-[0_0_20px_-10px_rgba(6,182,212,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <div className="absolute inset-0 bg-cyan-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-        <span className="relative z-10">{isResetLoading ? 'UPDATING...' : resetSuccess ? 'UPDATED' : 'RESET PASSWORD'}</span>
+        {isResetLoading ? 'UPDATING...' : resetSuccess ? 'UPDATED' : 'RESET PASSWORD'}
       </button>
 
       <button
@@ -438,26 +435,29 @@ export default function LoginPage() {
           if (otpTimerRef.current) window.clearInterval(otpTimerRef.current);
           otpTimerRef.current = null;
         }}
-        className="w-full text-cyan-500/60 hover:text-cyan-400 transition-colors font-mono text-sm uppercase tracking-wider mt-2"
+        className="w-full text-cyan-500/60 hover:text-cyan-400 transition-colors font-medium text-sm uppercase tracking-wider mt-2"
       >
         BACK TO LOGIN
       </button>
     </form>
   );
 
-  let title = 'LOGIN';
+  let title = 'Welcome back:';
+  let subtitle = 'Sign in to your account';
   let content = renderLoginForm();
 
   if (isForgotPasswordOpen && !isResetPasswordOpen) {
-    title = 'FORGOT PASSWORD';
+    title = 'Forgot Password';
+    subtitle = 'Enter your email to receive a reset OTP';
     content = renderForgotPasswordForm();
   } else if (isResetPasswordOpen) {
-    title = 'RESET PASSWORD';
+    title = 'Reset Password';
+    subtitle = 'Create a new password for your account';
     content = renderResetPasswordForm();
   }
 
   return (
-    <AuthLayout title={title}>
+    <AuthLayout title={title} subtitle={subtitle}>
       {content}
     </AuthLayout>
   );

@@ -159,34 +159,33 @@ export default function RegisterPage() {
   const renderStep1 = () => (
     <>
       <div className="relative group mb-6">
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/70 group-focus-within:text-cyan-400 transition-colors">
           <Mail size={20} />
         </div>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email Address"
-          className="w-full bg-black/50 border border-cyan-500/30 text-white pl-10 pr-4 py-3 rounded-none outline-none focus:border-cyan-400 focus:bg-cyan-950/20 transition-all font-mono placeholder-cyan-700/50"
+          placeholder="EMAIL ADDRESS"
+          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white pl-12 pr-4 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder-slate-500 font-medium tracking-wide"
           required
         />
       </div>
 
-      <div className="p-4 bg-cyan-900/10 border border-cyan-500/20 text-cyan-200/80 text-sm font-mono mb-4">
+      <div className="p-4 bg-cyan-900/10 border border-cyan-500/20 rounded-lg text-cyan-200/80 text-sm font-medium mb-4">
         <span className="text-cyan-400 font-bold">INFO:</span> We will send a 6-digit OTP to your email.
       </div>
 
-      <div className="p-4 bg-cyan-900/10 border border-cyan-500/20 text-cyan-200/90 text-sm font-mono mb-6">
+      <div className="p-4 bg-cyan-900/10 border border-cyan-500/20 rounded-lg text-cyan-200/90 text-sm font-medium mb-6">
         <span className="text-cyan-400 font-bold">SVNIT Students:</span> Use institute ID for signup — all events will be free!
       </div>
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full relative overflow-hidden group bg-cyan-900/20 border border-cyan-500/50 hover:border-cyan-400 text-white font-bold py-3 px-6 transition-all duration-300 uppercase tracking-widest font-mono text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-[#0f172a] border border-cyan-500 text-white font-bold py-4 px-6 rounded-xl hover:bg-cyan-950/30 hover:border-cyan-400 transition-all duration-300 uppercase tracking-widest text-lg shadow-[0_0_20px_-10px_rgba(6,182,212,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <div className="absolute inset-0 bg-cyan-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-        <span className="relative z-10">{isSubmitting ? "LOADING..." : "SEND OTP"}</span>
+        {isSubmitting ? "LOADING..." : "SEND OTP"}
       </button>
     </>
   );
@@ -196,7 +195,7 @@ export default function RegisterPage() {
       <div className="space-y-4 mb-6">
         {/* Name */}
         <div className="relative group">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/70 group-focus-within:text-cyan-400 transition-colors">
             <User size={20} />
           </div>
           <input
@@ -206,20 +205,20 @@ export default function RegisterPage() {
               if (!nameTouched) setNameTouched(true);
               setUsername(e.target.value);
             }}
-            placeholder="Name"
-            className="w-full bg-black/50 border border-cyan-500/30 text-white pl-10 pr-4 py-3 rounded-none outline-none focus:border-cyan-400 focus:bg-cyan-950/20 transition-all font-mono placeholder-cyan-700/50"
+            placeholder="NAME"
+            className="w-full bg-[#0f172a]/40 border border-[#334155] text-white pl-12 pr-4 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder-slate-500 font-medium tracking-wide"
             required
           />
         </div>
         {nameError && (
-          <div className="px-3 py-2 border font-mono text-xs bg-amber-500/10 border-amber-400/40 text-amber-200">
+          <div className="px-3 py-2 border font-medium text-xs bg-amber-500/10 border-amber-400/40 text-amber-200 rounded-lg">
             <span className="text-cyan-400 font-bold">NOTE:</span> {nameError}
           </div>
         )}
 
         {/* Password */}
         <div className="relative group">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/70 group-focus-within:text-cyan-400 transition-colors">
             <Lock size={20} />
           </div>
           <input
@@ -229,41 +228,41 @@ export default function RegisterPage() {
               if (!passwordTouched) setPasswordTouched(true);
               setPassword(e.target.value);
             }}
-            placeholder="Password"
-            className="w-full bg-black/50 border border-cyan-500/30 text-white pl-10 pr-12 py-3 rounded-none outline-none focus:border-cyan-400 focus:bg-cyan-950/20 transition-all font-mono placeholder-cyan-700/50"
+            placeholder="PASSWORD"
+            className="w-full bg-[#0f172a]/40 border border-[#334155] text-white pl-12 pr-12 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder-slate-500 font-medium tracking-wide"
             required
           />
           <button
             type="button"
             onClick={() => setShowPassword((v) => !v)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-500/60 hover:text-cyan-400 transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-cyan-400 transition-colors"
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
         {passwordError && (
-          <div className="px-3 py-2 border font-mono text-xs bg-amber-500/10 border-amber-400/40 text-amber-200">
+          <div className="px-3 py-2 border font-medium text-xs bg-amber-500/10 border-amber-400/40 text-amber-200 rounded-lg">
             <span className="text-cyan-400 font-bold">NOTE:</span> {passwordError}
           </div>
         )}
 
         {/* Confirm Password */}
         <div className="relative group">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/70 group-focus-within:text-cyan-400 transition-colors">
             <Lock size={20} />
           </div>
           <input
             type={showConfirmPassword ? "text" : "password"}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm Password"
-            className="w-full bg-black/50 border border-cyan-500/30 text-white pl-10 pr-12 py-3 rounded-none outline-none focus:border-cyan-400 focus:bg-cyan-950/20 transition-all font-mono placeholder-cyan-700/50"
+            placeholder="CONFIRM PASSWORD"
+            className="w-full bg-[#0f172a]/40 border border-[#334155] text-white pl-12 pr-12 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder-slate-500 font-medium tracking-wide"
             required
           />
           <button
             type="button"
             onClick={() => setShowConfirmPassword((v) => !v)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-500/60 hover:text-cyan-400 transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-cyan-400 transition-colors"
           >
             {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
@@ -271,7 +270,7 @@ export default function RegisterPage() {
 
         {/* OTP */}
         <div className="relative group">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/70 group-focus-within:text-cyan-400 transition-colors">
             <Hash size={20} />
           </div>
           <input
@@ -279,7 +278,7 @@ export default function RegisterPage() {
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
             placeholder="6-DIGIT OTP"
-            className="w-full bg-black/50 border border-cyan-500/30 text-white pl-10 pr-4 py-3 text-center tracking-[0.35em] text-lg rounded-none outline-none focus:border-cyan-400 focus:bg-cyan-950/20 transition-all font-mono placeholder-cyan-700/50"
+            className="w-full bg-[#0f172a]/40 border border-[#334155] text-white pl-12 pr-4 py-4 text-center tracking-[0.35em] text-lg rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder-slate-500 font-medium"
             required
             maxLength={6}
           />
@@ -294,7 +293,7 @@ export default function RegisterPage() {
             setFormSuccess("");
             setCurrentStep(1);
           }}
-          className="w-full bg-transparent border border-cyan-500/30 hover:bg-cyan-950/20 hover:border-cyan-400 text-cyan-300 font-bold py-3 transition-all duration-200 uppercase tracking-widest text-sm font-mono"
+          className="w-full bg-transparent border border-cyan-500/30 hover:bg-cyan-950/20 hover:border-cyan-400 text-cyan-500/80 hover:text-cyan-400 font-bold py-4 rounded-xl transition-all duration-200 uppercase tracking-widest text-sm"
         >
           BACK
         </button>
@@ -302,19 +301,18 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full relative overflow-hidden group bg-cyan-900/20 border border-cyan-500/50 hover:border-cyan-400 text-white font-bold py-3 transition-all duration-300 uppercase tracking-widest font-mono text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-[#0f172a] border border-cyan-500 text-white font-bold py-4 px-6 rounded-xl hover:bg-cyan-950/30 hover:border-cyan-400 transition-all duration-300 uppercase tracking-widest text-sm shadow-[0_0_20px_-10px_rgba(6,182,212,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <div className="absolute inset-0 bg-cyan-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-          <span className="relative z-10">{isSubmitting ? "LOADING..." : "REGISTER"}</span>
+          {isSubmitting ? "LOADING..." : "REGISTER"}
         </button>
       </div>
     </>
   );
 
   return (
-    <AuthLayout title="REGISTER">
-      <div className="flex items-center justify-between pb-4 border-b border-cyan-500/20 mb-6">
-        <p className="text-cyan-500/70 font-mono text-sm">STEP {currentStep}/2</p>
+    <AuthLayout title="Create Account" subtitle="Join Mindbend 2026">
+      <div className="flex items-center justify-between pb-4 border-b border-gray-800 mb-6">
+        <p className="text-gray-400 font-medium text-sm tracking-wide">STEP {currentStep}/2</p>
         {currentStep === 2 && (
           <button
             type="button"
@@ -323,7 +321,7 @@ export default function RegisterPage() {
               setFormSuccess("");
               setCurrentStep(1);
             }}
-            className="text-cyan-400 hover:text-white transition-colors font-mono text-xs cursor-pointer uppercase tracking-wider"
+            className="text-cyan-500 hover:text-white transition-colors text-xs cursor-pointer uppercase tracking-wider font-bold"
           >
             CHANGE EMAIL
           </button>
@@ -337,14 +335,14 @@ export default function RegisterPage() {
         {currentStep === 1 ? renderStep1() : renderStep2()}
       </form>
 
-      <div className="text-center pt-6 border-t border-cyan-500/20 mt-6">
-        <p className="text-cyan-600/60 text-sm font-mono uppercase">
+      <div className="text-center pt-6 border-t border-gray-800 mt-6">
+        <p className="text-slate-400 text-sm font-medium">
           Already have an account?{' '}
           <Link
             href="/login"
-            className="text-cyan-400 hover:text-white font-bold transition-colors ml-1"
+            className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors uppercase tracking-wide ml-1"
           >
-            Login
+            LOGIN
           </Link>
         </p>
       </div>
