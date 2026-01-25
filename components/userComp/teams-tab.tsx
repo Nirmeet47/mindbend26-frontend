@@ -22,8 +22,8 @@ export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, 
         className="relative"
       >
         <div className="absolute inset-0 bg-white/5 border border-white/10" />
-        <div className="absolute top-0 left-1 w-4 h-4 border-t-2 border-l-2 border-[#33ABB9]" />
-        <div className="absolute bottom-0 right-1 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]" />
+        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]" />
+        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]" />
         <div className="relative p-12 text-center">
           <div className="w-8 h-8 border-2 border-[#33ABB9] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-[#33ABB9] font-mono text-sm">Loading your teams...</p>
@@ -40,8 +40,8 @@ export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, 
         className="relative"
       >
         <div className="absolute inset-0 bg-red-500/10 border border-red-500/30" />
-        <div className="absolute top-0 left-1 w-4 h-4 border-t-2 border-l-2 border-red-500" />
-        <div className="absolute bottom-0 right-1 w-4 h-4 border-b-2 border-r-2 border-red-500" />
+        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-red-500" />
+        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-red-500" />
         <div className="relative p-6 text-center">
           <p className="text-red-400 font-mono text-sm">{error}</p>
         </div>
@@ -57,8 +57,8 @@ export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, 
         className="relative"
       >
         <div className="absolute inset-0 bg-white/5 border border-white/10" />
-        <div className="absolute top-0 left-1 w-4 h-4 border-t-2 border-l-2 border-[#33ABB9]" />
-        <div className="absolute bottom-0 right-1 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]" />
+        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]" />
+        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]" />
         <div className="relative p-12 text-center">
           <Users className="w-12 h-12 text-[#33ABB9]/40 mx-auto mb-4" />
           <p className="text-gray-400 font-mono text-sm">You haven't joined any teams yet.</p>
@@ -71,7 +71,7 @@ export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, 
     <div className="space-y-4">
       {teams.map((team, index) => {
         return (
-          <motion.div 
+          <motion.div
             key={team._id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
