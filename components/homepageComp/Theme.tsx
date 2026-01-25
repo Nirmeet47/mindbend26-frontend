@@ -30,12 +30,12 @@ export default function Theme() {
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.onChange((progress) => {
-      // Evenly distribute 3 paragraphs across the full section
-      // 0-0.33: paragraph 0, 0.33-0.66: paragraph 1, 0.66-1: paragraph 2
+      // Adjusted thresholds for earlier transitions
+      // 0-0.15: paragraph 0, 0.15-0.35: paragraph 1, 0.35+: paragraph 2
       let index = 0;
-      if (progress > 0.66) {
+      if (progress > 0.35) {
         index = 2;
-      } else if (progress > 0.33) {
+      } else if (progress > 0.15) {
         index = 1;
       }
       setActiveIndex(index);

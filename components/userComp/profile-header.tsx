@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { LogOut, Edit2, Lock, Save, X } from "lucide-react"
+import { LogOut, Edit2, Save, X } from "lucide-react"
 import { logout } from "@/lib/auth"
 import { motion } from "framer-motion"
 import LogoutModal from "../ui/LogoutModal";
@@ -25,13 +25,7 @@ export default function ProfileHeader({
 }: ProfileHeaderProps) {
 
   const [showEditProfile, setShowEditProfile] = useState(false)
-  const [showResetPassword, setShowResetPassword] = useState(false)
   const [editData, setEditData] = useState(userData)
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  })
   const router = useRouter();
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -76,7 +70,7 @@ export default function ProfileHeader({
         className="relative"
       >
         {/* Background Shape */}
-        <div className="absolute inset-0 bg-white/5 border-2 border-[#33ABB9]/60 transition-colors hover:border-[#33ABB9]" />
+        <div className="absolute inset-0 bg-white/5 border-2 border-[#33ABB9]/70 transition-colors hover:border-[#33ABB9]" />
 
         <div className="relative p-4 md:p-8 overflow-hidden">
           <div className="flex flex-col md:flex-row md:items-start justify-between md:gap-6 gap-4">
@@ -99,21 +93,12 @@ export default function ProfileHeader({
                   className="relative flex items-center gap-1 px-3 py-2 text-[#33ABB9] hover:bg-[#33ABB9]/10 transition-all text-xs uppercase tracking-normal font-semibold border border-gray-700/30 bg-black/20 whitespace-nowrap w-auto md:w-36"
                 >
                   {/* Corner Accents */}
-                  <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]/60" />
-                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]/60" />
+                  <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]/70" />
+                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]/70" />
                   <Edit2 size={14} />
                   Edit Profile
                 </button>
-                <button
-                  onClick={() => setShowResetPassword(!showResetPassword)}
-                  className="relative flex items-center gap-1 px-3 py-2 text-[#33ABB9] hover:bg-[#33ABB9]/10 transition-all text-xs uppercase tracking-normal font-semibold border border-gray-700/30 bg-black/20 whitespace-nowrap w-auto md:w-36"
-                >
-                  {/* Corner Accents */}
-                  <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]/60" />
-                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]/60" />
-                  <Lock size={14} />
-                  Reset Password
-                </button>
+
               </div>
             </div>
           </div>
@@ -187,67 +172,7 @@ export default function ProfileHeader({
             </div>
           )}
 
-          {showResetPassword && (
-            <div className="mt-8 pt-8 border-t border-white/10">
-              <h3 className="text-[#33ABB9] font-bold uppercase tracking-[0.15em] mb-4 text-sm font-mono">[ CHANGE PASSWORD ]</h3>
-              <div className="space-y-3 max-w-2xl">
-                <input
-                  type="password"
-                  value={passwordData.currentPassword}
-                  onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                  placeholder="Current Password"
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#33ABB9]/50 focus:shadow-[0_0_20px_rgba(51,171,185,0.2)] transition-all text-sm"
-                />
-                <input
-                  type="password"
-                  value={passwordData.newPassword}
-                  onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                  placeholder="New Password"
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#33ABB9]/50 focus:shadow-[0_0_20px_rgba(51,171,185,0.2)] transition-all text-sm"
-                />
-                <input
-                  type="password"
-                  value={passwordData.confirmPassword}
-                  onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                  placeholder="Confirm New Password"
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#33ABB9]/50 focus:shadow-[0_0_20px_rgba(51,171,185,0.2)] transition-all text-sm"
-                />
-                <div className="flex gap-2 pt-2">
-                  <button
-                    onClick={() => {
-                      if (passwordData.newPassword !== passwordData.confirmPassword) {
-                        alert("Passwords don't match")
-                        return
-                      }
-                      if (!passwordData.currentPassword || !passwordData.newPassword) {
-                        alert("Please fill all fields")
-                        return
-                      }
-                      // Here you would call an API to change password
-                      console.log("Change password:", passwordData)
-                      setShowResetPassword(false)
-                      setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" })
-                    }}
-                    className="flex-1 relative px-6 py-3 bg-[#33ABB9] text-black font-bold font-orbitron tracking-wider text-base overflow-hidden transition-all flex items-center justify-center gap-2 cursor-pointer group"
-                  >
-                    <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover:translate-x-0 transition-transform duration-300 opacity-20" />
-                    <span className="relative z-10 flex items-center gap-2">
-                      <Save size={16} /> Update Password
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowResetPassword(false)
-                      setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" })
-                    }}
-                    className="flex-1 py-2 border border-white/10 text-gray-400 font-bold uppercase tracking-[0.15em] hover:bg-white/5 text-sm flex items-center justify-center gap-2"
-                  >
-                    <X size={16} /> Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+
         </div>
       </motion.div>
 

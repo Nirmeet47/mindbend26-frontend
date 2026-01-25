@@ -21,10 +21,10 @@ export default function PersonalDetailsCard({ userData }: PersonalDetailsCardPro
     >
       {/* Background Shape */}
       <div className="absolute inset-0 bg-white/5 border border-white/10 transition-colors hover:border-[#33ABB9]/30" />
-      
+
       {/* Corner Accents */}
-      <div className="absolute top-0 left-1 w-4 h-4 border-t-2 border-l-2 border-[#33ABB9]" />
-      <div className="absolute bottom-0 right-1 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]" />
+      <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]" />
+      <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]" />
 
       <div className="relative p-6 z-10">
         <h3 className="text-[10px] text-gray-500 font-mono tracking-[0.2em] mb-4 uppercase">Personal Details</h3>
