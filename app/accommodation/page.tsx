@@ -31,45 +31,24 @@ const AccommodationCard = ({
     whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
     transition={{ duration: 0.5, delay }}
-    className="relative group min-h-min w-full max-w-lg mx-auto"
+    className="relative bg-white/5 border border-gray-700/30 overflow-hidden"
   >
-    {/* Background Shape */}
-    <div
-      className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-xl border-0 border-white/5 shadow-xl"
-      style={{
-        clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)'
-      }}
-    />
-
-    {/* Tech Decorations */}
-    <TechDecorationTopLeft />
-    <TechDecorationTopRight />
-    <TechDecorationBottomRight />
-    <TechDecorationBottomLeft />
-
-    <div className="absolute top-0 left-16 right-12 h-[1.5px] bg-gradient-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-    <div className="absolute top-12 bottom-16 right-0 w-[1.5px] bg-gradient-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
-    <div className="absolute bottom-0 left-0 right-32 h-[1.5px] bg-gradient-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-    <div className="absolute top-16 bottom-0 left-0 w-[1.5px] bg-gradient-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
+    {/* Corner Accents */}
+    <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#33ABB9]/70" />
+    <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]/70" />
 
     <div className="relative z-10 p-6 flex flex-col h-full">
       {/* Header */}
-      <div className="mb-6 pl-3 border-l-2 border-[#33ABB9]/50">
-        <span className="block text-[10px] font-mono text-[#33ABB9] mb-2 tracking-widest uppercase">
-          ACCOM.SYS // 0{Math.floor(Math.random() * 99)}
-        </span>
-        <h3 className="text-xl font-bold text-white tracking-wide group-hover:text-[#33ABB9] transition-colors uppercase font-orbitron mb-2">
+      <div className="mb-6">
+        <h3 className="text-xl font-bold text-white tracking-wide uppercase font-orbitron mb-2">
           {title}
         </h3>
         <div className="flex items-center space-x-2">
-          <div className="h-1 w-1 bg-[#33ABB9] rounded-full animate-pulse" />
           <span className={`text-xs font-semibold px-2 py-1 rounded border ${tagColor}`}>
             {tag}
           </span>
         </div>
       </div>
-
-
 
       {/* Description */}
       <p className="text-gray-300 text-sm mb-4 leading-relaxed">{description}</p>
@@ -101,10 +80,14 @@ const ImportantNotes = ({ notes, title, delay = 0 }: { notes: string[], title: s
     whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
     transition={{ duration: 0.5, delay }}
-    className="relative bg-white/5 border-2 border-red-500/70 transition-colors hover:border-red-500"
+    className="relative bg-white/5 border border-gray-700/30 overflow-hidden"
   >
+    {/* Corner Accents in Red */}
+    <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-red-400/70" />
+    <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-red-400/70" />
+
     <div className="relative p-6">
-      <div className="flex items-center gap-3 mb-4 pl-3 border-l-2 border-red-500/50">
+      <div className="flex items-center gap-3 mb-4">
         <Shield className="w-5 h-5 text-red-400" />
         <h3 className="text-lg font-bold text-red-400 uppercase font-orbitron tracking-wide">{title}</h3>
       </div>
@@ -229,26 +212,11 @@ export default function AccommodationPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="relative group min-h-min w-full max-w-4xl mx-auto px-8 md:px-12 lg:px-22"
+            className="relative bg-white/5 border border-gray-700/30 overflow-hidden w-full max-w-4xl mx-auto px-8 md:px-12 lg:px-22"
           >
-            {/* Background Shape */}
-            <div
-              className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-xl border-0 border-white/5 shadow-xl"
-              style={{
-                clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)'
-              }}
-            />
-
-            {/* Tech Decorations */}
-            <TechDecorationTopLeft />
-            <TechDecorationTopRight />
-            <TechDecorationBottomRight />
-            <TechDecorationBottomLeft />
-
-            <div className="absolute top-0 left-16 right-12 h-[1.5px] bg-gradient-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-            <div className="absolute top-12 bottom-16 right-0 w-[1.5px] bg-gradient-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
-            <div className="absolute bottom-0 left-0 right-32 h-[1.5px] bg-gradient-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-            <div className="absolute top-16 bottom-0 left-0 w-[1.5px] bg-gradient-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
+            {/* Corner Accents */}
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#33ABB9]/70" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]/70" />
 
             <div className="relative z-10 p-8 text-center">
               <div className="mb-6 pl-3 border-l-2 border-[#33ABB9]/50">
@@ -261,18 +229,6 @@ export default function AccommodationPage() {
                 Ready to secure your accommodation for Mindbend 2026? Fill out our booking form to reserve your preferred option. 
                 Limited availability - book early to guarantee your spot!
               </p>
-              
-              {/* Placeholder for Google Form */}
-              <div className="bg-gradient-to-r from-[#33ABB9]/10 to-purple-500/10 border border-[#33ABB9]/20 rounded p-8 mb-6">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="w-2 h-2 bg-[#33ABB9] rounded-full animate-pulse" />
-                  <span className="text-[#33ABB9] font-mono text-sm uppercase tracking-wide">Google Form Integration</span>
-                </div>
-                <p className="text-gray-500 text-xs font-mono">
-                  [ FORM.MODULE LOADING... ]<br />
-                  ACCOMMODATION.BOOKING.FORM WILL BE EMBEDDED HERE
-                </p>
-              </div>
 
               <button
                 className="relative px-8 py-3 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-sm font-bold tracking-wider uppercase transition-all overflow-hidden cursor-not-allowed opacity-70"
