@@ -6,13 +6,14 @@ import { MapPin, Clock, Users, Shield, Home, Building, ExternalLink } from 'luci
 import Navbar from '@/components/layoutComp/Navbar';
 import Footer from '@/components/homepageComp/Footer';
 import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from '@/components/ui/TechDecorations';
+import AccommodationBackground from '@/components/ui/AccommodationBackground';
 
-const AccommodationCard = ({ 
-  title, 
-  tag, 
-  description, 
-  price, 
-  features, 
+const AccommodationCard = ({
+  title,
+  tag,
+  description,
+  price,
+  features,
   tagColor,
   icon: Icon,
   delay = 0
@@ -150,20 +151,8 @@ export default function AccommodationPage() {
     <>
       <Navbar />
       <div className="relative pt-32 md:pt-24 w-full min-h-screen text-white overflow-x-hidden selection:bg-[#33ABB9]/30">
-        {/* Background similar to TechnicalBackground */}
-        <div className="fixed inset-0 bg-[#030303] z-0" />
-        
-        {/* Grid Pattern */}
-        <div 
-          className="fixed inset-0 opacity-[0.03] pointer-events-none z-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(51, 171, 185, 0.4) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(51, 171, 185, 0.4) 1px, transparent 1px)
-            `,
-            backgroundSize: '40px 40px',
-          }}
-        />
+        {/* Dynamic Shader Background */}
+        <AccommodationBackground />
 
         <div className="container mx-auto py-8 relative z-10">
           <div className="flex flex-col items-center w-full animate-fade-in">
@@ -194,13 +183,13 @@ export default function AccommodationPage() {
 
           {/* Important Notes Sections */}
           <div className="grid lg:grid-cols-2 gap-10 md:gap-20 px-8 md:px-12 lg:px-22 mb-12">
-            <ImportantNotes 
-              title="Guest House Guidelines" 
+            <ImportantNotes
+              title="Guest House Guidelines"
               notes={guestHouseNotes}
               delay={0.2}
             />
-            <ImportantNotes 
-              title="Hostel Stay Guidelines" 
+            <ImportantNotes
+              title="Hostel Stay Guidelines"
               notes={hostelNotes}
               delay={0.3}
             />
@@ -224,9 +213,9 @@ export default function AccommodationPage() {
                   Book Your Stay
                 </h3>
               </div>
-              
+
               <p className="text-gray-300 text-sm mb-8 max-w-2xl mx-auto leading-relaxed">
-                Ready to secure your accommodation for Mindbend 2026? Fill out our booking form to reserve your preferred option. 
+                Ready to secure your accommodation for Mindbend 2026? Fill out our booking form to reserve your preferred option.
                 Limited availability - book early to guarantee your spot!
               </p>
 
