@@ -7,6 +7,7 @@ import Sponsors from "@/components/homepageComp/Sponsors";
 import Footer from "@/components/homepageComp/Footer";
 import Navbar from "@/components/layoutComp/Navbar";
 import Hero from "@/components/homepageComp/Hero";
+import Timeline from "@/components/homepageComp/Timeline"
 
 import { Metadata } from 'next';
 
@@ -115,6 +116,9 @@ export default function Page() {
             <Theme />
           </section>
 
+          <section aria-label="Timeline of Theme">
+            <Timeline />
+          </section>
 
 
           <section aria-label="Events and Competitions">
