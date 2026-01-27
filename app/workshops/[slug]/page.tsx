@@ -12,6 +12,8 @@ import WorkshopEventCard from '@/components/WorkshopEventCard';
 import EventsHeader from '@/components/events/EventsHeader';
 import WorkshopRegistrationCTA from '@/components/workshops/WorkshopRegistrationCTA';
 import { EventStatus } from '@/types';
+import useAuth from '@/hooks/useAuth';
+import { showErrorToast } from '@/utils/toast';
 
 
 // Lazy load the background scene
@@ -55,11 +57,19 @@ export default function WorkshopDetailPage() {
   const params = useParams();
   const router = useRouter();
   const slug = params.slug as string;
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
 
   const [workshop, setWorkshop] = useState<Workshop | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSvnitian, setIsSvnitian] = useState<boolean>(false);
+
+  // Set user's SVNitian status from auth context (only if authenticated)
+  useEffect(() => {
+    if (isAuthenticated && user?.isSvnitian) {
+      setIsSvnitian(true);
+    }
+  }, [isAuthenticated, user]);
 
   useEffect(() => {
     fetchWorkshop();
@@ -292,7 +302,7 @@ export default function WorkshopDetailPage() {
             <InfoCard
               icon={Trophy}
               label="ENTRY FEE"
-              value={workshop.entryFee === 0 ? 'FREE' : `₹${workshop.entryFee}`}
+              value={(isAuthenticated && isSvnitian) ? '₹0' : (workshop.entryFee === 0 ? 'FREE' : `₹${workshop.entryFee}`)}
               color="text-[#33ABB9]"
               delay={0.6}
             />

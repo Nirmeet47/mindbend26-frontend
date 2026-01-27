@@ -6,8 +6,10 @@ import { EventStatus } from '@/types';
 import { useState } from 'react';
 import { eventTeamApi } from '@/lib/eventTeam';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from '../ui/TechDecorations';
 import { showSuccessToast, showErrorToast, toastMessages } from '@/utils/toast';
+import useAuth from '@/hooks/useAuth';
 
 interface RegistrationCTAProps {
   eventStatus: EventStatus;
@@ -34,6 +36,8 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
   isSvnitian,
   eventType = 'technical'
 }) => {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
   const [regLoading, setRegLoading] = useState(false);
   const [regSuccess, setRegSuccess] = useState(false);
   const [regError, setRegError] = useState<string | null>(null);
@@ -47,6 +51,11 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
   const themeColorRgb = '51, 171, 185'; // Always use cyan RGB
 
   const handleRegister = async () => {
+    if (!isAuthenticated) {
+      showErrorToast('Please login to register for the event');
+      router.push('/login');
+      return;
+    }
     if (!eventId) return;
     setRegLoading(true);
     setRegError(null);
@@ -107,9 +116,27 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
         {eventStatus === 'OPEN' ? (
           <div className="space-y-8 relative z-10">
             <div className="flex flex-wrap items-center justify-center gap-6">
-              {/* Internal registration button */}
-              {isSvnitian ? (
+              {/* Check authentication first */}
+              {!isAuthenticated ? (
                 <>
+                  {/* Login prompt button for unauthenticated users */}
+                  <button
+                    onClick={() => {
+                      showErrorToast('Please login to register for the event');
+                      router.push('/login');
+                    }}
+                    className="group/register relative px-8 py-4 text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden"
+                    style={{ backgroundColor: themeColor }}
+                  >
+                    <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover/register:translate-x-0 transition-transform duration-300 opacity-30" />
+                    <span className="relative z-10 flex items-center gap-2">
+                      LOGIN_TO_REGISTER
+                    </span>
+                  </button>
+                </>
+              ) : isSvnitian ? (
+                <>
+                  {/* Internal registration for authenticated SVNitians */}
                   {eventId && !regSuccess && (
                     <>
                       {!isTeamEvent && (
@@ -322,8 +349,7 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
                 </>
               ) : (
                 <>
-
-                  {/* External links - Always show register button for non-SVNIT users */}
+                  {/* External links for authenticated non-SVNIT users */}
                   <Link
                     href={unstopLink || '#'}
                     target={unstopLink ? "_blank" : "_self"}
