@@ -20,9 +20,9 @@ const RADIUS_DOT = 360;
 // --- SCRAMBLE COMPONENT ---
 const CHARS = "-_~`!@#$%^&*()+=[]{}|;:,.<>?/0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-const ScrambleText = ({ text, isActive, className, speed = 30 }) => {
+const ScrambleText = ({ text, isActive, className, speed = 30 }: { text: string; isActive: boolean; className?: string; speed?: number }) => {
   const [displayText, setDisplayText] = useState(text);
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!isActive) {
@@ -30,30 +30,30 @@ const ScrambleText = ({ text, isActive, className, speed = 30 }) => {
         return;
     }
     let iteration = 0;
-    clearInterval(intervalRef.current);
+    clearInterval(intervalRef.current!);
 
     intervalRef.current = setInterval(() => {
       setDisplayText(() =>
         text
           .split("")
-          .map((letter, index) => {
+          .map((letter: string, index: number) => {
             if (index < iteration) return text[index];
             return CHARS[Math.floor(Math.random() * CHARS.length)];
           })
           .join("")
       );
-      if (iteration >= text.length) clearInterval(intervalRef.current);
+      if (iteration >= text.length) clearInterval(intervalRef.current!);
       iteration += 1 / 2;
     }, speed);
 
-    return () => clearInterval(intervalRef.current);
+    return () => clearInterval(intervalRef.current!);
   }, [isActive, text, speed]);
 
   return <span className={className}>{displayText}</span>;
 };
 
 // --- GLITCH ICON COMPONENT ---
-const GlitchIcon = ({ Icon }) => {
+const GlitchIcon = ({ Icon }: { Icon: any }) => {
   return (
     <div className="relative flex items-center justify-center w-16 h-16">
       {/* 1. Main Icon (Cyan) - Stable but glowing */}
@@ -247,6 +247,7 @@ export default function MobileScrollTimeline() {
                         <ScrambleText 
                             text={activeItem.title} 
                             isActive={true} 
+                            className=""
                             key={activeIndex} 
                         />
                     </h2>
