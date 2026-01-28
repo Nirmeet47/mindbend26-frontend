@@ -132,50 +132,50 @@ export default function AdminTeamsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+    <div className="min-h-screen bg-black p-8">
       {/* Header Section */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-white mb-2">
           Teams Management
         </h1>
-        <p className="text-slate-400">
+        <p className="text-gray-400">
           Manage and monitor all team registrations across events
         </p>
       </div>
       
       {/* Stats Bar */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
-          <div className="text-slate-400 text-sm font-medium mb-1">Total Teams</div>
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-xl">
+          <div className="text-gray-400 text-sm font-medium mb-1">Total Teams</div>
           <div className="text-3xl font-bold text-white">{totalResults}</div>
         </div>
-        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
-          <div className="text-slate-400 text-sm font-medium mb-1">Active Teams</div>
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-xl">
+          <div className="text-gray-400 text-sm font-medium mb-1">Active Teams</div>
           <div className="text-3xl font-bold text-white">
             {teams.filter(t => t.isActive).length}
           </div>
         </div>
-        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
-          <div className="text-slate-400 text-sm font-medium mb-1">Inactive Teams</div>
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-xl">
+          <div className="text-gray-400 text-sm font-medium mb-1">Inactive Teams</div>
           <div className="text-3xl font-bold text-white">
             {teams.filter(t => !t.isActive).length}
           </div>
         </div>
-        <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 shadow-xl">
-          <div className="text-slate-400 text-sm font-medium mb-1">Displayed</div>
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-xl">
+          <div className="text-gray-400 text-sm font-medium mb-1">Displayed</div>
           <div className="text-3xl font-bold text-white">{teams.length}</div>
         </div>
       </div>
 
       {/* Filters Section */}
-      <div className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl p-6 mb-8 shadow-xl">
+      <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 mb-8 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
           <h2 className="text-xl font-semibold text-white">
             Filter Options
           </h2>
           <button
             onClick={resetFilters}
-            className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-slate-300 bg-slate-700 hover:bg-slate-600 rounded-xl transition-colors"
+            className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-300 bg-white/5 hover:bg-white/10 rounded-xl transition-colors"
           >
             Clear Filters
           </button>
@@ -184,7 +184,7 @@ export default function AdminTeamsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {/* Team Name Search */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Team Name
             </label>
             <input
@@ -195,13 +195,13 @@ export default function AdminTeamsPage() {
                 setPage(1);
               }}
               placeholder="Search teams..."
-              className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 transition-colors"
+              className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-white/30 transition-colors"
             />
           </div>
 
           {/* Event Name Search */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Event Name
             </label>
             <input
@@ -212,13 +212,13 @@ export default function AdminTeamsPage() {
                 setPage(1);
               }}
               placeholder="Search events..."
-              className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-purple-500 transition-colors"
+              className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-white/30 transition-colors"
             />
           </div>
 
           {/* Status Filter */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Status
             </label>
             <select
@@ -227,7 +227,7 @@ export default function AdminTeamsPage() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors"
+              className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-white/30 transition-colors"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -237,7 +237,7 @@ export default function AdminTeamsPage() {
 
           {/* Type Filter */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Event Type
             </label>
             <select
@@ -246,7 +246,7 @@ export default function AdminTeamsPage() {
                 setTypeFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors"
+              className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-white/30 transition-colors"
             >
               <option value="all">All Types</option>
               <option value="technical">Technical</option>
@@ -266,7 +266,7 @@ export default function AdminTeamsPage() {
                 setTeamSizeFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors"
+              className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white focus:outline-none focus:border-white/30 transition-colors"
             >
               <option value="all">All Sizes</option>
               <option value="1">Solo</option>
@@ -280,15 +280,15 @@ export default function AdminTeamsPage() {
       {/* Teams Display */}
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
         </div>
       ) : error ? (
         <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-8 text-center">
           <p className="text-red-400 text-lg">{error}</p>
         </div>
       ) : teams.length === 0 ? (
-        <div className="bg-slate-800/50 border border-slate-700 rounded-2xl p-12 text-center">
-          <p className="text-slate-400 text-lg">No teams found</p>
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-12 text-center">
+          <p className="text-gray-400 text-lg">No teams found</p>
         </div>
       ) : (
         <>
@@ -297,16 +297,16 @@ export default function AdminTeamsPage() {
             {teams.map((team) => (
               <div 
                 key={team._id}
-                className="bg-linear-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-2xl overflow-hidden hover:border-purple-500/50 transition-all shadow-xl"
+                className="bg-[#0a0a0a] border border-white/5 rounded-2xl overflow-hidden hover:border-white/20 transition-all shadow-xl"
               >
                 {/* Card Header */}
-                <div className="bg-slate-800/50 p-5 border-b border-slate-700">
+                <div className="bg-black/30 p-5 border-b border-white/5">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1 min-w-0">
                       <h3 className="text-lg font-semibold text-white truncate mb-1">
                         {team.name}
                       </h3>
-                      <p className="text-sm text-slate-400 truncate">
+                      <p className="text-sm text-gray-400 truncate">
                         {team.eventId?.name || "No Event Associated"}
                       </p>
                     </div>
@@ -314,7 +314,7 @@ export default function AdminTeamsPage() {
                       className={`ml-3 px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap ${
                         team.isActive
                           ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                          : "bg-slate-600/20 text-slate-400 border border-slate-600/30"
+                          : "bg-gray-600/20 text-gray-400 border border-gray-600/30"
                       }`}
                     >
                       {team.isActive ? "Active" : "Inactive"}
@@ -339,18 +339,18 @@ export default function AdminTeamsPage() {
                 <div className="p-5 space-y-4">
                   {/* Leader Info */}
                   <div>
-                    <div className="text-xs font-medium text-slate-400 mb-3">
+                    <div className="text-xs font-medium text-gray-400 mb-3">
                       Team Leader
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-linear-to-br from-black-500 to-gray-500 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
+                      <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
                         {team.leader?.name?.charAt(0).toUpperCase() || "?"}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-white truncate">
                           {team.leader?.name || "Unknown"}
                         </p>
-                        <p className="text-xs text-slate-400 truncate">
+                        <p className="text-xs text-gray-400 truncate">
                           {team.leader?.email || "No email"}
                         </p>
                       </div>
@@ -358,17 +358,17 @@ export default function AdminTeamsPage() {
                   </div>
 
                   {/* Team Stats */}
-                  <div className="grid grid-cols-2 gap-3 pt-4 border-t border-slate-700">
-                    <div className="bg-slate-900/50 rounded-xl p-3 border border-slate-700">
-                      <div className="text-xs text-slate-400 mb-1">
+                  <div className="grid grid-cols-2 gap-3 pt-4 border-t border-white/5">
+                    <div className="bg-black/30 rounded-xl p-3 border border-white/5">
+                      <div className="text-xs text-gray-400 mb-1">
                         Members
                       </div>
                       <div className="text-xl font-bold text-white">
                         {team.members?.length || 0}
                       </div>
                     </div>
-                    <div className="bg-slate-900/50 rounded-xl p-3 border border-slate-700">
-                      <div className="text-xs text-slate-400 mb-1">
+                    <div className="bg-black/30 rounded-xl p-3 border border-white/5">
+                      <div className="text-xs text-gray-400 mb-1">
                         Created
                       </div>
                       <div className="text-sm font-semibold text-white">
@@ -409,7 +409,7 @@ export default function AdminTeamsPage() {
               <button
                 onClick={() => setPage(page - 1)}
                 disabled={page === 1}
-                className="px-4 py-2 bg-slate-800 border border-slate-700 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-white/5 border border-white/10 text-white rounded-lg hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Prev
               </button>
@@ -433,8 +433,8 @@ export default function AdminTeamsPage() {
                       onClick={() => setPage(pageNum)}
                       className={`w-10 h-10 rounded-lg font-medium transition-colors ${
                         page === pageNum
-                          ? "bg-linear-to-r from-purple-600 to-gray-600 text-white"
-                          : "bg-slate-800 border border-slate-700 text-slate-400 hover:bg-slate-700"
+                          ? "bg-white text-black"
+                          : "bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10"
                       }`}
                     >
                       {pageNum}
@@ -446,14 +446,14 @@ export default function AdminTeamsPage() {
               <button
                 onClick={() => setPage(page + 1)}
                 disabled={page === totalPages}
-                className="px-4 py-2 bg-slate-800 border border-slate-700 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-white/5 border border-white/10 text-white rounded-lg hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Next
               </button>
               <button
                 onClick={() => setPage(totalPages)}
                 disabled={page === totalPages}
-                className="px-4 py-2 bg-slate-800 border border-slate-700 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-white/5 border border-white/10 text-white rounded-lg hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Last
               </button>
