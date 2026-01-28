@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { eventsApi } from "../../../../lib/dashboardApi";
 import Table from "../../../../components/admin/Table";
-import Header from "../../../../components/Header";
 import EditEventModal from "../../../../components/admin/EditEventModal";
 import AddEventModal from "../../../../components/admin/AddEventModal";
 import { Button } from "../../../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Event } from "@/types";
-import { Plus } from "lucide-react";
+import { Plus, Filter, RefreshCw } from "lucide-react";
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -39,63 +40,121 @@ export default function EventsPage() {
   const columns = ["name", "type", "slug", "isTeamEvent", "prizeMoney", "edit"];
 
   return (
-    <div className="px-8 py-10 bg-gray-50 dark:bg-gray-900 min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <Header title="Events Management" />
-        <Button onClick={() => setShowAddModal(true)} className="bg-blue-600 hover:bg-blue-700">
-          <Plus className="w-4 h-4 mr-2" />
-          Add New Event
-        </Button>
+    <div className="min-h-screen bg-black">
+      {/* Header */}
+      <div className="border-b border-white/5 bg-[#0a0a0a]/50 backdrop-blur-sm sticky top-0 z-10">
+        <div className="px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-white mb-1">Events Management</h1>
+              <p className="text-sm text-gray-400">Manage all technical and managerial events</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={fetchEvents}
+                variant="outline"
+                size="sm"
+                className="bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh
+              </Button>
+              <Button
+                onClick={() => setShowAddModal(true)}
+                className="bg-white text-black hover:bg-gray-200"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add New Event
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-        <div className="flex items-center gap-4 mb-6">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Filter by type:</label>
-          <select
-            className="border border-gray-300 dark:border-gray-700 rounded-md px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            value={filter}
-            onChange={e => setFilter(e.target.value)}
-          >
-            <option value="all">All Events</option>
-            <option value="technical">Technical</option>
-            <option value="managerial">Managerial</option>
-          </select>
-        </div>
-
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span className="ml-3 text-gray-600 dark:text-gray-400">Loading events...</span>
-          </div>
-        ) : error ? (
-          <div className="text-center py-12">
-            <div className="text-red-500 text-lg mb-2">{error}</div>
-            <Button onClick={fetchEvents} variant="outline">
-              Try Again
-            </Button>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <Table
-              columns={columns}
-              data={filteredEvents.map((event: any) => ({
-                ...event,
-                isTeamEvent: event.isTeamEvent ? "Yes" : "No",
-                prizeMoney: event.prizeMoney ? `₹${event.prizeMoney.toLocaleString()}` : "₹0",
-                edit: (
-                  <Button
-                    onClick={() => setEditEvent(event)}
-                    variant="outline"
-                    size="sm"
-                    className="text-blue-600 border-blue-200 hover:bg-blue-50"
-                  >
-                    Edit
-                  </Button>
-                ),
-              }))}
-            />
-          </div>
-        )}
+      {/* Main Content */}
+      <div className="px-8 py-8">
+        <Card className="bg-[#0a0a0a] border-white/5">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-white">All Events</CardTitle>
+              <div className="flex items-center gap-3">
+                <Filter className="w-4 h-4 text-gray-400" />
+                <select
+                  className="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 text-sm text-white focus:ring-2 focus:ring-white/20 focus:border-transparent outline-none"
+                  value={filter}
+                  onChange={e => setFilter(e.target.value)}
+                >
+                  <option value="all" className="bg-black">All Events</option>
+                  <option value="technical" className="bg-black">Technical</option>
+                  <option value="managerial" className="bg-black">Managerial</option>
+                </select>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-20">
+                <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin mb-3" />
+                <span className="text-sm text-gray-400">Loading events...</span>
+              </div>
+            ) : error ? (
+              <div className="text-center py-20">
+                <div className="text-red-400 text-sm mb-4">{error}</div>
+                <Button
+                  onClick={fetchEvents}
+                  variant="outline"
+                  className="bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
+                >
+                  Try Again
+                </Button>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table
+                  columns={columns}
+                  data={filteredEvents.map((event: any) => ({
+                    ...event,
+                    type: (
+                      <Badge
+                        variant="outline"
+                        className={`${event.type === 'technical'
+                          ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                          : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                          }`}
+                      >
+                        {event.type}
+                      </Badge>
+                    ),
+                    isTeamEvent: event.isTeamEvent ? (
+                      <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/20">
+                        Team
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="bg-gray-500/10 text-gray-400 border-gray-500/20">
+                        Solo
+                      </Badge>
+                    ),
+                    prizeMoney: event.prizeMoney ? (
+                      <span className="text-green-400 font-medium">₹{event.prizeMoney.toLocaleString()}</span>
+                    ) : (
+                      <span className="text-gray-500">₹0</span>
+                    ),
+                    edit: (
+                      <Button
+                        onClick={() => setEditEvent(event)}
+                        variant="outline"
+                        size="sm"
+                        className="bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
+                      >
+                        Edit
+                      </Button>
+                    ),
+                  }))}
+                />
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Add Event Modal */}
