@@ -8,6 +8,7 @@ import {
   useTransform,
   animate,
 } from "framer-motion";
+import { IMAGES, VIDEOS } from "@/constants/assets";
 
 // Animated counter that starts when it enters the viewport
 function Counter({
@@ -55,7 +56,7 @@ const About = () => {
         {/* Decorative Grid Pattern - Hidden on small mobile */}
         <div className="absolute bottom-8 right-4 md:right-8 opacity-40 md:opacity-100">
           <img
-            src="/images/image.png"
+            src={IMAGES.image}
             alt="grid"
             className="w-16 h-16 md:w-25 md:h-25 object-contain"
           />
@@ -151,7 +152,7 @@ const About = () => {
           loop
           className="absolute inset-0 w-full h-full object-cover opacity-20 md:opacity-100 md:scale-90 md:translate-x-30"
         >
-          <source src="/videos/Home_about.mp4" type="video/mp4" />
+          <source src={VIDEOS.homeAbout} type="video/mp4" />
         </video>
 
         {/* Video edge gradients for smooth blending */}

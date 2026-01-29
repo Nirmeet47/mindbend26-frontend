@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { workshopsApi } from "../../lib/dashboardApi";
 import { Workshop } from "@/types";
 import Image from "next/image";
+import { IMAGES } from "@/constants/assets";
 
 export default function EditWorkshopModal({ workshop, onClose, onSuccess }: { workshop: Workshop; onClose: () => void; onSuccess: () => void }) {
   // Helper function to format date for datetime-local input
@@ -38,7 +39,7 @@ export default function EditWorkshopModal({ workshop, onClose, onSuccess }: { wo
     whatsappGrpLink: workshop.whatsappGrpLink || "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>(workshop.workshopPhoto?.startsWith('http') ? '/images/workshop_img.png' : workshop.workshopPhoto || '/images/workshop_img.png');
+  const [imagePreview, setImagePreview] = useState<string>(workshop.workshopPhoto?.startsWith('http') ? IMAGES.workshopImg : workshop.workshopPhoto || IMAGES.workshopImg);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -233,7 +234,7 @@ export default function EditWorkshopModal({ workshop, onClose, onSuccess }: { wo
             {(imagePreview || form.workshopPhoto) && (
               <div className="mt-2">
                 <Image 
-                  src={imagePreview || form.workshopPhoto || '/images/workshop_img.png'} 
+                  src={imagePreview || form.workshopPhoto || IMAGES.workshopImg} 
                   alt="Preview" 
                   width={200} 
                   height={150} 

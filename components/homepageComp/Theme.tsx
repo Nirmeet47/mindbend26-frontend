@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll } from "framer-motion";
+import { VIDEOS } from "@/constants/assets";
 
 const paragraphs = [
   {
@@ -67,7 +68,7 @@ export default function Theme() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="/videos/Home_theme.mp4" type="video/mp4" />
+          <source src={VIDEOS.homeTheme} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/50"></div>
       </div>
@@ -80,7 +81,7 @@ export default function Theme() {
           playsInline
           className="w-full sm:w-[90%] md:w-[70%] scale-180 md:scale-100 h-auto object-cover"
         >
-          <source src="/videos/Home_theme.mp4" type="video/mp4" />
+          <source src={VIDEOS.homeTheme} type="video/mp4" />
         </video>
         {/* Dark Overlay for text readability */}
         <div className="absolute inset-0 bg-black/10"></div>
