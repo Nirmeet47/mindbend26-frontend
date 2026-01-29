@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import WorkshopBackground from '@/components/events/WorkshopBackground';
 import WorkshopEventCard from '@/components/WorkshopEventCard';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/layoutComp/Navbar';
+import AccommodationBackground from '@/components/ui/AccommodationBackground';
 
 interface Workshop {
   _id: string;
@@ -48,7 +48,7 @@ function Workshops() {
     <>
       <Navbar />
       <div className="relative pt-32 md:pt-24 w-full min-h-screen text-white overflow-x-hidden selection:bg-[#8B5CF6]/30">
-        <WorkshopBackground />
+        <AccommodationBackground />
         <div className="container mx-auto py-8">
           <div className="flex flex-col items-center w-full animate-fade-in relative z-20">
             <h1
