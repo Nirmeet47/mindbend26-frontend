@@ -9,6 +9,7 @@ import { permissions } from '../../lib/permissions';
 import api from '@/lib/api';
 import { HiMiniUserGroup, HiUser } from "react-icons/hi2";
 import Image from 'next/image';
+import { IMAGES } from '@/constants/assets';
 
 const AdminSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -81,7 +82,7 @@ const AdminSidebar = () => {
         <div className="flex items-center justify-between p-6 border-b border-slate-800">
           <div className={`flex items-center gap-3 transition-opacity duration-300 z-0 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
             <div className="w-10 h-10 bg-linear-to-br from-black-500 to-gray-500 rounded-lg flex items-center justify-center shadow-lg">
-              <Image src="/images/mb_logo.jpg" alt="Mindbend Logo" width={100} height={100} />
+              <Image src={IMAGES.mbLogoJpg} alt="Mindbend Logo" width={100} height={100} />
             </div>
             <span className="text-xl font-bold text-white whitespace-nowrap">Mindbend Admin</span>
           </div>

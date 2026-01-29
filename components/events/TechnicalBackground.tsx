@@ -1,4 +1,5 @@
 'use client';
+import { VIDEOS } from '@/constants/assets';
 import React, { useEffect, useState } from 'react';
 
 const colors = {
@@ -215,7 +216,7 @@ const VideoBackground = () => {
                 onTimeUpdate={handleTimeUpdate}
                 className="w-full h-full object-cover"
             >
-                <source src="/videos/technical-bg.mp4" type="video/mp4" />
+                <source src={VIDEOS.technicalBg} type="video/mp4" />
             </video>
         </div>
     );

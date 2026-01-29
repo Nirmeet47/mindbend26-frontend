@@ -9,6 +9,7 @@ import {
   useMotionValueEvent,
 } from "framer-motion";
 import gsap from "gsap";
+import { IMAGES, VIDEOS } from "@/constants/assets";
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -305,7 +306,7 @@ const Hero = () => {
       >
         <Link href="/">
           <img
-            src="/images/mb_font.png"
+            src={IMAGES.mbFont}
             alt="MINDBEND"
             className="w-[80vw] scale-160 lg:scale-100 md:w-[70vw] h-auto object-contain cursor-pointer opacity-95 z-100"
           />
@@ -340,7 +341,7 @@ const Hero = () => {
               playsInline
               className="w-full h-full object-cover"
             >
-              <source src="/videos/hero.mp4" type="video/mp4" />
+              <source src={VIDEOS.hero} type="video/mp4" />
             </video>
             {/* White curtain that reveals video */}
             <div className="video-curtain absolute inset-0 bg-white z-10" />
