@@ -253,12 +253,13 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto bg-[#0a0a0a] border border-white/5 text-white" data-lenis-prevent>
+      <DialogContent className="bg-[#0a0a0a] border border-white/5 shadow-2xl w-[90vw] max-w-6xl max-h-[85vh] overflow-y-auto" data-lenis-prevent>
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-white">
+          <DialogTitle className="flex items-center gap-2 text-white text-xl">
+            <Upload className="h-5 w-5 text-blue-400" />
             Edit Event: {event.name}
           </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogDescription className="text-gray-400 text-sm">
             Update the event details and configurations.
           </DialogDescription>
         </DialogHeader>
@@ -821,18 +822,26 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
               {error}
             </div>
           )}
 
-          <div className="flex justify-end space-x-2 pt-4 border-t">
-            <Button type="button" variant="outline" onClick={onClose}>
+          <div className="flex gap-2 justify-end pt-6 border-t border-white/10">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-lg transition-all duration-200"
+            >
               Cancel
-            </Button>
-            <Button type="submit" disabled={loading}>
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 bg-blue-500/20 border-blue-500/30 text-blue-400 hover:bg-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               {loading ? "Updating..." : "Update Event"}
-            </Button>
+            </button>
           </div>
         </form>
       </DialogContent>
