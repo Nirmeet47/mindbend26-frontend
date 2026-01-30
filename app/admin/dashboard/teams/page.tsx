@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
-import { teamsApi, getTeamStats } from "../../../../lib/dashboardApi";
+import { teamsApi, getTeamStats, getEventTeamStats } from "../../../../lib/dashboardApi";
 import { Button } from "../../../../components/ui/button";
 import { Input } from "../../../../components/ui/input";
 import { Label } from "../../../../components/ui/label";
@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../../../../components/ui/dialog";
 import { Avatar, AvatarFallback } from "../../../../components/ui/avatar";
 import { Separator } from "../../../../components/ui/separator";
-import { Search, Filter, Users, UserCheck, UserX, Calendar, Mail, Phone, Eye, Settings, Trash2, AlertTriangle, CheckCircle } from "lucide-react";
+import { Search, Filter, Users, UserCheck, UserX, Calendar, Mail, Phone, Eye, Settings, Trash2, AlertTriangle, CheckCircle, BarChart3 } from "lucide-react";
 
 interface Team {
   _id: string;
@@ -44,6 +44,15 @@ interface TeamStats {
   inactive: number;
 }
 
+interface EventTeamStats {
+  eventId: string;
+  eventName: string;
+  eventType: string;
+  totalTeams: number;
+  activeTeams: number;
+  inactiveTeams: number;
+}
+
 export default function TeamsPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [filteredTeams, setFilteredTeams] = useState<Team[]>([]);
@@ -52,6 +61,9 @@ export default function TeamsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [stats, setStats] = useState<TeamStats>({ total: 0, active: 0, inactive: 0 });
+  const [eventStats, setEventStats] = useState<EventTeamStats[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<string>("");
+  const [showEventStats, setShowEventStats] = useState(false);
   
   // Filters
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,6 +90,16 @@ export default function TeamsPage() {
       setStats(data);
     } catch (err) {
       console.error("Failed to fetch team stats:", err);
+    }
+  };
+
+  // Fetch event statistics
+  const fetchEventStats = async () => {
+    try {
+      const data = await getEventTeamStats();
+      setEventStats(data);
+    } catch (err) {
+      console.error("Failed to fetch event team stats:", err);
     }
   };
 
@@ -150,6 +172,7 @@ export default function TeamsPage() {
   useEffect(() => {
     fetchTeams();
     fetchStats();
+    fetchEventStats();
   }, [fetchTeams]);
 
   // Handle team status toggle
@@ -306,18 +329,165 @@ export default function TeamsPage() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="event">Event Name</Label>
-              <Input
+              <Label htmlFor="event">Select Event</Label>
+              <select
                 id="event"
-                placeholder="Event name..."
-                value={eventFilter}
-                onChange={(e) => setEventFilter(e.target.value)}
-                className="bg-black border-gray-700"
-              />
+                value={selectedEvent}
+                onChange={(e) => {
+                  setSelectedEvent(e.target.value);
+                  setEventFilter(e.target.value ? eventStats.find(ev => ev.eventId === e.target.value)?.eventName || "" : "");
+                  setPage(1);
+                }}
+                className="w-full px-3 py-2 bg-black border border-gray-700 rounded-md text-white"
+              >
+                <option value="">All Events</option>
+                {eventStats.map((event) => (
+                  <option key={event.eventId} value={event.eventId}>
+                    {event.eventName} ({event.totalTeams} teams)
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* Professional Action Bar */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <Button
+            variant={showEventStats ? "default" : "outline"}
+            onClick={() => setShowEventStats(!showEventStats)}
+            className="flex items-center gap-2"
+          >
+            <BarChart3 className="h-4 w-4" />
+            {showEventStats ? "Hide" : "Show"} Event Analytics
+          </Button>
+          {hasActiveFilters && (
+            <Badge variant="secondary" className="bg-blue-600">
+              {Object.values({ 
+                search: searchTerm, 
+                status: statusFilter !== "all" ? statusFilter : "", 
+                type: typeFilter !== "all" ? typeFilter : "", 
+                event: eventFilter 
+              }).filter(Boolean).length} filters active
+            </Badge>
+          )}
+        </div>
+        
+        {selectedEvent && (
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setSelectedEvent("");
+              setEventFilter("");
+              setShowEventStats(false);
+            }}
+            className="text-gray-400 hover:text-white"
+          >
+            Clear Event Filter
+          </Button>
+        )}
+      </div>
+
+      {/* Event Statistics - Only show when toggled */}
+      {showEventStats && eventStats.length > 0 && (
+        <Card className="bg-gray-900 border-gray-800 mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5" />
+              Event Analytics
+            </CardTitle>
+            <CardDescription>
+              {selectedEvent
+                ? `Detailed view for ${eventStats.find(e => e.eventId === selectedEvent)?.eventName}`
+                : "Click on any event to filter teams and view details"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {selectedEvent ? (
+              // Show details for selected event
+              (() => {
+                const event = eventStats.find(e => e.eventId === selectedEvent);
+                return event ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xl font-semibold">{event.eventName}</h3>
+                      <Badge
+                        variant="outline"
+                        className={`${
+                          event.eventType === "technical"
+                            ? "border-blue-500 text-blue-400"
+                            : event.eventType === "managerial"
+                            ? "border-purple-500 text-purple-400"
+                            : "border-orange-500 text-orange-400"
+                        }`}
+                      >
+                        {event.eventType}
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="text-center p-4 bg-blue-900/20 rounded-lg border border-blue-800">
+                        <p className="text-2xl font-bold text-blue-400">{event.totalTeams}</p>
+                        <p className="text-sm text-gray-400">Total Teams</p>
+                      </div>
+                      <div className="text-center p-4 bg-green-900/20 rounded-lg border border-green-800">
+                        <p className="text-2xl font-bold text-green-400">{event.activeTeams}</p>
+                        <p className="text-sm text-gray-400">Active Teams</p>
+                      </div>
+                      <div className="text-center p-4 bg-gray-700/20 rounded-lg border border-gray-600">
+                        <p className="text-2xl font-bold text-gray-400">{event.inactiveTeams}</p>
+                        <p className="text-sm text-gray-400">Inactive Teams</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : null;
+              })()
+            ) : (
+              // Show overview of all events
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {eventStats.map((event) => (
+                  <div
+                    key={event.eventId}
+                    className="p-4 bg-black/30 rounded-lg border border-gray-700 hover:border-gray-600 cursor-pointer transition-all hover:bg-black/50"
+                    onClick={() => {
+                      setSelectedEvent(event.eventId);
+                      setEventFilter(event.eventName);
+                    }}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-semibold truncate">{event.eventName}</h4>
+                      <Badge
+                        variant="outline"
+                        className={`text-xs ${
+                          event.eventType === "technical"
+                            ? "border-blue-500 text-blue-400"
+                            : event.eventType === "managerial"
+                            ? "border-purple-500 text-purple-400"
+                            : "border-orange-500 text-orange-400"
+                        }`}
+                      >
+                        {event.eventType}
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <div>
+                        <span className="text-blue-400 font-semibold">{event.totalTeams}</span>
+                        <span className="text-gray-400 ml-1">teams</span>
+                      </div>
+                      <div>
+                        <span className="text-green-400 font-semibold">{event.activeTeams}</span>
+                        <span className="text-gray-400 mx-1">/</span>
+                        <span className="text-gray-500">{event.inactiveTeams}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Teams Grid */}
       {error ? (

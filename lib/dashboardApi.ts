@@ -81,3 +81,8 @@ export const getTeamStats = async () => {
   const response = await api.get("/admin/stats/teams");
   return response.data.data;
 };
+
+export const getEventTeamStats = async () => {
+  const response = await api.get("/admin/stats/teams/by-event");
+  return response.data.data;
+};
