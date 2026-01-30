@@ -76,3 +76,8 @@ export const getCounts = async () => {
   const response = await api.get("/admin/dashboard");
   return response.data.data.counts;
 };
+
+export const getTeamStats = async () => {
+  const response = await api.get("/admin/stats/teams");
+  return response.data.data;
+};
