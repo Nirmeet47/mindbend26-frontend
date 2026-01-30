@@ -3,17 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Calendar, Users, Shield, LogOut, Menu, X, Code, BookOpen } from 'lucide-react';
+import { Home, Calendar, Users, Shield, LogOut, BookOpen, ChevronLeft } from 'lucide-react';
 import { logout } from '../../lib/auth';
 import { permissions } from '../../lib/permissions';
 import api from '@/lib/api';
 import { HiMiniUserGroup, HiUser } from "react-icons/hi2";
 import Image from 'next/image';
-import { IMAGES } from '@/constants/assets';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const AdminSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
   const [user, setUser] = useState<any>(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const pathname = usePathname();
@@ -57,10 +59,6 @@ const AdminSidebar = () => {
     ...(canViewSecurity ? [{ icon: Shield, label: 'Security', href: '/admin/dashboard/security', active: pathname?.startsWith('/admin/dashboard/security') }] : []),
   ];
 
-  const handleNavClick = (index: number) => {
-    setActiveIndex(index);
-  };
-
   const doLogout = async () => {
     if (!confirm('Are you sure you want to logout?')) return;
     try {
@@ -71,103 +69,123 @@ const AdminSidebar = () => {
   };
 
   return (
-    <div className="relative">
+    <>
       {/* Sidebar */}
       <aside
-        className={`relative left-0 top-0 h-full bg-slate-900 shadow-2xl flex flex-col transition-all duration-300 ease-in-out z-50 ${
-          isCollapsed ? 'w-20' : 'w-72'
-        }`}
+        className={cn(
+          "fixed left-0 top-0 h-screen bg-[#0a0a0a] border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out z-50",
+          isCollapsed ? 'w-16' : 'w-64'
+        )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-800">
-          <div className={`flex items-center gap-3 transition-opacity duration-300 z-0 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
-            <div className="w-10 h-10 bg-linear-to-br from-black-500 to-gray-500 rounded-lg flex items-center justify-center shadow-lg">
-              <Image src={IMAGES.mbLogoJpg} alt="Mindbend Logo" width={100} height={100} />
+        <div className="h-16 flex items-center justify-between px-4 border-b border-white/5">
+          <div className={cn(
+            "flex items-center gap-3 transition-all duration-300",
+            isCollapsed ? 'opacity-0 w-0' : 'opacity-100'
+          )}>
+            <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0">
+              <Image
+                src="/images/mb_logo.jpg"
+                alt="Mindbend"
+                width={32}
+                height={32}
+                className="object-cover"
+              />
             </div>
-            <span className="text-xl font-bold text-white whitespace-nowrap">Mindbend Admin</span>
+            <span className="text-sm font-semibold text-white whitespace-nowrap">
+              Mindbend Admin
+            </span>
           </div>
           <button
             onClick={toggleSidebar}
-            className="p-2 hover:bg-slate-800 rounded-lg transition-all duration-200 text-slate-400 hover:text-white ml-auto z-10"
+            className={cn(
+              "p-1.5 hover:bg-white/5 rounded-md transition-colors text-gray-400 hover:text-white",
+              isCollapsed && "mx-auto"
+            )}
           >
-            {isCollapsed ? <Menu className="w-5 h-5" /> : <X className="w-5 h-5" />}
+            <ChevronLeft className={cn(
+              "w-4 h-4 transition-transform duration-300",
+              isCollapsed && "rotate-180"
+            )} />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-6 space-y-2 overflow-y-auto">
+        <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
           {navItems.map((item, index) => {
             const Icon = item.icon;
             const isActive = item.active;
-            
+
             return (
               <Link
                 key={index}
                 href={item.href}
-                onClick={() => handleNavClick(index)}
-                className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-200 group relative ${
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 group relative text-sm",
                   isActive
-                    ? 'bg-linear-to-r from-black-600 to-gray-600 text-white shadow-lg shadow-black-500/50'
-                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                }`}
+                    ? 'bg-white/10 text-white'
+                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                )}
               >
-                <Icon className={`w-5 h-5 shrink-0 transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-                <span
-                  className={`font-medium whitespace-nowrap transition-opacity duration-300 ${
-                    isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100'
-                  }`}
-                >
+                <Icon className="w-4 h-4 flex-shrink-0" />
+                <span className={cn(
+                  "font-medium whitespace-nowrap transition-all duration-300",
+                  isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100'
+                )}>
                   {item.label}
                 </span>
-                
+
                 {/* Active indicator */}
                 {isActive && (
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-l-full" />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-white rounded-r-full" />
                 )}
               </Link>
             );
           })}
         </nav>
 
-        {/* Footer */}
-        <div className={`p-4 border-t border-slate-800 ${isCollapsed ? 'hidden' : 'block'}`}>
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-linear-to-r from-black-600/20 to-gray-600/20 border border-black-500/30">
-            <div className="w-10 h-10 bg-linear-to-br from-black-500 to-gray-500 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-              {loadingUser ? '...' : (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
+        <Separator className="bg-white/5" />
+
+        {/* Footer - User Profile */}
+        <div className="p-3">
+          {!isCollapsed && (
+            <div className="flex items-center gap-3 p-2 rounded-md bg-white/5 mb-2">
+              <Avatar className="w-8 h-8 border border-white/10">
+                <AvatarFallback className="bg-white/10 text-white text-xs">
+                  {loadingUser ? '...' : (user?.name ? user.name.charAt(0).toUpperCase() : 'U')}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-white truncate">
+                  {loadingUser ? 'Loading...' : user?.name || 'Unknown'}
+                </p>
+                <p className="text-xs text-gray-400 truncate">
+                  {loadingUser ? '' : user?.role || 'Unknown'}
+                </p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-white truncate">{loadingUser ? 'Loading...' : user?.name || 'Unknown'}</p>
-              <p className="text-xs text-slate-400 truncate">{loadingUser ? '' : user?.role || 'Unknown'}</p>
-            </div>
-          </div>
-          <button
+          )}
+
+          <Button
             onClick={doLogout}
-            className="w-full mt-3 flex items-center gap-3 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white transition-all duration-200"
+            variant="ghost"
+            className={cn(
+              "w-full justify-start gap-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 text-sm h-9",
+              isCollapsed && "justify-center px-2"
+            )}
           >
-            <LogOut className="w-5 h-5" />
-            <span className="font-medium">Logout</span>
-          </button>
+            <LogOut className="w-4 h-4" />
+            {!isCollapsed && <span className="font-medium">Logout</span>}
+          </Button>
         </div>
       </aside>
 
-      {/* Hamburger for collapsed state */}
-      {isCollapsed && (
-        <button
-          onClick={toggleSidebar}
-          className="fixed top-6 left-6 p-3 bg-slate-900 hover:bg-slate-800 rounded-xl shadow-2xl transition-all duration-200 z-40 text-white"
-        >
-          <Menu className="w-6 h-6" />
-        </button>
-      )}
-
-      {/* Overlay for mobile */}
-      {!isCollapsed && (
-        <div
-          onClick={toggleSidebar}
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
-        />
-      )}
-    </div>
+      {/* Spacer to prevent content overlap */}
+      <div className={cn(
+        "transition-all duration-300",
+        isCollapsed ? 'w-16' : 'w-64'
+      )} />
+    </>
   );
 };
 
