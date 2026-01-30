@@ -1,5 +1,6 @@
 import type React from 'react';
 import dynamic from 'next/dynamic';
+import { VIDEOS } from '@/constants/assets';
 
 interface AuthLayoutProps {
     children: React.ReactNode;
@@ -17,7 +18,7 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
             {/* Background Video - Increased visibility */}
             <video
                 className="fixed inset-0 w-full h-full object-cover opacity-30 pointer-events-none mix-blend-screen z-0"
-                src="/videos/auth.mp4"
+                src={VIDEOS.auth}
                 autoPlay
                 muted
                 loop

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
+import { IMAGES } from "@/constants/assets";
 
 const SCRAMBLE_CHARS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!<>-_\\/[]{}—=+*^?#________";
@@ -176,7 +177,7 @@ export default function Navbar() {
         ) : (
           <Link href="/" className="flex items-center">
             <img
-              src="/images/mb_font.png"
+              src={IMAGES.mbFont}
               alt="MINDBEND"
               className="h-5 md:h-6 object-contain select-none"
             />

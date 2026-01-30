@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Calendar, MapPin, Users, Ticket, Award, Trophy, Phone, Mail, GraduationCap, Globe, Mic2, ShieldAlert, Newspaper, FileText } from "lucide-react";
 import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from "@/components/ui/TechDecorations";
 import Navbar from "@/components/layoutComp/Navbar";
+import { IMAGES } from "@/constants/assets";
 
 const InfoCard = ({ title, children, className = "", delay = 0, icon: Icon }: { title: string, children: React.ReactNode, className?: string, delay?: number, icon?: any }) => {
     return (
@@ -181,7 +182,7 @@ function MBMUN() {
                         <div className="flex flex-col justify-center items-center w-full animate-fade-in gap-y-6">
                             <div className="flex flex-row gap-x-8 w-full justify-center items-center">
 
-                            <Image src={"/images/mbmun_logo.jpg"} alt={"MBMUN"} width={160} height={160}/>
+                            <Image src={IMAGES.mbmunLogoJpg} alt={"MBMUN"} width={160} height={160}/>
                             <h1
                                 className="text-5xl sm:text-7xl md:text-8xl xl:text-10xl uppercase tracking-normal leading-[1.1] font-black mb-4"
                                 style={{
