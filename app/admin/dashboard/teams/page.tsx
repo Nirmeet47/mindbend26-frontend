@@ -1,15 +1,8 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import { teamsApi, getTeamStats, getEventTeamStats } from "../../../../lib/dashboardApi";
-import { Button } from "../../../../components/ui/button";
-import { Input } from "../../../../components/ui/input";
-import { Label } from "../../../../components/ui/label";
-import { Badge } from "../../../../components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../../components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../../../../components/ui/dialog";
-import { Avatar, AvatarFallback } from "../../../../components/ui/avatar";
-import { Separator } from "../../../../components/ui/separator";
-import { Search, Filter, Users, UserCheck, UserX, Calendar, Mail, Phone, Eye, Settings, Trash2, AlertTriangle, CheckCircle, BarChart3 } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../../../../components/ui/dialog";
+import { Search, Filter, Users, UserCheck, UserX, Calendar, Mail, Phone, Eye, Settings, Trash2, AlertTriangle, CheckCircle, BarChart3, X } from "lucide-react";
 
 interface Team {
   _id: string;
@@ -199,244 +192,267 @@ export default function TeamsPage() {
   if (loading && teams.length === 0) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-400 mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading teams data...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 space-y-6">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-4xl font-bold">Teams Management</h1>
-        <p className="text-gray-400">Manage and monitor all team registrations across events</p>
+      <div className="border-b border-white/5 bg-[#0a0a0a]/50 backdrop-blur-sm sticky top-0 z-10">
+        <div className="px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-white mb-1">Team Management</h1>
+              <p className="text-sm text-gray-400">Manage and monitor all team registrations across events</p>
+            </div>
+          </div>
+        </div>
       </div>
 
+      {/* Main Content */}
+      <div className="px-8 py-8">
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <Users className="h-8 w-8 text-blue-400" />
-              <div>
-                <p className="text-sm font-medium text-gray-400">Total Teams</p>
-                <p className="text-3xl font-bold">{stats.total}</p>
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-400 mb-1">Total Teams</p>
+              <p className="text-3xl font-bold text-white">{stats.total}</p>
             </div>
-          </CardContent>
-        </Card>
+            <div className="p-3 bg-blue-500/10 rounded-xl">
+              <Users className="h-6 w-6 text-blue-400" />
+            </div>
+          </div>
+        </div>
         
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <UserCheck className="h-8 w-8 text-green-400" />
-              <div>
-                <p className="text-sm font-medium text-gray-400">Active Teams</p>
-                <p className="text-3xl font-bold text-green-400">{stats.active}</p>
-              </div>
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-400 mb-1">Active Teams</p>
+              <p className="text-3xl font-bold text-green-400">{stats.active}</p>
+              <p className="text-xs text-gray-500 mt-1">Can participate in events</p>
             </div>
-          </CardContent>
-        </Card>
+            <div className="p-3 bg-green-500/10 rounded-xl">
+              <UserCheck className="h-6 w-6 text-green-400" />
+            </div>
+          </div>
+        </div>
         
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <UserX className="h-8 w-8 text-red-400" />
-              <div>
-                <p className="text-sm font-medium text-gray-400">Inactive Teams</p>
-                <p className="text-3xl font-bold text-red-400">{stats.inactive}</p>
-              </div>
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-400 mb-1">Inactive Teams</p>
+              <p className="text-3xl font-bold text-red-400">{stats.inactive}</p>
+              <p className="text-xs text-gray-500 mt-1">Cannot participate</p>
             </div>
-          </CardContent>
-        </Card>
+            <div className="p-3 bg-red-500/10 rounded-xl">
+              <UserX className="h-6 w-6 text-red-400" />
+            </div>
+          </div>
+        </div>
         
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <Filter className="h-8 w-8 text-purple-400" />
-              <div>
-                <p className="text-sm font-medium text-gray-400">
-                  {hasActiveFilters ? "Filtered" : "Displayed"}
-                </p>
-                <p className="text-3xl font-bold text-purple-400">{filteredTeams.length}</p>
-              </div>
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-400 mb-1">
+                {hasActiveFilters ? "Filtered Results" : "Displayed"}
+              </p>
+              <p className="text-3xl font-bold text-purple-400">{filteredTeams.length}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                {hasActiveFilters ? "Total matching filters" : "Current page"}
+              </p>
             </div>
-          </CardContent>
-        </Card>
+            <div className="p-3 bg-purple-500/10 rounded-xl">
+              <Filter className="h-6 w-6 text-purple-400" />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Filters */}
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <Filter className="h-5 w-5" />
-              Filters
+      <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-xl mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-500/10 rounded-lg">
+              <Filter className="h-5 w-5 text-blue-400" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-white">Filters</h2>
               {hasActiveFilters && (
-                <Badge variant="outline" className="border-blue-500 text-blue-400">
-                  {Object.values({ searchTerm, statusFilter: statusFilter !== "all" ? statusFilter : "", typeFilter: typeFilter !== "all" ? typeFilter : "", eventFilter }).filter(Boolean).length} active
-                </Badge>
+                <p className="text-sm text-gray-400">
+                  {Object.values({ searchTerm, statusFilter: statusFilter !== "all" ? statusFilter : "", typeFilter: typeFilter !== "all" ? typeFilter : "", eventFilter }).filter(Boolean).length} active filters
+                </p>
               )}
-            </span>
-            <Button variant="outline" size="sm" onClick={clearFilters}>
-              Clear All
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="search">Search Teams</Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  id="search"
-                  placeholder="Team or leader name..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-black border-gray-700"
-                />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
-              <select
-                id="status"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "inactive")}
-                className="w-full px-3 py-2 bg-black border border-gray-700 rounded-md text-white"
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="type">Event Type</Label>
-              <select
-                id="type"
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value as "all" | "technical" | "managerial" | "workshop")}
-                className="w-full px-3 py-2 bg-black border border-gray-700 rounded-md text-white"
-              >
-                <option value="all">All Types</option>
-                <option value="technical">Technical</option>
-                <option value="managerial">Managerial</option>
-                <option value="workshop">Workshop</option>
-              </select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="event">Select Event</Label>
-              <select
-                id="event"
-                value={selectedEvent}
-                onChange={(e) => {
-                  setSelectedEvent(e.target.value);
-                  setEventFilter(e.target.value ? eventStats.find(ev => ev.eventId === e.target.value)?.eventName || "" : "");
-                  setPage(1);
-                }}
-                className="w-full px-3 py-2 bg-black border border-gray-700 rounded-md text-white"
-              >
-                <option value="">All Events</option>
-                {eventStats.map((event) => (
-                  <option key={event.eventId} value={event.eventId}>
-                    {event.eventName} ({event.totalTeams} teams)
-                  </option>
-                ))}
-              </select>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          <button
+            onClick={clearFilters}
+            className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-lg transition-all duration-200"
+          >
+            Clear All
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="space-y-2">
+            <label htmlFor="search" className="text-sm font-medium text-gray-300">Search Teams</label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+              <input
+                id="search"
+                type="text"
+                placeholder="Team or leader name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-3 py-2.5 bg-black/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-blue-400 focus:outline-none transition-colors"
+              />
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <label htmlFor="status" className="text-sm font-medium text-gray-300">Status</label>
+            <select
+              id="status"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as "all" | "active" | "inactive")}
+              className="w-full px-3 py-2.5 bg-black/50 border border-white/10 rounded-lg text-white focus:border-blue-400 focus:outline-none transition-colors"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          
+          <div className="space-y-2">
+            <label htmlFor="type" className="text-sm font-medium text-gray-300">Event Type</label>
+            <select
+              id="type"
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value as "all" | "technical" | "managerial" | "workshop")}
+              className="w-full px-3 py-2.5 bg-black/50 border border-white/10 rounded-lg text-white focus:border-blue-400 focus:outline-none transition-colors"
+            >
+              <option value="all">All Types</option>
+              <option value="technical">Technical</option>
+              <option value="managerial">Managerial</option>
+              <option value="workshop">Workshop</option>
+            </select>
+          </div>
+          
+          <div className="space-y-2">
+            <label htmlFor="event" className="text-sm font-medium text-gray-300">Select Event</label>
+            <select
+              id="event"
+              value={selectedEvent}
+              onChange={(e) => {
+                setSelectedEvent(e.target.value);
+                setEventFilter(e.target.value ? eventStats.find(ev => ev.eventId === e.target.value)?.eventName || "" : "");
+                setPage(1);
+              }}
+              className="w-full px-3 py-2.5 bg-black/50 border border-white/10 rounded-lg text-white focus:border-blue-400 focus:outline-none transition-colors"
+            >
+              <option value="">All Events</option>
+              {eventStats.map((event) => (
+                <option key={event.eventId} value={event.eventId}>
+                  {event.eventName} ({event.totalTeams} teams)
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
 
       {/* Professional Action Bar */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
-          <Button
-            variant={showEventStats ? "default" : "outline"}
+          <button
             onClick={() => setShowEventStats(!showEventStats)}
-            className="flex items-center gap-2"
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+              showEventStats
+                ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                : "bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white"
+            }`}
           >
             <BarChart3 className="h-4 w-4" />
             {showEventStats ? "Hide" : "Show"} Event Analytics
-          </Button>
+          </button>
           {hasActiveFilters && (
-            <Badge variant="secondary" className="bg-blue-600">
+            <div className="px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg text-sm font-medium">
               {Object.values({ 
                 search: searchTerm, 
                 status: statusFilter !== "all" ? statusFilter : "", 
                 type: typeFilter !== "all" ? typeFilter : "", 
                 event: eventFilter 
               }).filter(Boolean).length} filters active
-            </Badge>
+            </div>
           )}
         </div>
         
         {selectedEvent && (
-          <Button
-            variant="ghost"
+          <button
             onClick={() => {
               setSelectedEvent("");
               setEventFilter("");
               setShowEventStats(false);
             }}
-            className="text-gray-400 hover:text-white"
+            className="flex items-center gap-2 px-4 py-2 text-gray-400 hover:text-white text-sm transition-colors"
           >
+            <X className="h-4 w-4" />
             Clear Event Filter
-          </Button>
+          </button>
         )}
       </div>
 
       {/* Event Statistics - Only show when toggled */}
       {showEventStats && eventStats.length > 0 && (
-        <Card className="bg-gray-900 border-gray-800 mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5" />
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-xl mb-8">
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-blue-400" />
               Event Analytics
-            </CardTitle>
-            <CardDescription>
+            </h2>
+            <p className="text-sm text-gray-400">
               {selectedEvent
                 ? `Detailed view for ${eventStats.find(e => e.eventId === selectedEvent)?.eventName}`
                 : "Click on any event to filter teams and view details"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
+          </div>
+          
+          <div>
             {selectedEvent ? (
               // Show details for selected event
               (() => {
                 const event = eventStats.find(e => e.eventId === selectedEvent);
                 return event ? (
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-xl font-semibold">{event.eventName}</h3>
-                      <Badge
-                        variant="outline"
-                        className={`${
-                          event.eventType === "technical"
-                            ? "border-blue-500 text-blue-400"
-                            : event.eventType === "managerial"
-                            ? "border-purple-500 text-purple-400"
-                            : "border-orange-500 text-orange-400"
-                        }`}
-                      >
+                      <h3 className="text-lg font-semibold text-white">{event.eventName}</h3>
+                      <div className={`px-3 py-1 rounded-lg text-xs font-medium border ${
+                        event.eventType === "technical"
+                          ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
+                          : event.eventType === "managerial"
+                          ? "bg-purple-500/10 border-purple-500/30 text-purple-400"
+                          : "bg-orange-500/10 border-orange-500/30 text-orange-400"
+                      }`}>
                         {event.eventType}
-                      </Badge>
+                      </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="text-center p-4 bg-blue-900/20 rounded-lg border border-blue-800">
-                        <p className="text-2xl font-bold text-blue-400">{event.totalTeams}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="text-center p-6 bg-blue-500/5 rounded-xl border border-blue-500/20">
+                        <p className="text-3xl font-bold text-blue-400 mb-1">{event.totalTeams}</p>
                         <p className="text-sm text-gray-400">Total Teams</p>
                       </div>
-                      <div className="text-center p-4 bg-green-900/20 rounded-lg border border-green-800">
-                        <p className="text-2xl font-bold text-green-400">{event.activeTeams}</p>
+                      <div className="text-center p-6 bg-green-500/5 rounded-xl border border-green-500/20">
+                        <p className="text-3xl font-bold text-green-400 mb-1">{event.activeTeams}</p>
                         <p className="text-sm text-gray-400">Active Teams</p>
                       </div>
-                      <div className="text-center p-4 bg-gray-700/20 rounded-lg border border-gray-600">
-                        <p className="text-2xl font-bold text-gray-400">{event.inactiveTeams}</p>
+                      <div className="text-center p-6 bg-gray-500/5 rounded-xl border border-gray-500/20">
+                        <p className="text-3xl font-bold text-gray-400 mb-1">{event.inactiveTeams}</p>
                         <p className="text-sm text-gray-400">Inactive Teams</p>
                       </div>
                     </div>
@@ -449,26 +465,23 @@ export default function TeamsPage() {
                 {eventStats.map((event) => (
                   <div
                     key={event.eventId}
-                    className="p-4 bg-black/30 rounded-lg border border-gray-700 hover:border-gray-600 cursor-pointer transition-all hover:bg-black/50"
+                    className="p-4 bg-black/40 rounded-xl border border-white/5 hover:border-white/20 cursor-pointer transition-all duration-200 hover:bg-black/60 group"
                     onClick={() => {
                       setSelectedEvent(event.eventId);
                       setEventFilter(event.eventName);
                     }}
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-semibold truncate">{event.eventName}</h4>
-                      <Badge
-                        variant="outline"
-                        className={`text-xs ${
-                          event.eventType === "technical"
-                            ? "border-blue-500 text-blue-400"
-                            : event.eventType === "managerial"
-                            ? "border-purple-500 text-purple-400"
-                            : "border-orange-500 text-orange-400"
-                        }`}
-                      >
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="font-medium text-white truncate group-hover:text-blue-400 transition-colors">{event.eventName}</h4>
+                      <div className={`px-2 py-1 rounded text-xs font-medium border ${
+                        event.eventType === "technical"
+                          ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
+                          : event.eventType === "managerial"
+                          ? "bg-purple-500/10 border-purple-500/30 text-purple-400"
+                          : "bg-orange-500/10 border-orange-500/30 text-orange-400"
+                      }`}>
                         {event.eventType}
-                      </Badge>
+                      </div>
                     </div>
                     <div className="flex justify-between text-sm">
                       <div>
@@ -485,107 +498,111 @@ export default function TeamsPage() {
                 ))}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* Teams Grid */}
       {error ? (
-        <Card className="bg-red-900/20 border-red-800">
-          <CardContent className="p-6 text-center">
-            <p className="text-red-400">{error}</p>
-          </CardContent>
-        </Card>
+        <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-8 text-center">
+          <p className="text-red-400 text-lg">{error}</p>
+        </div>
       ) : filteredTeams.length === 0 ? (
-        <Card className="bg-gray-900 border-gray-800">
-          <CardContent className="p-12 text-center">
-            <Users className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400 text-lg">No teams found</p>
-            {hasActiveFilters && (
-              <Button variant="outline" className="mt-4" onClick={clearFilters}>
-                Clear filters to see all teams
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        <div className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-12 text-center shadow-xl">
+          <div className="p-4 bg-gray-500/10 rounded-xl inline-block mb-4">
+            <Users className="h-12 w-12 text-gray-500" />
+          </div>
+          <p className="text-gray-400 text-lg mb-4">No teams found</p>
+          <p className="text-gray-500 text-sm mb-6">
+            {hasActiveFilters 
+              ? "Try adjusting your filters to see more results"
+              : "Teams will appear here once they register for events"
+            }
+          </p>
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="px-4 py-2 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition-all duration-200"
+            >
+              Clear filters to see all teams
+            </button>
+          )}
+        </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredTeams.map((team) => (
-            <Card key={team._id} className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-colors">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg truncate">{team.name}</CardTitle>
-                    <CardDescription className="truncate">
-                      {team.eventId?.name || "No Event"}
-                    </CardDescription>
-                  </div>
-                  <Badge
-                    variant={team.isActive ? "default" : "secondary"}
-                    className={team.isActive ? "bg-green-600" : "bg-gray-600"}
-                  >
-                    {team.isActive ? "Active" : "Inactive"}
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge
-                    variant="outline"
-                    className={`${
-                      team.eventId?.type === "technical"
-                        ? "border-blue-500 text-blue-400"
-                        : team.eventId?.type === "managerial"
-                        ? "border-purple-500 text-purple-400"
-                        : "border-orange-500 text-orange-400"
-                    }`}
-                  >
-                    {team.eventId?.type || "N/A"}
-                  </Badge>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <Avatar>
-                    <AvatarFallback className="bg-blue-600">
-                      {team.leader?.name?.charAt(0)?.toUpperCase() || "?"}
-                    </AvatarFallback>
-                  </Avatar>
+            <div key={team._id} className="bg-[#0a0a0a] border border-white/5 rounded-2xl shadow-xl hover:border-white/20 transition-all duration-200 overflow-hidden">
+              {/* Card Header */}
+              <div className="p-6 pb-4">
+                <div className="flex items-start justify-between mb-4">
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{team.leader?.name || "Unknown"}</p>
+                    <h3 className="text-lg font-semibold text-white truncate mb-1">{team.name}</h3>
+                    <p className="text-sm text-gray-400 truncate">{team.eventId?.name || "No Event"}</p>
+                  </div>
+                  <div className={`px-2.5 py-1 rounded-lg text-xs font-medium border shrink-0 ml-3 ${
+                    team.isActive 
+                      ? "bg-green-500/20 border-green-500/30 text-green-400" 
+                      : "bg-gray-500/20 border-gray-500/30 text-gray-400"
+                  }`}>
+                    {team.isActive ? "Active" : "Inactive"}
+                  </div>
+                </div>
+                
+                <div className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-medium border ${
+                  team.eventId?.type === "technical"
+                    ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
+                    : team.eventId?.type === "managerial"
+                    ? "bg-purple-500/10 border-purple-500/30 text-purple-400"
+                    : "bg-orange-500/10 border-orange-500/30 text-orange-400"
+                }`}>
+                  {team.eventId?.type || "N/A"}
+                </div>
+              </div>
+              
+              {/* Card Content */}
+              <div className="px-6 pb-6 space-y-4">
+                {/* Team Leader */}
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center border border-blue-500/30">
+                    <span className="text-blue-400 font-semibold">
+                      {team.leader?.name?.charAt(0)?.toUpperCase() || "?"}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-white truncate">{team.leader?.name || "Unknown"}</p>
                     <p className="text-sm text-gray-400 truncate">{team.leader?.email || "No email"}</p>
                   </div>
                 </div>
                 
+                {/* Team Info */}
                 <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-gray-400" />
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <Users className="h-4 w-4" />
                     <span>{team.members?.length || 0} members</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-gray-400" />
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <Calendar className="h-4 w-4" />
                     <span>{new Date(team.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
                 
-                <Separator className="bg-gray-800" />
+                {/* Divider */}
+                <div className="border-t border-white/10"></div>
                 
+                {/* Actions */}
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
+                  <button
                     onClick={() => {
                       setSelectedTeam(team);
                       setShowTeamDetails(true);
                     }}
-                    className="flex-1"
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-all duration-200"
                   >
-                    <Eye className="h-4 w-4 mr-2" />
+                    <Eye className="h-4 w-4" />
                     View Details
-                  </Button>
+                  </button>
                   
-                  <Button
-                    variant={team.isActive ? "destructive" : "default"}
-                    size="sm"
+                  <button
                     onClick={() => {
                       setConfirmAction({
                         show: true,
@@ -593,47 +610,50 @@ export default function TeamsPage() {
                         action: team.isActive ? "deactivate" : "activate"
                       });
                     }}
+                    className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium border transition-all duration-200 ${
+                      team.isActive
+                        ? "bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500/30"
+                        : "bg-green-500/20 border-green-500/30 text-green-400 hover:bg-green-500/30"
+                    }`}
                   >
                     {team.isActive ? (
                       <>
-                        <UserX className="h-4 w-4 mr-2" />
+                        <UserX className="h-4 w-4" />
                         Deactivate
                       </>
                     ) : (
                       <>
-                        <UserCheck className="h-4 w-4 mr-2" />
+                        <UserCheck className="h-4 w-4" />
                         Activate
                       </>
                     )}
-                  </Button>
+                  </button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       )}
 
       {/* Pagination */}
       {!hasActiveFilters && totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2">
-          <Button
-            variant="outline"
+        <div className="flex justify-center items-center gap-3 mt-8">
+          <button
             onClick={() => setPage(1)}
             disabled={page === 1}
-            className="px-4 py-2"
+            className="px-4 py-2 text-sm font-medium bg-white/5 hover:bg-white/10 disabled:bg-white/5 border border-white/10 hover:border-white/20 disabled:border-white/5 text-white hover:text-white disabled:text-gray-500 rounded-lg transition-all duration-200"
           >
             First
-          </Button>
-          <Button
-            variant="outline"
+          </button>
+          <button
             onClick={() => setPage(Math.max(1, page - 1))}
             disabled={page === 1}
-            className="px-4 py-2"
+            className="px-4 py-2 text-sm font-medium bg-white/5 hover:bg-white/10 disabled:bg-white/5 border border-white/10 hover:border-white/20 disabled:border-white/5 text-white hover:text-white disabled:text-gray-500 rounded-lg transition-all duration-200"
           >
             Previous
-          </Button>
+          </button>
           
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             {(() => {
               const pages = [];
               const maxVisible = 5;
@@ -664,121 +684,119 @@ export default function TeamsPage() {
               }
               
               return pages.map((pageNum) => (
-                <Button
+                <button
                   key={`page-${pageNum}`}
-                  variant={page === pageNum ? "default" : "outline"}
                   onClick={() => setPage(pageNum)}
-                  className="w-10 h-10"
+                  className={`w-10 h-10 text-sm font-medium rounded-lg border transition-all duration-200 ${
+                    page === pageNum
+                      ? "bg-blue-500/20 border-blue-500/30 text-blue-400"
+                      : "bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-gray-300 hover:text-white"
+                  }`}
                 >
                   {pageNum}
-                </Button>
+                </button>
               ));
             })()}
           </div>
           
-          <Button
-            variant="outline"
+          <button
             onClick={() => setPage(Math.min(totalPages, page + 1))}
             disabled={page === totalPages}
-            className="px-4 py-2"
+            className="px-4 py-2 text-sm font-medium bg-white/5 hover:bg-white/10 disabled:bg-white/5 border border-white/10 hover:border-white/20 disabled:border-white/5 text-white hover:text-white disabled:text-gray-500 rounded-lg transition-all duration-200"
           >
             Next
-          </Button>
-          <Button
-            variant="outline"
+          </button>
+          <button
             onClick={() => setPage(totalPages)}
             disabled={page === totalPages}
-            className="px-4 py-2"
+            className="px-4 py-2 text-sm font-medium bg-white/5 hover:bg-white/10 disabled:bg-white/5 border border-white/10 hover:border-white/20 disabled:border-white/5 text-white hover:text-white disabled:text-gray-500 rounded-lg transition-all duration-200"
           >
             Last
-          </Button>
+          </button>
         </div>
       )}
 
       {/* Filter Info */}
       {hasActiveFilters && (
-        <Card className="bg-blue-900/20 border-blue-800">
-          <CardContent className="p-6 text-center">
-            <p className="text-blue-400">
-              📊 Showing {filteredTeams.length} teams matching your filters. 
-              Pagination is disabled when filters are active.
-            </p>
-            <Button variant="outline" className="mt-3" onClick={clearFilters}>
-              Clear filters to return to paginated view
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-6 text-center mt-8">
+          <p className="text-blue-400 mb-3">
+            📊 Showing {filteredTeams.length} teams matching your filters. 
+            Pagination is disabled when filters are active.
+          </p>
+          <button
+            onClick={clearFilters}
+            className="px-4 py-2 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition-all duration-200"
+          >
+            Clear filters to return to paginated view
+          </button>
+        </div>
       )}
+      
+      </div> {/* End Main Content */}
 
       {/* Team Details Dialog */}
       <Dialog open={showTeamDetails} onOpenChange={setShowTeamDetails}>
-        <DialogContent className="bg-gray-900 border-gray-800 max-w-2xl">
+        <DialogContent className="bg-[#0a0a0a] border border-white/5 shadow-2xl w-[75vw] max-w-6xl max-h-[80vh] overflow-y-auto" data-lenis-prevent>
           <DialogHeader>
-            <DialogTitle className="text-2xl">{selectedTeam?.name}</DialogTitle>
-            <DialogDescription>
-              Team details and member information
+            <DialogTitle className="text-lg font-semibold text-white">{selectedTeam?.name}</DialogTitle>
+            <DialogDescription className="text-sm text-gray-400">
+              Team information
             </DialogDescription>
           </DialogHeader>
           
           {selectedTeam && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <div className="grid grid-cols-4 gap-3">
                 <div>
-                  <Label>Status</Label>
-                  <Badge
-                    variant={selectedTeam.isActive ? "default" : "secondary"}
-                    className={`mt-2 ${selectedTeam.isActive ? "bg-green-600" : "bg-gray-600"}`}
-                  >
+                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">Status</label>
+                  <div className={`mt-1 inline-flex px-2 py-1 rounded text-xs font-medium border ${
+                    selectedTeam.isActive 
+                      ? "bg-green-500/20 border-green-500/30 text-green-400" 
+                      : "bg-gray-500/20 border-gray-500/30 text-gray-400"
+                  }`}>
                     {selectedTeam.isActive ? "Active" : "Inactive"}
-                  </Badge>
+                  </div>
                 </div>
                 <div>
-                  <Label>Event</Label>
-                  <p className="mt-2 font-medium">{selectedTeam.eventId?.name || "No Event"}</p>
+                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">Event</label>
+                  <p className="mt-1 text-sm font-medium text-white truncate">{selectedTeam.eventId?.name || "No Event"}</p>
                 </div>
                 <div>
-                  <Label>Event Type</Label>
-                  <Badge
-                    variant="outline"
-                    className={`mt-2 ${
-                      selectedTeam.eventId?.type === "technical"
-                        ? "border-blue-500 text-blue-400"
-                        : selectedTeam.eventId?.type === "managerial"
-                        ? "border-purple-500 text-purple-400"
-                        : "border-orange-500 text-orange-400"
-                    }`}
-                  >
+                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">Type</label>
+                  <div className={`mt-1 inline-flex px-2 py-1 rounded text-xs font-medium border ${
+                    selectedTeam.eventId?.type === "technical"
+                      ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
+                      : selectedTeam.eventId?.type === "managerial"
+                      ? "bg-purple-500/10 border-purple-500/30 text-purple-400"
+                      : "bg-orange-500/10 border-orange-500/30 text-orange-400"
+                  }`}>
                     {selectedTeam.eventId?.type || "N/A"}
-                  </Badge>
+                  </div>
                 </div>
                 <div>
-                  <Label>Created</Label>
-                  <p className="mt-2">{new Date(selectedTeam.createdAt).toLocaleDateString()}</p>
+                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wide">Created</label>
+                  <p className="mt-1 text-sm text-white">{new Date(selectedTeam.createdAt).toLocaleDateString()}</p>
                 </div>
               </div>
               
-              <Separator className="bg-gray-800" />
-              
-              <div>
-                <Label className="text-lg">Team Leader</Label>
-                <div className="mt-3 flex items-center space-x-4 p-4 bg-gray-800 rounded-lg">
-                  <Avatar className="h-12 w-12">
-                    <AvatarFallback className="bg-blue-600">
+              <div className="border-t border-white/10 pt-4">
+                <label className="text-sm font-semibold text-white mb-2 block">Team Leader</label>
+                <div className="flex items-center space-x-3 p-3 bg-black/40 rounded-lg border border-white/10">
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center border border-blue-500/30 shrink-0">
+                    <span className="text-blue-400 font-semibold text-sm">
                       {selectedTeam.leader?.name?.charAt(0)?.toUpperCase() || "?"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <p className="font-semibold">{selectedTeam.leader?.name || "Unknown"}</p>
-                    <div className="flex items-center gap-4 text-sm text-gray-400">
-                      <div className="flex items-center gap-1">
-                        <Mail className="h-4 w-4" />
-                        {selectedTeam.leader?.email || "No email"}
-                      </div>
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0 grid grid-cols-3 gap-4">
+                    <div>
+                      <p className="font-medium text-white text-sm">{selectedTeam.leader?.name || "Unknown"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400">{selectedTeam.leader?.email || "No email"}</p>
+                    </div>
+                    <div>
                       {selectedTeam.leader?.phoneNumber && (
-                        <div className="flex items-center gap-1">
-                          <Phone className="h-4 w-4" />
-                          {selectedTeam.leader.phoneNumber}
-                        </div>
+                        <p className="text-xs text-gray-500">{selectedTeam.leader.phoneNumber}</p>
                       )}
                     </div>
                   </div>
@@ -787,26 +805,32 @@ export default function TeamsPage() {
               
               {selectedTeam.members && selectedTeam.members.length > 0 && (
                 <div>
-                  <Label className="text-lg">Team Members ({selectedTeam.members.length})</Label>
-                  <div className="mt-3 space-y-2">
+                  <label className="text-sm font-semibold text-white mb-2 block">Members ({selectedTeam.members.length})</label>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
                     {selectedTeam.members.map((member, index) => (
-                      <div key={index} className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg">
-                        <Avatar>
-                          <AvatarFallback className="bg-green-600">
+                      <div key={index} className="flex items-center space-x-3 p-2 bg-black/40 rounded-lg border border-white/10">
+                        <div className="w-7 h-7 bg-green-500/20 rounded-lg flex items-center justify-center border border-green-500/30 shrink-0">
+                          <span className="text-green-400 font-semibold text-xs">
                             {member.user?.name?.charAt(0)?.toUpperCase() || "?"}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <p className="font-medium">{member.user?.name || "Unknown"}</p>
-                          <p className="text-sm text-gray-400">{member.user?.email || "No email"}</p>
+                          </span>
                         </div>
-                        <Badge variant="outline" className={
-                          member.status === "accepted" ? "border-green-500 text-green-400" : 
-                          member.status === "pending" ? "border-yellow-500 text-yellow-400" :
-                          "border-red-500 text-red-400"
-                        }>
-                          {member.status}
-                        </Badge>
+                        <div className="flex-1 min-w-0 grid grid-cols-3 gap-4">
+                          <div>
+                            <p className="font-medium text-white text-xs">{member.user?.name || "Unknown"}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-400">{member.user?.email || "No email"}</p>
+                          </div>
+                          <div className="flex justify-end">
+                            <div className={`px-1.5 py-0.5 rounded text-xs font-medium border ${
+                              member.status === "accepted" ? "bg-green-500/20 border-green-500/30 text-green-400" : 
+                              member.status === "pending" ? "bg-yellow-500/20 border-yellow-500/30 text-yellow-400" :
+                              "bg-red-500/20 border-red-500/30 text-red-400"
+                            }`}>
+                              {member.status}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -821,9 +845,9 @@ export default function TeamsPage() {
       <Dialog open={confirmAction.show} onOpenChange={(open) => 
         setConfirmAction({ ...confirmAction, show: open })
       }>
-        <DialogContent className="bg-gray-900 border-gray-800">
+        <DialogContent className="bg-[#0a0a0a] border border-white/5 shadow-2xl max-w-sm" data-lenis-prevent>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 text-white text-lg">
               {confirmAction.action === "activate" ? (
                 <CheckCircle className="h-5 w-5 text-green-400" />
               ) : (
@@ -831,34 +855,38 @@ export default function TeamsPage() {
               )}
               {confirmAction.action === "activate" ? "Activate Team" : "Deactivate Team"}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-gray-400 text-sm">
               {confirmAction.action === "activate"
-                ? "This will allow the team to participate in events and show them in active listings."
-                : "This will prevent the team from participating in events and hide them from active listings."
+                ? "This will allow the team to participate in events."
+                : "This will prevent the team from participating in events."
               }
             </DialogDescription>
           </DialogHeader>
           
           {confirmAction.team && (
-            <div className="space-y-4">
-              <div className="p-4 bg-gray-800 rounded-lg">
-                <p className="font-medium">{confirmAction.team.name}</p>
-                <p className="text-sm text-gray-400">{confirmAction.team.eventId?.name}</p>
+            <div className="space-y-3">
+              <div className="p-3 bg-black/40 rounded-lg border border-white/10">
+                <p className="font-medium text-white text-sm">{confirmAction.team.name}</p>
+                <p className="text-xs text-gray-400">{confirmAction.team.eventId?.name}</p>
               </div>
               
-              <div className="flex gap-3 justify-end">
-                <Button
-                  variant="outline"
+              <div className="flex gap-2 justify-end">
+                <button
                   onClick={() => setConfirmAction({ show: false, team: null, action: "activate" })}
+                  className="px-3 py-2 text-xs font-medium text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-lg transition-all duration-200"
                 >
                   Cancel
-                </Button>
-                <Button
-                  variant={confirmAction.action === "activate" ? "default" : "destructive"}
+                </button>
+                <button
                   onClick={() => handleStatusToggle(confirmAction.team!, confirmAction.action === "activate")}
+                  className={`px-3 py-2 text-xs font-medium rounded-lg border transition-all duration-200 ${
+                    confirmAction.action === "activate"
+                      ? "bg-green-500/20 border-green-500/30 text-green-400 hover:bg-green-500/30"
+                      : "bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500/30"
+                  }`}
                 >
                   {confirmAction.action === "activate" ? "Activate" : "Deactivate"}
-                </Button>
+                </button>
               </div>
             </div>
           )}

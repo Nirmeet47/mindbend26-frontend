@@ -281,12 +281,12 @@ export default function AddEventModal({ open, onClose, onSuccess }: AddEventModa
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto bg-[#0a0a0a] border border-white/5 text-white" data-lenis-prevent>
         <DialogHeader>
-          <DialogTitle className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+          <DialogTitle className="text-xl font-semibold text-white">
             Add New Event
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-gray-400">
             Create a new event with all necessary details and configurations.
           </DialogDescription>
         </DialogHeader>
