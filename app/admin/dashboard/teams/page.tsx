@@ -732,7 +732,7 @@ export default function TeamsPage() {
         </div>
       )}
       
-      </div> {/* End Main Content */}
+      </div>
 
       {/* Team Details Dialog */}
       <Dialog open={showTeamDetails} onOpenChange={setShowTeamDetails}>
