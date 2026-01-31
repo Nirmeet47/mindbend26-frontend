@@ -1,6 +1,6 @@
 // Role-based permission utilities
 
-export type AdminRole = "technical" | "managerial" | "superAdmin" | "dev";
+export type AdminRole = "technical" | "managerial" | "esports" | "superAdmin" | "dev";
 
 export interface User {
   role: AdminRole;
@@ -10,10 +10,10 @@ export interface User {
 // Permission checks
 export const permissions = {
   canAddEvent: (role: AdminRole): boolean => {
-    return ["technical", "managerial", "superAdmin", "dev"].includes(role);
+    return ["technical", "managerial", "esports", "superAdmin", "dev"].includes(role);
   },
   canUpdateEvent: (role: AdminRole): boolean => {
-    return ["technical", "managerial", "superAdmin", "dev"].includes(role);
+    return ["technical", "managerial", "esports", "superAdmin", "dev"].includes(role);
   },
   canHideEvent: (role: AdminRole): boolean => {
     return ["superAdmin", "dev"].includes(role);

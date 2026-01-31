@@ -61,7 +61,7 @@ export default function TeamsPage() {
   // Filters
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
-  const [typeFilter, setTypeFilter] = useState<"all" | "technical" | "managerial" | "workshop">("all");
+  const [typeFilter, setTypeFilter] = useState<"all" | "technical" | "managerial" | "esports" | "workshop">("all");
   const [eventFilter, setEventFilter] = useState("");
   
   // Dialog states
@@ -334,12 +334,13 @@ export default function TeamsPage() {
             <select
               id="type"
               value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value as "all" | "technical" | "managerial" | "workshop")}
+              onChange={(e) => setTypeFilter(e.target.value as "all" | "technical" | "managerial" | "esports" | "workshop")}
               className="w-full px-3 py-2.5 bg-black/50 border border-white/10 rounded-lg text-white focus:border-blue-400 focus:outline-none transition-colors"
             >
               <option value="all">All Types</option>
               <option value="technical">Technical</option>
               <option value="managerial">Managerial</option>
+              <option value="esports">Esports</option>
               <option value="workshop">Workshop</option>
             </select>
           </div>

@@ -20,7 +20,7 @@ interface EditEventModalProps {
 export default function EditEventModal({ event, open, onClose, onSuccess }: EditEventModalProps) {
   const [form, setForm] = useState({
     name: event.name || "",
-    type: event.type || "technical" as "technical" | "managerial",
+    type: event.type || "technical" as "technical" | "managerial" | "esports",
     slug: event.slug || "",
     isTeamEvent: event.isTeamEvent || false,
     minTeamSize: event.minTeamSize || 1,
@@ -291,6 +291,7 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
                 >
                   <option value="technical">Technical</option>
                   <option value="managerial">Managerial</option>
+                  <option value="esports">Esports</option>
                 </select>
               </div>
             </div>

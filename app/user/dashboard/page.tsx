@@ -21,7 +21,7 @@ const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScen
   ssr: false,
 })
 
-type EventType = "technical" | "managerial"
+type EventType = "technical" | "managerial" | "esports"
 
 import { DetailedTeam } from "@/types"
 

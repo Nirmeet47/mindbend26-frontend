@@ -21,7 +21,7 @@ interface RegistrationCTAProps {
   eventName?: string;
   isTeamEvent?: boolean;
   isSvnitian?: boolean;
-  eventType?: 'technical' | 'managerial';
+  eventType?: 'technical' | 'managerial' | 'esports';
 }
 
 const RegistrationCTA: React.FC<RegistrationCTAProps> = ({

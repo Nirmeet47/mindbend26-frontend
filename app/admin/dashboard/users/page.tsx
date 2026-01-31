@@ -44,7 +44,7 @@ export default function UsersPage() {
   
   // Filters
   const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState<"all" | "user" | "technical" | "managerial" | "superAdmin">("all");
+  const [roleFilter, setRoleFilter] = useState<"all" | "user" | "technical" | "managerial" | "esports" | "superAdmin">("all");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "banned">("all");
   const [verificationFilter, setVerificationFilter] = useState<"all" | "verified" | "unverified">("all");
   
@@ -236,6 +236,7 @@ export default function UsersPage() {
       case "superAdmin": return "bg-red-500/20 border-red-500/30 text-red-400";
       case "managerial": return "bg-purple-500/20 border-purple-500/30 text-purple-400";
       case "technical": return "bg-green-500/20 border-green-500/30 text-green-400";
+      case "esports": return "bg-cyan-500/20 border-cyan-500/30 text-cyan-400";
       default: return "bg-blue-500/20 border-blue-500/30 text-blue-400";
     }
   };
@@ -387,6 +388,7 @@ export default function UsersPage() {
                 <option value="user">User</option>
                 <option value="technical">Technical</option>
                 <option value="managerial">Managerial</option>
+                <option value="esports">Esports</option>
                 <option value="superAdmin">Super Admin</option>
               </select>
             </div>
@@ -717,6 +719,7 @@ export default function UsersPage() {
                   <option value="user">User</option>
                   <option value="technical">Technical</option>
                   <option value="managerial">Managerial</option>
+                  <option value="esports">Esports</option>
                 </select>
               </div>
               <div className="space-y-2">
@@ -971,6 +974,7 @@ export default function UsersPage() {
                     <option value="user">User</option>
                     <option value="technical">Technical</option>
                     <option value="managerial">Managerial</option>
+                    <option value="esports">Esports</option>
                     <option value="superAdmin">Super Admin</option>
                   </select>
                 </div>

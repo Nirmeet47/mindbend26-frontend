@@ -19,7 +19,7 @@ interface AddEventModalProps {
 export default function AddEventModal({ open, onClose, onSuccess }: AddEventModalProps) {
   const [form, setForm] = useState({
     name: "",
-    type: "technical" as "technical" | "managerial",
+    type: "technical" as "technical" | "managerial" | "esports",
     slug: "",
     isTeamEvent: false,
     minTeamSize: 1,
@@ -319,6 +319,7 @@ export default function AddEventModal({ open, onClose, onSuccess }: AddEventModa
                 >
                   <option value="technical">Technical</option>
                   <option value="managerial">Managerial</option>
+                  <option value="esports">Esports</option>
                 </select>
               </div>
             </div>
