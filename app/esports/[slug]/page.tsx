@@ -16,7 +16,7 @@ import EventsHeader from '@/components/events/EventsHeader';
 import RegisteredTeamModal from '@/components/events/RegisteredTeamModal';
 import { DetailedTeam, Event } from '@/types';
 import useAuth from '@/hooks/useAuth';
-import EsportsBackground from '@/components/events/EsportsBackground';
+import { NeuralNoise } from '@/components/NeuralNoise';
 
 export default function EsportsEventDetailPage() {
   const params = useParams();
@@ -45,13 +45,13 @@ export default function EsportsEventDetailPage() {
         .get(slug)
         .then((res) => {
           setEvent(res.data?.data?.event || null);
-          if(res.data?.data?.team){
+          if (res.data?.data?.team) {
             setEventTeam(res.data?.data?.team || null);
           }
-          if(res.data?.data?.team && res.data?.data?.isLeader){
+          if (res.data?.data?.team && res.data?.data?.isLeader) {
             setIsLeader(true);
           }
-          if(res.data?.data?.isSvnitian){
+          if (res.data?.data?.isSvnitian) {
             setIsSvnitian(true);
           }
         })
@@ -69,23 +69,23 @@ export default function EsportsEventDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0a1a] text-white overflow-x-hidden">
-        <EsportsBackground />
+        <NeuralNoise className="fixed inset-0 -z-10 bg-black pointer-events-none" />
         <div className="relative z-10">
           {/* Header Skeleton */}
           <section className="max-w-7xl mx-auto px-4 pt-16 pb-12">
             <div className="animate-pulse space-y-8">
               <div className="space-y-4">
-                <div className="h-4 bg-purple-800/30 rounded w-48"></div>
-                <div className="h-16 bg-linear-to-r from-purple-800/30 to-cyan-700/30 rounded w-3/4"></div>
-                <div className="h-6 bg-purple-800/30 rounded w-32"></div>
+                <div className="h-4 bg-gray-700/30 rounded w-48"></div>
+                <div className="h-16 bg-gray-700/30 rounded w-3/4"></div>
+                <div className="h-6 bg-gray-700/30 rounded w-32"></div>
               </div>
-              
-              <div className="bg-linear-to-br from-purple-800/20 to-gray-900/30 rounded-lg overflow-hidden border border-purple-700/30">
-                <div className="w-full h-96 bg-purple-700/20"></div>
+
+              <div className="bg-white/5 rounded-lg overflow-hidden border border-gray-700/30">
+                <div className="w-full h-96 bg-gray-700/30"></div>
                 <div className="p-6 space-y-4">
-                  <div className="h-8 bg-purple-700/20 rounded w-2/3"></div>
-                  <div className="h-5 bg-purple-700/20 rounded w-full"></div>
-                  <div className="h-5 bg-purple-700/20 rounded w-4/5"></div>
+                  <div className="h-8 bg-gray-700/30 rounded w-2/3"></div>
+                  <div className="h-5 bg-gray-700/30 rounded w-full"></div>
+                  <div className="h-5 bg-gray-700/30 rounded w-4/5"></div>
                 </div>
               </div>
             </div>
@@ -95,10 +95,10 @@ export default function EsportsEventDetailPage() {
           <section className="max-w-7xl mx-auto px-4 pb-16">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 animate-pulse">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-purple-800/20 border border-purple-700/30 rounded-lg p-6 space-y-3">
-                  <div className="h-8 w-8 bg-purple-700/30 rounded"></div>
-                  <div className="h-4 bg-purple-700/30 rounded w-20"></div>
-                  <div className="h-6 bg-purple-700/30 rounded w-full"></div>
+                <div key={i} className="bg-white/5 border border-gray-700/30 rounded-lg p-6 space-y-3">
+                  <div className="h-8 w-8 bg-gray-700/30 rounded"></div>
+                  <div className="h-4 bg-gray-700/30 rounded w-20"></div>
+                  <div className="h-6 bg-gray-700/30 rounded w-full"></div>
                 </div>
               ))}
             </div>
@@ -112,14 +112,14 @@ export default function EsportsEventDetailPage() {
   if (error || !event) {
     return (
       <div className="min-h-screen bg-[#0a0a1a] text-white flex items-center justify-center px-4">
-        <EsportsBackground />
+        <NeuralNoise className="fixed inset-0 -z-10 bg-black pointer-events-none" />
         <div className="text-center max-w-md relative z-10">
           <div className="mb-8 relative">
-            <div className="w-24 h-24 mx-auto border-4 border-purple-500/30 rounded-full flex items-center justify-center">
+            <div className="w-24 h-24 mx-auto border-4 border-gray-700/30 rounded-full flex items-center justify-center">
               <span className="text-5xl">🎮</span>
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-4 bg-linear-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-4 text-[#e5e7eb]">
             Event Not Found
           </h1>
           <p className="text-gray-400 mb-8 leading-relaxed">
@@ -127,7 +127,7 @@ export default function EsportsEventDetailPage() {
           </p>
           <button
             onClick={handleBack}
-            className="px-8 py-4 bg-linear-to-r from-purple-600 to-cyan-600 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 transform hover:scale-105"
+            className="px-8 py-4 bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] font-bold rounded-lg hover:bg-[#33ABB9]/30 transition-all duration-300 transform hover:scale-105"
           >
             Back to Esports
           </button>
@@ -145,16 +145,16 @@ export default function EsportsEventDetailPage() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-[#0a0a1a] text-white overflow-x-hidden selection:bg-purple-500/50 selection:text-white font-rajdhani tracking-wide relative"
+      className="min-h-screen bg-[#0a0a1a] text-white overflow-x-hidden selection:bg-[#33ABB9]/30 selection:text-white font-rajdhani tracking-wide relative"
     >
-      <EsportsBackground />
+      <NeuralNoise className="fixed inset-0 -z-10 bg-black pointer-events-none" />
 
       {/* Cyberpunk Grid Overlay */}
       <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(139, 92, 246, 0.4) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(139, 92, 246, 0.4) 1px, transparent 1px)
+            linear-gradient(rgba(51, 171, 185, 0.4) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(51, 171, 185, 0.4) 1px, transparent 1px)
           `,
           backgroundSize: '40px 40px',
           maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
@@ -172,22 +172,22 @@ export default function EsportsEventDetailPage() {
             breadcrumbType="ESPORTS"
           />
           {/* Event Image */}
-            {event.eventPhoto && (
-              <div className="relative w-full mb-12">
-                <EventCard
-                  showExploreButton={false}
-                  slug="#"
-                  title={event.name}
-                  aboutEvent={event.aboutEvent?.substring(0, 150) + "..." || ""}
-                  date={event.eventDate ? (() => { 
-                    const d = new Date(event.eventDate); 
-                    return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}${d.getDate() % 10 === 1 && d.getDate() !== 11 ? 'st' : d.getDate() % 10 === 2 && d.getDate() !== 12 ? 'nd' : d.getDate() % 10 === 3 && d.getDate() !== 13 ? 'rd' : 'th'}`; 
-                  })() : 'Coming Soon'}
-                  prize={event.prizeMoney > 0 ? `₹${event.prizeMoney.toLocaleString()}` : 'TBA'}
-                  image={event.eventPhoto}
-                />
-              </div>
-            )}
+          {event.eventPhoto && (
+            <div className="relative w-full mb-12">
+              <EventCard
+                showExploreButton={false}
+                slug="#"
+                title={event.name}
+                aboutEvent={event.aboutEvent?.substring(0, 150) + "..." || ""}
+                date={event.eventDate ? (() => {
+                  const d = new Date(event.eventDate);
+                  return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}${d.getDate() % 10 === 1 && d.getDate() !== 11 ? 'st' : d.getDate() % 10 === 2 && d.getDate() !== 12 ? 'nd' : d.getDate() % 10 === 3 && d.getDate() !== 13 ? 'rd' : 'th'}`;
+                })() : 'Coming Soon'}
+                prize={event.prizeMoney > 0 ? `₹${event.prizeMoney.toLocaleString()}` : 'TBA'}
+                image={event.eventPhoto}
+              />
+            </div>
+          )}
         </section>
 
         {/* Quick Info Cards */}
@@ -198,14 +198,14 @@ export default function EsportsEventDetailPage() {
               label="DEADLINE"
               value={event.registrationDeadline ? formatDate(event.registrationDeadline) : 'TBA'}
               sub={daysRemaining > 0 ? `${daysRemaining} DAYS LEFT` : null}
-              color="text-purple-400"
+              color="text-[#33ABB9]"
               delay={0.3}
             />
             <InfoCard
               icon={MapPin}
               label="VENUE"
               value={event.venue || 'Online'}
-              color="text-cyan-400"
+              color="text-white"
               delay={0.4}
             />
             <InfoCard
@@ -216,14 +216,14 @@ export default function EsportsEventDetailPage() {
                   ? `${event.minTeamSize} ${event.minTeamSize === 1 ? 'PLAYER' : 'PLAYERS'}`
                   : `${event.minTeamSize} - ${event.maxTeamSize} PLAYERS`)
                 : 'SOLO'}
-              color="text-purple-400"
+              color="text-[#33ABB9]"
               delay={0.5}
             />
             <InfoCard
               icon={Trophy}
               label="ENTRY FEE"
               value={(isAuthenticated && isSvnitian) ? '₹0' : (event.entryFee === 0 ? 'FREE_ENTRY' : `₹${event.entryFee}`)}
-              color="text-cyan-400"
+              color="text-white"
               delay={0.6}
             />
           </div>
