@@ -6,6 +6,7 @@ import { Users, Crown, Copy, Check, RefreshCw, Mail, UserMinus, X, Shield, Zap, 
 import { DetailedTeam, Team } from '@/types';
 import { eventTeamApi } from '@/lib/eventTeam';
 import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from '../ui/TechDecorations';
+import SciFiConfirmModal from '../ui/SciFiConfirmModal';
 
 interface RegisteredTeamModalProps {
   team: DetailedTeam;
@@ -30,6 +31,69 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [inviteSuccess, setInviteSuccess] = useState(false);
   const [inviteStatus, setInviteStatus] = useState<string | null>(null);
+
+  // Confirmation Modal State
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    type: 'leave' | 'delete' | 'remove_member' | 'unregister' | 'accept_invite' | 'reject_invite' | null;
+    title: string;
+    description: string;
+    data?: any;
+    variant?: 'danger' | 'success' | 'info' | 'warning';
+    confirmText?: string;
+  }>({
+    isOpen: false,
+    type: null,
+    title: '',
+    description: '',
+  });
+
+  const closeConfirmModal = () => {
+    setConfirmModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  const handleConfirmAction = async () => {
+    if (!confirmModal.type) return;
+
+    try {
+      switch (confirmModal.type) {
+        case 'leave':
+          await eventTeamApi.leaveTeam(team._id);
+          window.location.reload();
+          break;
+        case 'delete':
+          await eventTeamApi.deleteTeam(team._id);
+          window.location.reload();
+          break;
+        case 'unregister':
+          await eventTeamApi.deleteTeam(team._id);
+          window.location.reload();
+          break;
+        case 'remove_member':
+          if (confirmModal.data?.memberId) {
+            await eventTeamApi.removeMember(team._id, confirmModal.data.memberId);
+            window.location.reload();
+          }
+          break;
+        case 'accept_invite':
+          if (onAcceptRejectInvite) {
+            onAcceptRejectInvite(team._id, 'accept');
+            // Close modal immediately as action is handled by parent/props
+            closeConfirmModal();
+          }
+          break;
+        case 'reject_invite':
+          if (onAcceptRejectInvite) {
+            onAcceptRejectInvite(team._id, 'reject');
+            closeConfirmModal();
+          }
+          break;
+      }
+    } catch (err: any) {
+      console.error(`Failed to ${confirmModal.type}:`, err);
+      // Optional: Show error in modal or toast
+    }
+  };
 
   const inviteLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/join-team/${inviteToken}`;
 
@@ -78,56 +142,57 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
     }
   };
 
-  const handleRemoveMember = async (memberId: string) => {
-    
+  const handleRemoveMember = (memberId: string) => {
     if (!isLeader) return;
-    if (!confirm('Are you sure you want to remove this member?')) return;
-    try {
-      await eventTeamApi.removeMember(team._id, memberId);
-      window.location.reload();
-    } catch (err) {
-      console.error('Failed to remove member:', err);
-    }
+    setConfirmModal({
+      isOpen: true,
+      type: 'remove_member',
+      title: 'Remove Member?',
+      description: 'Are you sure you want to remove this member? They will lose access to the team.',
+      data: { memberId },
+      variant: 'danger',
+      confirmText: 'Remove'
+    });
   };
 
-  const handleLeaveTeam = async () => {
-
+  const handleLeaveTeam = () => {
     if (isLeader) return;
-    if (!confirm('Are you sure you want to leave this team?')) return;
-    try {
-      await eventTeamApi.leaveTeam(team._id);
-      window.location.reload();
-    } catch (err) {
-      console.error('Failed to leave team:', err);
-    }
+    setConfirmModal({
+      isOpen: true,
+      type: 'leave',
+      title: 'Leave Team?',
+      description: 'Are you sure you want to leave this team? You will need a new invite to rejoin.',
+      variant: 'danger',
+      confirmText: 'Leave Team'
+    });
   };
 
-  const handleDeleteTeam = async () => {
-
+  const handleDeleteTeam = () => {
     if (!isLeader) return;
-    if (!confirm('Are you sure you want to delete this team? This action cannot be undone.')) return;
-    try {
-      await eventTeamApi.deleteTeam(team._id);
-      window.location.reload();
-    } catch (err) {
-      console.error('Failed to delete team:', err);
-    }
+    setConfirmModal({
+      isOpen: true,
+      type: 'delete',
+      title: 'Delete Team?',
+      description: 'Are you sure you want to delete this team? This action cannot be undone and all members will be removed.',
+      variant: 'danger',
+      confirmText: 'Delete Team'
+    });
   };
 
-  const handleUnRegister = async () => {
-
-    if (!confirm('Are you sure you want to unregister from this event?')) return;
-    try {
-      await eventTeamApi.deleteTeam(team._id);
-      window.location.reload();
-    } catch (err) {
-      console.error('Failed to unregister:', err);
-    }
+  const handleUnRegister = () => {
+    setConfirmModal({
+      isOpen: true,
+      type: 'unregister',
+      title: 'Unregister?',
+      description: 'Are you sure you want to unregister from this event? This action cannot be undone.',
+      variant: 'danger',
+      confirmText: 'Unregister'
+    });
   };
 
   const activeMembers = team.members.filter(m => m.status === 'active');
   const pendingMembers = team.members.filter(m => m.status === 'pending');
-  
+
   // For list view - check current user's status
   const currentMember = userEmail ? team.members.find((m) => m.user?.email === userEmail) : null;
   const isPending = currentMember?.status === 'pending';
@@ -137,162 +202,159 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
 
       {
         isFullView ? (
-      <section className="max-w-7xl mx-auto px-4 pb-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="relative group min-h-75 w-full cursor-pointer"
-          onClick={() => setShowModal(true)}
-        >
-          {/* Background Shape with ClipPath */}
-          <div
-            className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-xl border-0 border-white/5 shadow-xl transition-all duration-300 group-hover:bg-[#184344]/40"
-            style={{
-              clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)'
-            }}
-          />
+          <section className="max-w-7xl mx-auto px-4 pb-24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="relative group min-h-75 w-full cursor-pointer"
+              onClick={() => setShowModal(true)}
+            >
+              {/* Background Shape with ClipPath */}
+              <div
+                className="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-xl border-0 border-white/5 shadow-xl transition-all duration-300 group-hover:bg-[#184344]/40"
+                style={{
+                  clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)'
+                }}
+              />
 
-          {/* Decorative Tech Overlays */}
-          <TechDecorationTopLeft />
-          <TechDecorationTopRight />
-          <TechDecorationBottomRight />
-          <TechDecorationBottomLeft />
+              {/* Decorative Tech Overlays */}
+              <TechDecorationTopLeft />
+              <TechDecorationTopRight />
+              <TechDecorationBottomRight />
+              <TechDecorationBottomLeft />
 
-          {/* Gradient Border Lines */}
-          <div className="absolute top-0 left-16 right-12 h-[1.5px] bg-linear-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-          <div className="absolute top-12 bottom-16 right-0 w-[1.5px] bg-linear-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
-          <div className="absolute bottom-0 left-0 right-32 h-[1.5px] bg-linear-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
-          <div className="absolute top-16 bottom-0 left-0 w-[1.5px] bg-linear-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
+              {/* Gradient Border Lines */}
+              <div className="absolute top-0 left-16 right-12 h-[1.5px] bg-linear-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
+              <div className="absolute top-12 bottom-16 right-0 w-[1.5px] bg-linear-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
+              <div className="absolute bottom-0 left-0 right-32 h-[1.5px] bg-linear-to-r from-[#33ABB9]/50 to-[#33ABB9]/20" />
+              <div className="absolute top-16 bottom-0 left-0 w-[1.5px] bg-linear-to-b from-[#33ABB9]/20 to-[#33ABB9]/50" />
 
-          {/* Content */}
-          <div className="relative z-10 p-8 md:p-10">
-            {/* Header with System ID */}
-            <div className="mb-6 pl-3 border-l-2 border-[#33ABB9]/50">
-              <span className="block text-[10px] font-mono text-[#33ABB9] mb-2 tracking-widest uppercase">
-                SYS.STATUS // REGISTRATION CONFIRMED
-              </span>
-              <h3 className="text-2xl md:text-3xl font-bold text-white tracking-wide group-hover:text-[#33ABB9] transition-colors uppercase font-orbitron mb-2">
-                {isTeamEvent ? team.name : 'REGISTERED'}
-              </h3>
-              <div className="flex items-center gap-3 flex-wrap">
-                <div className="flex items-center space-x-2">
-                  <div className="h-1 w-1 bg-[#33ABB9] rounded-full animate-pulse" />
-                  <span className="text-xs font-semibold text-[#33ABB9]/80 bg-[#184344]/30 px-3 py-1 rounded border border-[#33ABB9]/30">
-                    {isTeamEvent ? 'TEAM REGISTERED' : 'SOLO REGISTERED'}
+              {/* Content */}
+              <div className="relative z-10 p-8 md:p-10">
+                {/* Header with System ID */}
+                <div className="mb-6 pl-3 border-l-2 border-[#33ABB9]/50">
+                  <span className="block text-[10px] font-mono text-[#33ABB9] mb-2 tracking-widest uppercase">
+                    SYS.STATUS // REGISTRATION CONFIRMED
                   </span>
+                  <h3 className="text-2xl md:text-3xl font-bold text-white tracking-wide group-hover:text-[#33ABB9] transition-colors uppercase font-orbitron mb-2">
+                    {isTeamEvent ? team.name : 'REGISTERED'}
+                  </h3>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex items-center space-x-2">
+                      <div className="h-1 w-1 bg-[#33ABB9] rounded-full animate-pulse" />
+                      <span className="text-xs font-semibold text-[#33ABB9]/80 bg-[#184344]/30 px-3 py-1 rounded border border-[#33ABB9]/30">
+                        {isTeamEvent ? 'TEAM REGISTERED' : 'SOLO REGISTERED'}
+                      </span>
+                    </div>
+                    {isTeamEvent && isLeader && (
+                      <div className="flex items-center gap-2 px-3 py-1 bg-[#E8823A]/20 border border-[#E8823A]/50 rounded">
+                        <Crown className="w-3 h-3 text-[#E8823A]" />
+                        <span className="text-xs font-bold text-[#E8823A] uppercase">Leader</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                {isTeamEvent && isLeader && (
-                  <div className="flex items-center gap-2 px-3 py-1 bg-[#E8823A]/20 border border-[#E8823A]/50 rounded">
-                    <Crown className="w-3 h-3 text-[#E8823A]" />
-                    <span className="text-xs font-bold text-[#E8823A] uppercase">Leader</span>
+
+                {/* Stats Grid */}
+                {isTeamEvent ? (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    {/* Event Name */}
+                    <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
+                      <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Event</p>
+                      <p className="text-white font-bold text-sm truncate">{eventName}</p>
+                    </div>
+
+                    {/* Team Size */}
+                    <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
+                      <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Team Size</p>
+                      <p className="text-white font-bold text-lg font-mono">
+                        {team.currentSize}
+                        <span className="text-gray-500 text-sm">/{team.maxSize}</span>
+                      </p>
+                    </div>
+
+                    {/* Status */}
+                    <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
+                      <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Status</p>
+                      <p
+                        className={`font-bold text-sm ${(team.currentSize ?? 0) > (team.maxSize ?? 0)
+                            ? 'text-red-400' // Over capacity
+                            : (team.currentSize ?? 0) >= (team.minSize ?? 0)
+                              ? 'text-green-400' // Ready
+                              : 'text-yellow-400' // Forming
+                          }`}
+                      >
+                        {(team.currentSize ?? 0) > (team.maxSize ?? 0)
+                          ? 'OVER CAPACITY'
+                          : (team.currentSize ?? 0) >= (team.minSize ?? 0)
+                            ? 'READY'
+                            : 'FORMING'}
+                      </p>
+
+                      {/* Warning for leader if over capacity */}
+                      {isLeader && (team.currentSize ?? 0) > (team.maxSize ?? 0) && (
+                        <div className="mt-2 text-red-400 text-xs bg-red-400/10 border border-red-400/30 px-3 py-1 rounded">
+                          Your team is over capacity. Please remove members to get the status to READY.
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Active Members */}
+                    <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
+                      <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Active</p>
+                      <p className="text-white font-bold text-lg font-mono">{activeMembers.length}</p>
+                    </div>
+                  </div>
+                ) : (
+                  // Solo Event Stats
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    {/* Event Name */}
+                    <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
+                      <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Event</p>
+                      <p className="text-white font-bold text-base truncate">{eventName}</p>
+                    </div>
+
+                    {/* Registration Type */}
+                    <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
+                      <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Type</p>
+                      <p className="text-white font-bold text-base">Individual</p>
+                    </div>
+
+                    {/* Status */}
+                    <div className="bg-white/5 border border-green-400/30 rounded p-4 hover:border-green-400/50 transition-colors">
+                      <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Status</p>
+                      <p className="font-bold text-base text-green-400">CONFIRMED</p>
+                    </div>
                   </div>
                 )}
-              </div>
-            </div>
 
-            {/* Stats Grid */}
-            {isTeamEvent ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                {/* Event Name */}
-                <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
-                  <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Event</p>
-                  <p className="text-white font-bold text-sm truncate">{eventName}</p>
-                </div>
-
-                {/* Team Size */}
-                <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
-                  <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Team Size</p>
-                  <p className="text-white font-bold text-lg font-mono">
-                    {team.currentSize}
-                    <span className="text-gray-500 text-sm">/{team.maxSize}</span>
-                  </p>
-                </div>
-
-                {/* Status */}
-                <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
-                  <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Status</p>
-                  <p
-                    className={`font-bold text-sm ${
-                      (team.currentSize ?? 0) > (team.maxSize ?? 0)
-                        ? 'text-red-400' // Over capacity
-                        : (team.currentSize ?? 0) >= (team.minSize ?? 0)
-                        ? 'text-green-400' // Ready
-                        : 'text-yellow-400' // Forming
-                    }`}
-                  >
-                    {(team.currentSize ?? 0) > (team.maxSize ?? 0)
-                      ? 'OVER CAPACITY'
-                      : (team.currentSize ?? 0) >= (team.minSize ?? 0)
-                      ? 'READY'
-                      : 'FORMING'}
-                  </p>
-
-                  {/* Warning for leader if over capacity */}
-                  {isLeader && (team.currentSize ?? 0) > (team.maxSize ?? 0) && (
-                    <div className="mt-2 text-red-400 text-xs bg-red-400/10 border border-red-400/30 px-3 py-1 rounded">
-                      Your team is over capacity. Please remove members to get the status to READY.
-                    </div>
-                  )}
-                </div>
-
-                {/* Active Members */}
-                <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
-                  <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Active</p>
-                  <p className="text-white font-bold text-lg font-mono">{activeMembers.length}</p>
+                {/* View Details CTA */}
+                <div className="flex justify-end">
+                  <div className="group/btn relative px-6 py-2 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-xs font-bold tracking-wider uppercase transition-all overflow-hidden">
+                    <span className="relative z-10">View Full Details</span>
+                    <div className="absolute inset-0 bg-[#33ABB9]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
+                  </div>
                 </div>
               </div>
-            ) : (
-              // Solo Event Stats
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                {/* Event Name */}
-                <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
-                  <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Event</p>
-                  <p className="text-white font-bold text-base truncate">{eventName}</p>
-                </div>
-
-                {/* Registration Type */}
-                <div className="bg-white/5 border border-white/10 rounded p-4 hover:border-[#33ABB9]/30 transition-colors">
-                  <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Type</p>
-                  <p className="text-white font-bold text-base">Individual</p>
-                </div>
-
-                {/* Status */}
-                <div className="bg-white/5 border border-green-400/30 rounded p-4 hover:border-green-400/50 transition-colors">
-                  <p className="text-[#33ABB9]/60 text-[9px] uppercase tracking-widest mb-1 font-mono">Status</p>
-                  <p className="font-bold text-base text-green-400">CONFIRMED</p>
-                </div>
-              </div>
-            )}
-
-            {/* View Details CTA */}
-            <div className="flex justify-end">
-              <div className="group/btn relative px-6 py-2 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-xs font-bold tracking-wider uppercase transition-all overflow-hidden">
-                <span className="relative z-10">View Full Details</span>
-                <div className="absolute inset-0 bg-[#33ABB9]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </section>
+            </motion.div>
+          </section>
         ) : (
           // Compact List View for Dashboard
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`relative group transition-all flex flex-col ${
-              currentMember?.status?.toLowerCase() !== 'left' 
-                ? 'cursor-pointer' 
+            className={`relative group transition-all flex flex-col ${currentMember?.status?.toLowerCase() !== 'left'
+                ? 'cursor-pointer'
                 : 'opacity-60 cursor-not-allowed'
-            }`}
+              }`}
             onClick={() => { if (currentMember?.status?.toLowerCase() !== 'left') setShowModal(true); }}
           >
             {/* Background Shape */}
-            <div className={`absolute inset-0 bg-white/5 border border-white/10 transition-all ${
-              currentMember?.status?.toLowerCase() !== 'left' 
-                ? 'group-hover:border-[#33ABB9]/30 group-hover:bg-[#33ABB9]/5' 
+            <div className={`absolute inset-0 bg-white/5 border border-white/10 transition-all ${currentMember?.status?.toLowerCase() !== 'left'
+                ? 'group-hover:border-[#33ABB9]/30 group-hover:bg-[#33ABB9]/5'
                 : ''
-            }`} />
-            
+              }`} />
+
             {/* Corner Accents */}
             <div className="absolute top-0 left-1 w-4 h-4 border-t-2 border-l-2 border-[#33ABB9]" />
             <div className="absolute bottom-0 right-1 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]" />
@@ -325,7 +387,14 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
                             className="px-3 py-1 border border-green-500/30 bg-green-500/10 text-green-400 text-[10px] font-bold uppercase hover:bg-green-500/20 transition-all"
                             onClick={(e) => {
                               e.stopPropagation();
-                              onAcceptRejectInvite(team._id, 'accept');
+                              setConfirmModal({
+                                isOpen: true,
+                                type: 'accept_invite',
+                                title: 'Accept Invitation?',
+                                description: `Are you sure you want to join ${team.name}?`,
+                                variant: 'success',
+                                confirmText: 'Accept'
+                              });
                             }}
                           >
                             Accept
@@ -334,7 +403,14 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
                             className="px-3 py-1 border border-red-500/30 bg-red-500/10 text-red-400 text-[10px] font-bold uppercase hover:bg-red-500/20 transition-all"
                             onClick={(e) => {
                               e.stopPropagation();
-                              onAcceptRejectInvite(team._id, 'reject');
+                              setConfirmModal({
+                                isOpen: true,
+                                type: 'reject_invite',
+                                title: 'Reject Invitation?',
+                                description: `Are you sure you want to reject the invitation to ${team.name}?`,
+                                variant: 'danger',
+                                confirmText: 'Reject'
+                              });
                             }}
                           >
                             Reject
@@ -406,7 +482,7 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
                         }
                       }}
                     >
-                    {inviteLoading ? "Sending..." : "Invite"}
+                      {inviteLoading ? "Sending..." : "Invite"}
                     </button>
                   </div>
                   {inviteStatus && (
@@ -424,7 +500,7 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
             </div>
           </motion.div>
         )
-    }
+      }
       {/* Full Team Details Modal - Technical Style */}
       <AnimatePresence>
         {showModal && (
@@ -477,7 +553,7 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
               </button>
 
               {/* Scrollable Content - Inside the frame */}
-              <div 
+              <div
                 className="relative z-10 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 pointer-events-auto"
                 style={{
                   clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)'
@@ -522,19 +598,18 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
                     <div className={`bg-white/5 border p-4 transition-colors ${(team.currentSize ?? 0) >= (team.minSize ?? 0) ? 'border-green-400/30 hover:border-green-400/50' : 'border-yellow-400/30 hover:border-yellow-400/50'}`}>
                       <p className="text-gray-400 text-[9px] uppercase tracking-widest mb-1 font-mono">Status</p>
                       <p
-                        className={`text-lg font-bold font-mono ${
-                          (team.currentSize ?? 0) > (team.maxSize ?? 0)
+                        className={`text-lg font-bold font-mono ${(team.currentSize ?? 0) > (team.maxSize ?? 0)
                             ? 'text-red-400' // Over capacity
                             : (team.currentSize ?? 0) >= (team.minSize ?? 0)
-                            ? 'text-green-400' // Ready
-                            : 'text-yellow-400' // Forming
-                        }`}
+                              ? 'text-green-400' // Ready
+                              : 'text-yellow-400' // Forming
+                          }`}
                       >
                         {(team.currentSize ?? 0) > (team.maxSize ?? 0)
                           ? 'OVER CAPACITY'
                           : (team.currentSize ?? 0) >= (team.minSize ?? 0)
-                          ? 'READY'
-                          : 'FORMING'}
+                            ? 'READY'
+                            : 'FORMING'}
                       </p>
                     </div>
                   </div>
@@ -773,7 +848,7 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
                   </div>
                 )}
 
-                
+
                 {/* Unregister Button for Solo Events */}
                 {!isTeamEvent && (
                   <div className="mt-6">
@@ -803,7 +878,7 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
               className="fixed inset-0 bg-black/80 backdrop-blur-sm"
               onClick={() => !inviteLoading && setShowInviteModal(false)}
             />
-            
+
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -905,6 +980,16 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
           </div>
         )}
       </AnimatePresence>
+      {/* Sci-Fi Confirmation Modal */}
+      <SciFiConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={closeConfirmModal}
+        onConfirm={handleConfirmAction}
+        title={confirmModal.title}
+        description={confirmModal.description}
+        variant={confirmModal.variant}
+        confirmText={confirmModal.confirmText}
+      />
     </>
   );
 };

@@ -226,7 +226,7 @@ export default function LoginPage() {
 
   // 1. LOGIN FORM
   const renderLoginForm = () => (
-    <form onSubmit={handleLoginSubmit} className="space-y-6">
+    <form onSubmit={handleLoginSubmit} className="space-y-5">
       {/* Email Input */}
       <div className="relative group">
         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#33ABB9]">
@@ -265,7 +265,7 @@ export default function LoginPage() {
         </button>
       </div>
 
-      <div className="flex items-center justify-end text-sm">
+      <div className="flex items-center justify-end">
         <button
           type="button"
           onClick={() => {
@@ -309,7 +309,7 @@ export default function LoginPage() {
             href="/register"
             className="text-[#33ABB9] hover:text-[#4DD4E5] font-bold transition-colors ml-1"
           >
-            Register
+            CREATE ACCOUNT
           </Link>
         </p>
       </div>
@@ -350,14 +350,14 @@ export default function LoginPage() {
         }}
         className="w-full text-gray-400 hover:text-[#33ABB9] transition-colors text-sm uppercase tracking-wider mt-2"
       >
-        BACK TO LOGIN
+        Back to Login
       </button>
     </form>
   );
 
   // 3. RESET PASSWORD FORM
   const renderResetPasswordForm = () => (
-    <form onSubmit={handleResetPassword} className="space-y-6">
+    <form onSubmit={handleResetPassword} className="space-y-5">
       <div className="relative group">
         <input
           type="text"
@@ -456,19 +456,22 @@ export default function LoginPage() {
     </form>
   );
 
-  let title = 'LOGIN';
+  let title = 'Welcome back:';
+  let subtitle = 'Sign in to your account';
   let content = renderLoginForm();
 
   if (isForgotPasswordOpen && !isResetPasswordOpen) {
-    title = 'FORGOT PASSWORD';
+    title = 'Forgot Password';
+    subtitle = 'Enter your email to receive a reset OTP';
     content = renderForgotPasswordForm();
   } else if (isResetPasswordOpen) {
-    title = 'RESET PASSWORD';
+    title = 'Reset Password';
+    subtitle = 'Create a new password for your account';
     content = renderResetPasswordForm();
   }
 
   return (
-    <AuthLayout title={title}>
+    <AuthLayout title={title} subtitle={subtitle}>
       {content}
     </AuthLayout>
   );
