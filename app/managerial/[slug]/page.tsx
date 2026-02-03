@@ -15,6 +15,8 @@ import EventCard from '@/components/EventCard';
 import EventsHeader from '@/components/events/EventsHeader';
 import RegisteredTeamModal from '@/components/events/RegisteredTeamModal';
 import { DetailedTeam, Event } from '@/types';
+import useAuth from '@/hooks/useAuth';
+import { showErrorToast } from '@/utils/toast';
 
 // Lazy load the background scene
 const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScene'), {
@@ -25,6 +27,7 @@ export default function EventDetailPage() {
   const params = useParams();
   const router = useRouter();
   const slug = params.slug as string;
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
 
   const [event, setEvent] = useState<Event | null>(null);
   const [eventTeam, setEventTeam] = useState<DetailedTeam | null>(null);
@@ -32,6 +35,13 @@ export default function EventDetailPage() {
   const [isSvnitian, setIsSvnitian] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Set user's SVNitian status from auth context (only if authenticated)
+  useEffect(() => {
+    if (isAuthenticated && user?.isSvnitian) {
+      setIsSvnitian(true);
+    }
+  }, [isAuthenticated, user]);
 
   // Fetch event data from API
   useEffect(() => {
@@ -264,7 +274,7 @@ export default function EventDetailPage() {
             <InfoCard
               icon={Trophy}
               label="FEES"
-              value={event.entryFee === 0 ? 'FREE_ENTRY' : `₹${event.entryFee}`}
+              value={(isAuthenticated && isSvnitian) ? '₹0' : (event.entryFee === 0 ? 'FREE_ENTRY' : `₹${event.entryFee}`)}
               color="text-[#FF4D00]"
               delay={0.6}
             />

@@ -5,7 +5,7 @@ export default function AdminDashboardLayout({ children }: { children: ReactNode
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <AdminSidebar />
-      <main style={{ flex: 1, background: "#181830", padding: 32 }}>{children}</main>
+      <main style={{ flex: 1, background: "#000000" }}>{children}</main>
     </div>
   );
 }

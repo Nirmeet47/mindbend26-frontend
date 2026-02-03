@@ -9,6 +9,7 @@ interface AuthState {
   user: {
     name?: string;
     email?: string;
+    isSvnitian?: boolean;
   } | null;
 }
 
@@ -29,7 +30,7 @@ export function useAuth() {
       setAuthState({
         isAuthenticated: true,
         isLoading: false,
-        user: user ? { name: user.name, email: user.email } : null,
+        user: user ? { name: user.name, email: user.email, isSvnitian: user.isSvnitian } : null,
       });
     } catch (error: any) {
       // If 401 or any error, user is not authenticated

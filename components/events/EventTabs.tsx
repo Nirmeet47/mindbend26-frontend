@@ -105,7 +105,7 @@ const EventTabs: React.FC<EventTabsProps> = ({
                   <div className="w-2 h-2 bg-[#00F0FF] animate-pulse" />
                   <p className="font-bold text-[#00F0FF] font-orbitron tracking-wider">NOTE</p>
                 </div>
-                <p className="text-gray-300 font-rajdhani text-lg">SVNTians must use their institute email for registration access.</p>
+                <p className="text-gray-300 font-rajdhani text-lg">SVNitians must use their institute ID and create team on the website for free registration.</p>
               </div>
             </div>
           </div>

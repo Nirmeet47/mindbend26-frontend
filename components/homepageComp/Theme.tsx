@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll } from "framer-motion";
+import { VIDEOS } from "@/constants/assets";
 
 const paragraphs = [
   {
@@ -30,12 +31,12 @@ export default function Theme() {
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.onChange((progress) => {
-      // Evenly distribute 3 paragraphs across the full section
-      // 0-0.33: paragraph 0, 0.33-0.66: paragraph 1, 0.66-1: paragraph 2
+      // Adjusted thresholds for earlier transitions
+      // 0-0.15: paragraph 0, 0.15-0.35: paragraph 1, 0.35+: paragraph 2
       let index = 0;
-      if (progress > 0.66) {
+      if (progress > 0.35) {
         index = 2;
-      } else if (progress > 0.33) {
+      } else if (progress > 0.15) {
         index = 1;
       }
       setActiveIndex(index);
@@ -67,7 +68,7 @@ export default function Theme() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="/videos/Home_theme.mp4" type="video/mp4" />
+          <source src={VIDEOS.homeTheme} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/50"></div>
       </div>
@@ -80,7 +81,7 @@ export default function Theme() {
           playsInline
           className="w-full sm:w-[90%] md:w-[70%] scale-180 md:scale-100 h-auto object-cover"
         >
-          <source src="/videos/Home_theme.mp4" type="video/mp4" />
+          <source src={VIDEOS.homeTheme} type="video/mp4" />
         </video>
         {/* Dark Overlay for text readability */}
         <div className="absolute inset-0 bg-black/10"></div>

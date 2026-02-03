@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { IMAGES } from "@/constants/assets";
 
 interface EventCardProps {
   id: number;
@@ -19,7 +20,7 @@ const events: EventCardProps[] = [
     id: 1,
     title: "TECHNICAL",
     subtitle: "INNOVATE - BUILD - LEARN",
-    image: "/images/tech_img.jpg",
+    image: IMAGES.techImg,
     link: "/technical",
     direction: "left",
   },
@@ -27,7 +28,7 @@ const events: EventCardProps[] = [
     id: 2,
     title: "MANAGERIAL",
     subtitle: "INNOVATE - COMPETE - CONQUER",
-    image: "/images/mng_img.avif",
+    image: IMAGES.mngImg,
     link: "/managerial",
     direction: "right",
   },
@@ -35,7 +36,7 @@ const events: EventCardProps[] = [
     id: 3,
     title: "WORKSHOPS",
     subtitle: "INNOVATE - BUILD - LEARN",
-    image: "/images/workshop_img.png",
+    image: IMAGES.workshopImg,
     link: "/workshops",
     direction: "left",
   },
@@ -43,7 +44,7 @@ const events: EventCardProps[] = [
     id: 4,
     title: "GUEST LECTURES",
     subtitle: "INNOVATE - INSPIRE - TRANSFORM",
-    image: "/images/gl_img.png",
+    image: IMAGES.glImg,
     link: "/guest-lectures",
     direction: "right",
   },

@@ -35,8 +35,8 @@ export default function LoginPage() {
     rememberMe: false,
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [, setFormError] = useState('');
-  const [, setFormSuccess] = useState('');
+  const [formError, setFormError] = useState('');
+  const [formSuccess, setFormSuccess] = useState('');
   const [isLoginLoading, setIsLoginLoading] = useState(false);
 
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
@@ -109,7 +109,7 @@ export default function LoginPage() {
         localStorage.setItem('token', response.data.token);
         if (loginForm.rememberMe) localStorage.setItem('rememberMe', 'true');
       }
-      setFormSuccess('Login successful! Redirecting...');
+      setFormSuccess('Login successful! Redirecting to dashboard...');
       showSuccessToast(toastMessages.auth.loginSuccess);
       setTimeout(() => router.push('/user/dashboard'), 800);
     } catch (err: unknown) {
@@ -229,36 +229,36 @@ export default function LoginPage() {
     <form onSubmit={handleLoginSubmit} className="space-y-5">
       {/* Email Input */}
       <div className="relative group">
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/70 group-focus-within:text-cyan-400 transition-colors">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#33ABB9]">
           <Mail size={20} />
         </div>
         <input
           type="email"
           value={loginForm.email}
           onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
-          placeholder="EMAIL ADDRESS"
-          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white pl-12 pr-4 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder-slate-500 font-medium tracking-wide"
+          placeholder="Email Address"
+          className="w-full bg-white/5 border border-white/10 text-white pl-10 pr-4 py-3 outline-none hover:border-[#33ABB9]/30 focus:border-[#33ABB9] focus:bg-white/10 transition-all placeholder-gray-500"
           required
         />
       </div>
 
       {/* Password Input */}
       <div className="relative group">
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/70 group-focus-within:text-cyan-400 transition-colors">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#33ABB9]">
           <Lock size={20} />
         </div>
         <input
           type={isPasswordVisible ? 'text' : 'password'}
           value={loginForm.password}
           onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-          placeholder="PASSWORD"
-          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white pl-12 pr-12 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder-slate-500 font-medium tracking-wide"
+          placeholder="Password"
+          className="w-full bg-white/5 border border-white/10 text-white pl-10 pr-12 py-3 outline-none hover:border-[#33ABB9]/30 focus:border-[#33ABB9] focus:bg-white/10 transition-all placeholder-gray-500"
           required
         />
         <button
           type="button"
           onClick={() => setIsPasswordVisible((v) => !v)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-cyan-400 transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#33ABB9] transition-colors"
           aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
         >
           {isPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -274,26 +274,40 @@ export default function LoginPage() {
             setForgotPasswordSuccess('');
             setIsForgotPasswordOpen(true);
           }}
-          className="text-cyan-500/80 hover:text-cyan-400 text-sm font-medium transition-colors uppercase tracking-wider"
+          className="text-[#33ABB9] hover:text-[#4DD4E5] transition-colors uppercase tracking-wider text-xs"
         >
           Forgot Password?
         </button>
       </div>
 
+      {/* Success Message */}
+      {formSuccess && (
+        <div className="p-4 bg-[#33ABB9]/10 border border-[#33ABB9]/30 text-[#33ABB9] text-sm animate-in fade-in slide-in-from-top duration-300">
+          <span className="font-bold">SUCCESS:</span> {formSuccess}
+        </div>
+      )}
+
+      {/* Error Message */}
+      {formError && (
+        <div className="p-4 bg-red-500/10 border border-red-500/30 text-red-400 text-sm animate-in fade-in slide-in-from-top duration-300">
+          <span className="font-bold">ERROR:</span> {formError}
+        </div>
+      )}
+
       <button
         type="submit"
         disabled={isLoginLoading}
-        className="w-full bg-[#0f172a] border border-cyan-500 text-white font-bold py-4 px-6 rounded-xl hover:bg-cyan-950/30 hover:border-cyan-400 transition-all duration-300 uppercase tracking-widest text-lg shadow-[0_0_20px_-10px_rgba(6,182,212,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-[#33ABB9]/10 border border-[#33ABB9]/30 hover:border-[#33ABB9] hover:bg-[#33ABB9]/20 text-white font-bold py-3.5 px-6 transition-all duration-300 uppercase tracking-widest text-base disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isLoginLoading ? 'AUTHENTICATING...' : 'LOGIN'}
+        {isLoginLoading ? 'LOGGING IN...' : 'LOGIN'}
       </button>
 
-      <div className="text-center pt-2">
-        <p className="text-slate-400 text-sm font-medium">
-          New to Mindbend?{' '}
+      <div className="text-center pt-4 border-t border-white/10">
+        <p className="text-gray-400 text-sm uppercase">
+          New User?{' '}
           <Link
             href="/register"
-            className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors uppercase tracking-wide ml-1"
+            className="text-[#33ABB9] hover:text-[#4DD4E5] font-bold transition-colors ml-1"
           >
             CREATE ACCOUNT
           </Link>
@@ -306,15 +320,15 @@ export default function LoginPage() {
   const renderForgotPasswordForm = () => (
     <form onSubmit={handleForgotPasswordSubmit} className="space-y-6">
       <div className="relative group">
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500/70 group-focus-within:text-cyan-400 transition-colors">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#33ABB9]">
           <Mail size={20} />
         </div>
         <input
           type="email"
           value={forgotPasswordEmail}
           onChange={(e) => setForgotPasswordEmail(e.target.value)}
-          placeholder="ENTER YOUR EMAIL"
-          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white pl-12 pr-4 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all placeholder-slate-500 font-medium tracking-wide"
+          placeholder="Enter your email"
+          className="w-full bg-white/5 border border-white/10 text-white pl-10 pr-4 py-3 outline-none hover:border-[#33ABB9]/30 focus:border-[#33ABB9] focus:bg-white/10 transition-all placeholder-gray-500"
           required
         />
       </div>
@@ -322,9 +336,9 @@ export default function LoginPage() {
       <button
         type="submit"
         disabled={isForgotPasswordLoading}
-        className="w-full bg-[#0f172a] border border-cyan-500 text-white font-bold py-4 px-6 rounded-xl hover:bg-cyan-950/30 hover:border-cyan-400 transition-all duration-300 uppercase tracking-widest text-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_-10px_rgba(6,182,212,0.5)]"
+        className="w-full bg-[#33ABB9]/10 border border-[#33ABB9]/30 hover:border-[#33ABB9] hover:bg-[#33ABB9]/20 text-white font-bold py-3.5 px-6 transition-all duration-300 uppercase tracking-widest text-base disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-[#33ABB9]/20"
       >
-        {isForgotPasswordLoading ? 'PROCESSING...' : 'SEND OTP'}
+        {isForgotPasswordLoading ? 'SENDING...' : 'SEND OTP'}
       </button>
 
       <button
@@ -334,7 +348,7 @@ export default function LoginPage() {
           setForgotPasswordError('');
           setForgotPasswordSuccess('');
         }}
-        className="w-full text-cyan-500/60 hover:text-cyan-400 transition-colors font-medium text-sm uppercase tracking-wider mt-2"
+        className="w-full text-gray-400 hover:text-[#33ABB9] transition-colors text-sm uppercase tracking-wider mt-2"
       >
         Back to Login
       </button>
@@ -350,15 +364,15 @@ export default function LoginPage() {
           value={resetOtp}
           onChange={(e) => setResetOtp(e.target.value)}
           placeholder="6-DIGIT OTP"
-          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white px-4 py-4 text-center tracking-[0.5em] text-xl rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all font-medium placeholder-slate-500"
+          className="w-full bg-white/5 border border-white/10 text-white px-4 py-3 text-center tracking-[0.5em] text-xl outline-none hover:border-[#33ABB9]/30 focus:border-[#33ABB9] focus:bg-white/10 transition-all placeholder-gray-500"
           required
           disabled={otpExpired}
         />
       </div>
 
-      <div className="flex items-center justify-between font-medium text-xs">
+      <div className="flex items-center justify-between text-xs">
         {!otpExpired ? (
-          <p className="text-cyan-500/70">
+          <p className="text-gray-400">
             EXPIRES IN <span className="text-white tabular-nums">{formatOtpTime(otpSecondsLeft)}</span>
           </p>
         ) : (
@@ -370,7 +384,7 @@ export default function LoginPage() {
             type="button"
             onClick={handleResendOtp}
             disabled={isResendLoading}
-            className="text-cyan-400 hover:text-white transition-colors disabled:opacity-50 uppercase tracking-wider"
+            className="text-[#33ABB9] hover:text-[#4DD4E5] transition-colors disabled:opacity-50"
           >
             {isResendLoading ? 'WAIT...' : 'RESEND OTP'}
           </button>
@@ -383,13 +397,13 @@ export default function LoginPage() {
           value={resetNewPassword}
           onChange={(e) => setResetNewPassword(e.target.value)}
           placeholder="NEW PASSWORD"
-          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white px-4 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all font-medium placeholder-slate-500"
+          className="w-full bg-white/5 border border-white/10 text-white px-4 py-3 outline-none hover:border-[#33ABB9]/30 focus:border-[#33ABB9] focus:bg-white/10 transition-all placeholder-gray-500"
           required
         />
         <button
           type="button"
           onClick={() => setIsResetPasswordVisible((v) => !v)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-cyan-400 transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#33ABB9] transition-colors"
         >
           {isResetPasswordVisible ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
@@ -401,13 +415,13 @@ export default function LoginPage() {
           value={resetConfirmPassword}
           onChange={(e) => setResetConfirmPassword(e.target.value)}
           placeholder="CONFIRM PASSWORD"
-          className="w-full bg-[#0f172a]/40 border border-[#334155] text-white px-4 py-4 rounded-xl outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50 transition-all font-medium placeholder-slate-500"
+          className="w-full bg-white/5 border border-white/10 text-white px-4 py-3 outline-none hover:border-[#33ABB9]/30 focus:border-[#33ABB9] focus:bg-white/10 transition-all placeholder-gray-500"
           required
         />
         <button
           type="button"
           onClick={() => setIsResetConfirmVisible((v) => !v)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-cyan-400 transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#33ABB9] transition-colors"
         >
           {isResetConfirmVisible ? <EyeOff size={20} /> : <Eye size={20} />}
         </button>
@@ -416,9 +430,9 @@ export default function LoginPage() {
       <button
         type="submit"
         disabled={isResetLoading || !!resetSuccess || otpExpired}
-        className="w-full bg-[#0f172a] border border-cyan-500 text-white font-bold py-4 px-6 rounded-xl hover:bg-cyan-950/30 hover:border-cyan-400 transition-all duration-300 uppercase tracking-widest text-lg shadow-[0_0_20px_-10px_rgba(6,182,212,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-[#33ABB9]/10 border border-[#33ABB9]/30 hover:border-[#33ABB9] hover:bg-[#33ABB9]/20 text-white font-bold py-3.5 px-6 transition-all duration-300 uppercase tracking-widest text-base disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-[#33ABB9]/20"
       >
-        {isResetLoading ? 'UPDATING...' : resetSuccess ? 'UPDATED' : 'RESET PASSWORD'}
+        {isResetLoading ? 'RESETTING...' : resetSuccess ? 'SUCCESS' : 'RESET PASSWORD'}
       </button>
 
       <button
@@ -435,7 +449,7 @@ export default function LoginPage() {
           if (otpTimerRef.current) window.clearInterval(otpTimerRef.current);
           otpTimerRef.current = null;
         }}
-        className="w-full text-cyan-500/60 hover:text-cyan-400 transition-colors font-medium text-sm uppercase tracking-wider mt-2"
+        className="w-full text-gray-400 hover:text-[#33ABB9] transition-colors text-sm uppercase tracking-wider mt-2"
       >
         BACK TO LOGIN
       </button>

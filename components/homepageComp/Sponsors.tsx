@@ -11,6 +11,7 @@ import {
   useVelocity,
 } from "framer-motion";
 import Image from "next/image";
+import { SPONSORS } from "@/constants/assets";
 
 // Custom wrap function to replace @motionone/utils
 const wrap = (min: number, max: number, v: number) => {
@@ -25,8 +26,9 @@ const DARK_LOGO_INDEXES = new Set<number>([4, 8, 17, 29]);
 
 const sponsorLogos: SponsorLogoItem[] = Array.from({ length: 31 }, (_, i) => {
   const idx = i + 1;
+  const sponsorKey = `s${idx}` as keyof typeof SPONSORS;
   return {
-    src: `/images/sponsors/${idx}.png`,
+    src: SPONSORS[sponsorKey],
     darkOnBlack: DARK_LOGO_INDEXES.has(idx),
   };
 });

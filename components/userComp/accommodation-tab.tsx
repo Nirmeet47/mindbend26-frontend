@@ -25,8 +25,8 @@ export default function AccommodationTab({ accommodations }: AccommodationTabPro
         className="relative"
       >
         <div className="absolute inset-0 bg-white/5 border border-white/10" />
-        <div className="absolute top-0 left-1 w-4 h-4 border-t-2 border-l-2 border-[#33ABB9]" />
-        <div className="absolute bottom-0 right-1 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]" />
+        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]" />
+        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]" />
         <div className="relative p-12 text-center">
           <Home className="w-12 h-12 text-[#33ABB9]/40 mx-auto mb-4" />
           <p className="text-gray-400 font-mono text-sm">You have no accommodation bookings yet.</p>
@@ -34,7 +34,7 @@ export default function AccommodationTab({ accommodations }: AccommodationTabPro
       </motion.div>
     )
   }
-  
+
   return (
     <div className="space-y-4">
       {accommodations.map((booking, index) => (
@@ -47,10 +47,10 @@ export default function AccommodationTab({ accommodations }: AccommodationTabPro
         >
           {/* Background Shape */}
           <div className="absolute inset-0 bg-white/5 border border-white/10 transition-all group-hover:border-[#33ABB9]/30" />
-          
+
           {/* Corner Accents */}
-          <div className="absolute top-0 left-1 w-4 h-4 border-t-2 border-l-2 border-[#33ABB9]" />
-          <div className="absolute bottom-0 right-1 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]" />
+          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]" />
+          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]" />
 
           <div className="relative p-6 z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

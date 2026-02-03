@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
+import { IMAGES } from "@/constants/assets";
 
 const SCRAMBLE_CHARS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!<>-_\\/[]{}—=+*^?#________";
@@ -37,7 +38,7 @@ const ScrambleText = ({
               Math.floor(Math.random() * SCRAMBLE_CHARS.length)
             ];
           })
-          .join("")
+          .join(""),
       );
 
       if (iteration >= text.length) clearInterval(intervalRef.current!);
@@ -157,33 +158,44 @@ export default function Navbar() {
       isHyperlink: true,
       href: "/ambassador",
       items: [],
-    }
+    },
   ];
 
   return (
     <>
       <motion.nav
-        initial={{ y: 0, opacity: 1 }}
-        animate={{ y: 0, opacity: 1 }}
-        className={`fixed left-0 w-full z-50 px-6 md:px-8 py-2 md:py-4 justify-between items-center text-white transition-all duration-300 mt-2 sm:mt-0 ${!showNavbar ? "hidden" : "flex"} ${scrollY > (isHome ? viewportHeight - 100 : 10) ? "bg-black/80 backdrop-blur-md py-4 shadow-lg border-b border-white/5" : "bg-transparent py-6"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{
+          y: showNavbar ? 0 : -100,
+          opacity: showNavbar ? 1 : 0,
+        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className={`fixed top-0 left-0 w-full z-50 px-6 md:px-8 py-3 md:py-4 flex justify-between items-center text-white ${scrollY > (isHome ? viewportHeight - 100 : 10)
+            ? "bg-black/80 backdrop-blur-md shadow-lg"
+            : "bg-transparent"
           }`}
-        style={{ fontFamily: "Barlow Condensed, sans-serif", top: 0 }}
+        style={{
+          fontFamily: "Barlow Condensed, sans-serif",
+          transition:
+            "background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+        }}
       >
-        {isHome && scrollY < (viewportHeight * 0.7 || 800) ? (
+        {isHome && scrollY < viewportHeight * 0.9 ? (
           <div className="w-20 md:w-28 h-8" />
         ) : (
           <Link href="/" className="flex items-center">
             <img
-              src="/images/mb_font.png"
+              src={IMAGES.mbFont}
               alt="MINDBEND"
-              className="h-6 md:h-7 object-contain select-none"
+              className="h-5 md:h-6 object-contain select-none"
             />
           </Link>
         )}
         <div className="flex items-center gap-4 md:gap-10">
           {/* Show LOGIN or PROFILE based on auth state, visible on all screens unless menu is open */}
-          {!isOpen && !isLoading && (
-            isAuthenticated ? (
+          {!isOpen &&
+            !isLoading &&
+            (isAuthenticated ? (
               <Link
                 href="/user/dashboard"
                 className="hidden md:flex items-center gap-2 text-[15px] font-bold tracking-[0.2em] hover:scale-110 hover:text-zinc-400 transition-all duration-300"
@@ -197,8 +209,7 @@ export default function Navbar() {
               >
                 LOGIN
               </Link>
-            )
-          )}
+            ))}
           <button
             onClick={() => setIsOpen(true)}
             className="text-[15px] font-bold tracking-[0.2em] uppercase hover:scale-110 hover:text-zinc-400 transition-all duration-300 cursor-pointer whitespace-nowrap"
@@ -206,7 +217,7 @@ export default function Navbar() {
             MENU [+]
           </button>
         </div>
-      </motion.nav >
+      </motion.nav>
 
       <AnimatePresence>
         {isOpen && (
@@ -242,8 +253,8 @@ export default function Navbar() {
               <div className="flex-1 overflow-y-auto p-6 md:px-16 md:py-12 space-y-8 md:space-y-10 no-scrollbar">
                 {/* Mobile Profile/Login Button */}
                 <div className="sm:hidden space-y-4 border-b border-white/10 pb-6">
-                  {!isLoading && (
-                    isAuthenticated ? (
+                  {!isLoading &&
+                    (isAuthenticated ? (
                       <Link
                         href="/user/dashboard"
                         className="group flex w-full items-center px-2 md:px-4 py-2 md:py-3 transition-all duration-300 hover:bg-white hover:translate-x-4"
@@ -269,8 +280,7 @@ export default function Navbar() {
                           <ScrambleText text="LOGIN" />
                         </h2>
                       </Link>
-                    )
-                  )}
+                    ))}
                 </div>
 
                 {menuData.map((section, idx) => (

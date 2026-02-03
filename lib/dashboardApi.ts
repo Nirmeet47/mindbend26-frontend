@@ -11,7 +11,7 @@ export const usersApi = {
 };
 
 export const eventsApi = {
-  listAdmin: (payload = { page: 1, limit: 20 }) =>
+  listAdmin: (payload = { page: 1, limit: 1000 }) =>
     api.post("/events/admin/all", payload),
   getAdmin: (id: string) => api.get(`/events/admin/${id}`),
   create: (body: any) => api.post("/events/create", body, {
@@ -75,4 +75,14 @@ export const workshopsApi = {
 export const getCounts = async () => {
   const response = await api.get("/admin/dashboard");
   return response.data.data.counts;
+};
+
+export const getTeamStats = async () => {
+  const response = await api.get("/admin/stats/teams");
+  return response.data.data;
+};
+
+export const getEventTeamStats = async () => {
+  const response = await api.get("/admin/stats/teams/by-event");
+  return response.data.data;
 };

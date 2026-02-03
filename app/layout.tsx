@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import { Toaster } from 'react-hot-toast';
 import Analytics from '@/components/Analytics';
+import SmoothScroll from '@/components/SmoothScroll';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -304,9 +305,11 @@ export default function RootLayout({
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${circuitForem.variable} antialiased`}
-      ><Analytics />
-
-        {children}
+      >
+        <Analytics />
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
         <Toaster
           position="top-right"
           toastOptions={{

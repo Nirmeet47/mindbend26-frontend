@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
+import { IMAGES } from "@/constants/assets";
 
 interface EventCardProps {
     title: string;
@@ -105,7 +106,7 @@ const WorkshopEventCard: React.FC<EventCardProps> = ({ showExploreButton = true,
                 {/* Image Placeholder */}
                 <div className="relative w-full h-60 mb-3 rounded-sm overflow-hidden border border-white/10 bg-black/50 group-hover:border-[#33ABB9]/30 transition-colors">
                     <Image
-                        src={image && image.startsWith('/images/') ? image : '/images/workshop_img.png'}
+                        src={image || IMAGES.workshopImg}
                         alt={title}
                         fill
                         className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" />

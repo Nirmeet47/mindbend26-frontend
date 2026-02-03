@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { IMAGES } from '@/constants/assets'
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -21,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: 'Managerial Events - Mindbend 2026 | SVNIT Surat',
       description: 'Test your business skills in managerial competitions. Case studies, business plans, marketing & strategy contests.',
-      images: ['/images/mng_img.avif'],
+      images: [IMAGES.mngImg],
     },
     twitter: {
       title: 'Managerial Events - Mindbend 2026',

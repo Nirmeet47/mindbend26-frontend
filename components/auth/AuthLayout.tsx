@@ -1,4 +1,6 @@
 import type React from 'react';
+import dynamic from 'next/dynamic';
+import { VIDEOS } from '@/constants/assets';
 
 interface AuthLayoutProps {
     children: React.ReactNode;
@@ -6,56 +8,74 @@ interface AuthLayoutProps {
     subtitle?: string;
 }
 
-export default function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
+// Lazy load the background scene
+const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScene'), {
+    ssr: false,
+});
+
+export default function AuthLayout({ children, title }: AuthLayoutProps) {
     return (
-        <div className="relative min-h-screen bg-[#02040a] flex items-center justify-center p-4 overflow-hidden font-sans">
-            {/* Background Video */}
+        <div className="relative min-h-screen bg-[#030303] flex items-center justify-center p-4 overflow-hidden selection:bg-[#33ABB9] selection:text-white font-rajdhani tracking-wide">
+            {/* Background Video - Increased visibility */}
             <video
-                className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none mix-blend-screen"
-                src="/videos/auth.mp4"
+                className="fixed inset-0 w-full h-full object-cover opacity-30 pointer-events-none mix-blend-screen z-0"
+                src={VIDEOS.auth}
                 autoPlay
                 muted
                 loop
                 playsInline
             />
 
-            {/* Vignette & Texture Overlay */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)] pointer-events-none" />
-            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] pointer-events-none" />
+            {/* Background 3D Scene - Reduced opacity */}
+            <div className="fixed inset-0 z-0 opacity-10 pointer-events-none mix-blend-screen">
+                <BackgroundScene />
+            </div>
 
-            {/* Main Card Container */}
-            <div className="relative z-10 w-full max-w-md bg-[#050A10] border border-[#1e293b]/50 rounded-[2rem] p-8 md:p-10 shadow-2xl overflow-hidden backdrop-blur-md">
+            {/* Cyberpunk Grid Overlay */}
+            <div
+                className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
+                style={{
+                    backgroundImage: `
+                        linear-gradient(rgba(51, 171, 185, 0.4) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(51, 171, 185, 0.4) 1px, transparent 1px)
+                    `,
+                    backgroundSize: '40px 40px',
+                    maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
+                }}
+            />
 
-                {/* Greenish Glow Effect (Top Left, Shining Down) */}
-                <div className="absolute -top-32 -left-32 w-80 h-80 bg-cyan-500/15 blur-[90px] rounded-full pointer-events-none mix-blend-screen" />
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-cyan-500/20 via-transparent to-transparent opacity-50" />
+            {/* Vignette Overlay */}
+            <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)] pointer-events-none z-0" />
 
-                {/* Grid Pattern Decoration (Top Right) */}
-                <div className="absolute top-8 right-8 opacity-20 pointer-events-none">
-                    <div className="grid grid-cols-5 gap-1.5">
-                        {[...Array(25)].map((_, i) => (
-                            <div key={i} className="w-[3px] h-[3px] bg-cyan-500 rounded-full" />
-                        ))}
+            {/* Main Container */}
+            <div className="relative z-10 w-full max-w-lg animate-in fade-in duration-700">
+                {/* Auth Card */}
+                <div className="relative">
+                    {/* Background Shape - No hover effect */}
+                    <div className="absolute inset-0 bg-white/5 border border-white/10 backdrop-blur-xl" />
+
+                    {/* Corner Accents */}
+                    <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#33ABB9]" />
+                    <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#33ABB9]" />
+                    <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#33ABB9]" />
+                    <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#33ABB9]" />
+
+                    {/* Content */}
+                    <div className="relative p-8 md:p-12 z-10">
+                        {/* Header */}
+                        <div className="text-center mb-12">
+                            <h1 className="text-4xl md:text-5xl text-white font-bold tracking-[0.2em] uppercase mb-4 animate-in slide-in-from-top duration-500">
+                                {title}
+                            </h1>
+                            <div className="h-[2px] w-20 mx-auto bg-gradient-to-r from-transparent via-[#33ABB9] to-transparent animate-in fade-in duration-700 delay-200" />
+                        </div>
+
+                        {/* Children content (The Form) */}
+                        <div className="relative animate-in fade-in slide-in-from-bottom duration-500 delay-300">
+                            {children}
+                        </div>
                     </div>
                 </div>
-
-                {/* Header */}
-                <div className="mb-10 relative z-20">
-                    <h1 className="text-3xl md:text-4xl text-white font-bold tracking-tight mb-2">
-                        {title}
-                    </h1>
-                    {subtitle && (
-                        <p className="text-gray-400 text-sm font-medium tracking-wide">
-                            {subtitle}
-                        </p>
-                    )}
-                </div>
-
-                {/* Children content (The Form) */}
-                <div className="relative z-20">
-                    {children}
-                </div>
-
             </div>
         </div>
     );

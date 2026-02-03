@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { workshopsRegistrationApi } from '@/lib/workshopsApi';
 import { showSuccessToast, showErrorToast, toastMessages } from '@/utils/toast';
+import useAuth from '@/hooks/useAuth';
 
 interface WorkshopRegistrationCTAProps {
   workshopSlug: string;
@@ -28,6 +30,8 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   isSvnitian,
   formatDate
 }) => {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
   const [regLoading, setRegLoading] = useState(false);
   const [regSuccess, setRegSuccess] = useState(false);
   const [regError, setRegError] = useState<string | null>(null);
@@ -50,6 +54,11 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   }, [workshopSlug]);
 
   const handleRegister = async () => {
+    if (!isAuthenticated) {
+      showErrorToast('Please login to register for the event');
+      router.push('/login');
+      return;
+    }
     setRegLoading(true);
     setRegError(null);
     try {
@@ -67,6 +76,11 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   };
 
   const handleUnregister = async () => {
+    if (!isAuthenticated) {
+      showErrorToast('Please login to access registration features');
+      router.push('/login');
+      return;
+    }
     setUnregLoading(true);
     setRegError(null);
     try {
@@ -105,9 +119,26 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
         {isRegOpen ? (
           <div className="space-y-8 relative z-10">
             <div className="flex flex-wrap items-center justify-center gap-6">
-              {/* Registration button for SVNIT students */}
-              {isSvnitian ? (
+              {/* Check authentication first */}
+              {!isAuthenticated ? (
                 <>
+                  {/* Login prompt button for unauthenticated users */}
+                  <button
+                    onClick={() => {
+                      showErrorToast('Please login to register for the event');
+                      router.push('/login');
+                    }}
+                    className="group/register relative px-8 py-4 bg-[#33ABB9] text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover/register:translate-x-0 transition-transform duration-300 opacity-30" />
+                    <span className="relative z-10 flex items-center gap-2">
+                      LOGIN_TO_REGISTER
+                    </span>
+                  </button>
+                </>
+              ) : isSvnitian ? (
+                <>
+                  {/* Registration for authenticated SVNIT students */}
                   {!isRegistered && registeredCount < maxParticipants && (
                     <button
                       onClick={handleRegister}
