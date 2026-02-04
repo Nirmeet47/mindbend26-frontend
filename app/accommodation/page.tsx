@@ -41,7 +41,7 @@ const AccommodationCard = ({
     <div className="relative z-10 p-6 flex flex-col h-full">
       {/* Header */}
       <div className="mb-6">
-        <h3 className="text-xl font-bold text-white tracking-wide uppercase font-orbitron mb-2">
+        <h3 className="text-2xl font-bold text-white tracking-wide uppercase font-orbitron mb-3">
           {title}
         </h3>
         <div className="flex items-center space-x-2">
@@ -52,13 +52,13 @@ const AccommodationCard = ({
       </div>
 
       {/* Description */}
-      <p className="text-gray-300 text-sm mb-4 leading-relaxed">{description}</p>
+      <p className="text-gray-300 text-base mb-5 leading-relaxed">{description}</p>
 
       {/* Features */}
-      <div className="space-y-2 mb-6">
+      <div className="space-y-3 mb-7">
         {features.map((feature, index) => (
-          <div key={index} className="flex items-start gap-2 text-xs">
-            <div className="w-1 h-1 bg-[#33ABB9] rounded-full mt-1.5 flex-shrink-0" />
+          <div key={index} className="flex items-start gap-2 text-sm">
+            <div className="w-1 h-1 bg-[#33ABB9] rounded-full mt-2 flex-shrink-0" />
             <span className="text-gray-400">{feature}</span>
           </div>
         ))}
@@ -67,8 +67,8 @@ const AccommodationCard = ({
       {/* Price */}
       <div className="mt-auto flex items-end justify-between">
         <div className="flex flex-col">
-          <span className="text-[9px] uppercase tracking-widest text-[#33ABB9] mb-1">COST/DAY</span>
-          <span className="text-2xl font-bold text-[#E8823A] font-mono">{price}</span>
+          <span className="text-xs uppercase tracking-widest text-[#33ABB9] mb-1">COST/DAY</span>
+          <span className="text-3xl font-bold text-[#E8823A] font-mono">{price}</span>
         </div>
       </div>
     </div>
@@ -90,12 +90,12 @@ const ImportantNotes = ({ notes, title, delay = 0 }: { notes: string[], title: s
     <div className="relative p-6">
       <div className="flex items-center gap-3 mb-4">
         <Shield className="w-5 h-5 text-red-400" />
-        <h3 className="text-lg font-bold text-red-400 uppercase font-orbitron tracking-wide">{title}</h3>
+        <h3 className="text-xl font-bold text-red-400 uppercase font-orbitron tracking-wide">{title}</h3>
       </div>
-      <div className="space-y-2">
+      <div className="space-y-3">
         {notes.map((note, index) => (
-          <div key={index} className="flex items-start gap-2 text-xs">
-            <div className="w-1 h-1 bg-red-400 rounded-full mt-1.5 flex-shrink-0" />
+          <div key={index} className="flex items-start gap-2 text-sm">
+            <div className="w-1 h-1 bg-red-400 rounded-full mt-2 flex-shrink-0" />
             <span className="text-gray-300">{note}</span>
           </div>
         ))}
@@ -110,14 +110,15 @@ export default function AccommodationPage() {
       title: "Guest House",
       tag: "SVP Bhavan",
       description: "Guest House opposite to SVNIT Main Gate named, SVP Bhavan. Perfect for comfortable stay with premium amenities and dedicated facilities.",
-      price: "₹1600",
+      price: "₹1500",
       tagColor: "bg-purple-500/20 text-purple-300 border border-purple-500/30",
       icon: Home,
       features: [
-        "INR 1600/- per day for one room (2 person capacity)",
+        "INR 1500/- per day for one room (2 person capacity)",
         "First come, first serve basis allocation",
         "In-time: 11:30 PM",
-        "24-hour charges, no specific check-in/out time"
+        "24-hour charges, no specific check-in/out time",
+        "Total capacity: 20 seats only"
       ]
     },
     {
@@ -157,7 +158,7 @@ export default function AccommodationPage() {
         <div className="container mx-auto py-8 relative z-10">
           <div className="flex flex-col items-center w-full animate-fade-in">
             <h1
-              className="text-4xl sm:text-6xl md:text-8xl uppercase tracking-normal leading-[1.1] font-black mb-4 text-center px-4"
+              className="text-5xl sm:text-7xl md:text-9xl uppercase tracking-normal leading-[1.1] font-black mb-6 text-center px-4"
               style={{
                 fontFamily: 'Barlow Condensed, sans-serif',
                 color: '#e5e7eb',
@@ -168,7 +169,7 @@ export default function AccommodationPage() {
               ACCOMMODATION
             </h1>
             <div className="text-center mb-12 max-w-3xl">
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <p className="text-gray-400 text-base leading-relaxed">
                 Choose from our carefully curated accommodation options designed to provide comfort and convenience during Mindbend 2026.
               </p>
             </div>
@@ -214,21 +215,22 @@ export default function AccommodationPage() {
                 </h3>
               </div>
 
-              <p className="text-gray-300 text-sm mb-8 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-gray-300 text-base mb-8 max-w-2xl mx-auto leading-relaxed">
                 Ready to secure your accommodation for Mindbend 2026? Fill out our booking form to reserve your preferred option.
                 Limited availability - book early to guarantee your spot!
               </p>
 
-              <button
-                className="relative px-8 py-3 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-sm font-bold tracking-wider uppercase transition-all overflow-hidden cursor-not-allowed opacity-70"
-                disabled
+              <a
+                href="https://forms.gle/ERQMVfLx8Kg61Xjm6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative inline-block px-8 py-3 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-sm font-bold tracking-wider uppercase transition-all overflow-hidden"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   <ExternalLink className="w-4 h-4" />
                   Book Accommodation
-                  <span className="text-xs opacity-75 font-mono">[ COMING.SOON ]</span>
                 </span>
-              </button>
+              </a>
             </div>
           </motion.div>
         </div>
