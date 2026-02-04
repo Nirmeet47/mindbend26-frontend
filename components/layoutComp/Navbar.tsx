@@ -73,12 +73,21 @@ export default function Navbar() {
   const [showNavbar, setShowNavbar] = useState(!isHome);
 
   // Hide navbar for 5 seconds on homepage (preloader duration)
+  // Sync Navbar visibility with preloader
   useEffect(() => {
     if (isHome) {
-      const timer = setTimeout(() => {
+      // Check if preloader is already done
+      const hasSeen = sessionStorage.getItem("mindbend_preloader_seen");
+      if (hasSeen) {
         setShowNavbar(true);
-      }, 5000);
-      return () => clearTimeout(timer);
+      } else {
+        // Wait for event
+        const handlePreloaderComplete = () => setShowNavbar(true);
+        window.addEventListener("preloader-complete", handlePreloaderComplete);
+        return () => window.removeEventListener("preloader-complete", handlePreloaderComplete);
+      }
+    } else {
+      setShowNavbar(true);
     }
   }, [isHome]);
 
@@ -161,11 +170,10 @@ export default function Navbar() {
           opacity: showNavbar ? 1 : 0,
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={`fixed top-0 left-0 w-full z-50 px-6 md:px-8 py-3 md:py-4 flex justify-between items-center text-white ${
-          scrollY > (isHome ? viewportHeight - 100 : 10)
+        className={`fixed top-0 left-0 w-full z-50 px-6 md:px-8 py-3 md:py-4 flex justify-between items-center text-white ${scrollY > (isHome ? viewportHeight - 100 : 10)
             ? "bg-black/80 backdrop-blur-md shadow-lg"
             : "bg-transparent"
-        }`}
+          }`}
         style={{
           fontFamily: "Barlow Condensed, sans-serif",
           transition:
