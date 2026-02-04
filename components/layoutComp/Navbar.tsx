@@ -72,7 +72,7 @@ export default function Navbar() {
   const { isAuthenticated, isLoading } = useAuth();
   const [showNavbar, setShowNavbar] = useState(!isHome);
 
-  // Hide navbar for 5 seconds on homepage (preloader duration)
+  // Hide navbar for preloader duration on homepage
   // Sync Navbar visibility with preloader
   useEffect(() => {
     if (isHome) {
