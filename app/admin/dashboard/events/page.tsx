@@ -87,6 +87,7 @@ export default function EventsPage() {
                   <option value="all" className="bg-black">All Events</option>
                   <option value="technical" className="bg-black">Technical</option>
                   <option value="managerial" className="bg-black">Managerial</option>
+                  <option value="esports" className="bg-black">Esports</option>
                 </select>
               </div>
             </div>

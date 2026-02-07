@@ -10,7 +10,7 @@ interface EventsHeaderProps {
   eventType: string;
   isTeamEvent?: boolean;
   eventStatus: EventStatus;
-  breadcrumbType: 'TECHNICAL' | 'MANAGERIAL' | 'WORKSHOPS';
+  breadcrumbType: 'TECHNICAL' | 'MANAGERIAL' | 'WORKSHOPS' | 'ESPORTS';
 }
 
 function EventsHeader({ eventName, eventType, isTeamEvent, eventStatus, breadcrumbType }: EventsHeaderProps) {

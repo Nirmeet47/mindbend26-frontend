@@ -2,7 +2,7 @@
 export interface Event {
   _id: string;
   name: string;
-  type: 'technical' | 'managerial' | 'workshops';
+  type: 'technical' | 'managerial' | 'esports' | 'workshops';
   slug?: string;
   isTeamEvent: boolean;
   minTeamSize: number;
@@ -34,7 +34,7 @@ export interface StructuredRule {
 }
 
 export type EventStatus = 'OPEN' | 'CLOSED' | 'HIDDEN';
-export type EventType = 'technical' | 'managerial' | 'workshops';
+export type EventType = 'technical' | 'managerial' | 'esports' | 'workshops';
 
 export interface PrizeDistribution {
   first: number;

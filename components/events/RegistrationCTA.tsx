@@ -21,7 +21,7 @@ interface RegistrationCTAProps {
   eventName?: string;
   isTeamEvent?: boolean;
   isSvnitian?: boolean;
-  eventType?: 'technical' | 'managerial';
+  eventType?: 'technical' | 'managerial' | 'esports';
 }
 
 const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
@@ -116,8 +116,27 @@ const RegistrationCTA: React.FC<RegistrationCTAProps> = ({
         {eventStatus === 'OPEN' ? (
           <div className="space-y-8 relative z-10">
             <div className="flex flex-wrap items-center justify-center gap-6">
-              {/* Check authentication first */}
-              {!isAuthenticated ? (
+              {/* For esports events, always redirect to Unstop regardless of authentication or SVNITian status */}
+              {eventType === 'esports' ? (
+                <Link
+                  href={unstopLink || '#'}
+                  target={unstopLink ? "_blank" : "_self"}
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    if (!unstopLink) {
+                      e.preventDefault();
+                      alert('Registration link coming soon! Please contact the event organizers for more information.');
+                    }
+                  }}
+                  className="group/register relative px-8 py-4 text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden"
+                  style={{ backgroundColor: themeColor }}
+                >
+                  <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover/register:translate-x-0 transition-transform duration-300 opacity-30" />
+                  <span className="relative z-10 flex items-center gap-2">
+                    REGISTER_NOW
+                  </span>
+                </Link>
+              ) : !isAuthenticated ? (
                 <>
                   {/* Login prompt button for unauthenticated users */}
                   <button
