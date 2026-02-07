@@ -11,7 +11,7 @@ export const usersApi = {
 };
 
 export const eventsApi = {
-  listAdmin: (payload = { page: 1, limit: 20 }) =>
+  listAdmin: (payload = { page: 1, limit: 1000 }) =>
     api.post("/events/admin/all", payload),
   getAdmin: (id: string) => api.get(`/events/admin/${id}`),
   create: (body: any) => api.post("/events/create", body, {

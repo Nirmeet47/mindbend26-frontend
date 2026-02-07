@@ -79,6 +79,10 @@ const Hero = () => {
         onComplete: () => {
           setPreloaderComplete(true);
           setShowContent(true);
+          // Dispatch event for navbar
+          window.dispatchEvent(new CustomEvent("preloader-complete"));
+          // Mark as seen for future visits
+          sessionStorage.setItem("mindbend_preloader_seen", "true");
         },
       });
 

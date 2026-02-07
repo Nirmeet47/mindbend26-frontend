@@ -22,7 +22,7 @@ export default function EventsPage() {
     setLoading(true);
     setError("");
     eventsApi
-      .listAdmin()
+      .listAdmin({ page: 1, limit: 1000 })
       .then((res) => setEvents(res.data?.data?.events || []))
       .catch(() => setError("Failed to load events"))
       .finally(() => setLoading(false));

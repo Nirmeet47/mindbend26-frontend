@@ -5,6 +5,7 @@ import { VIDEOS } from '@/constants/assets';
 interface AuthLayoutProps {
     children: React.ReactNode;
     title: string;
+    subtitle?: string;
 }
 
 // Lazy load the background scene
