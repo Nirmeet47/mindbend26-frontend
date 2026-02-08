@@ -27,16 +27,10 @@ export default function EsportsEventDetailPage() {
   const [event, setEvent] = useState<Event | null>(null);
   const [eventTeam, setEventTeam] = useState<DetailedTeam | null>(null);
   const [isLeader, setIsLeader] = useState<boolean>(false);
-  const [isSvnitian, setIsSvnitian] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Set user's SVNitian status from auth context (only if authenticated)
-  useEffect(() => {
-    if (isAuthenticated && user?.isSvnitian) {
-      setIsSvnitian(true);
-    }
-  }, [isAuthenticated, user]);
+
 
   // Fetch event data from API
   useEffect(() => {
@@ -50,9 +44,6 @@ export default function EsportsEventDetailPage() {
           }
           if (res.data?.data?.team && res.data?.data?.isLeader) {
             setIsLeader(true);
-          }
-          if (res.data?.data?.isSvnitian) {
-            setIsSvnitian(true);
           }
         })
         .catch(() => setError('Failed to load event details. Please try again later.'))
@@ -68,7 +59,7 @@ export default function EsportsEventDetailPage() {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a1a] text-white overflow-x-hidden">
+      <div className="min-h-screen bg-[#030303] text-white overflow-x-hidden">
         <NeuralNoise className="fixed inset-0 -z-10 bg-black pointer-events-none" />
         <div className="relative z-10">
           {/* Header Skeleton */}
@@ -111,7 +102,7 @@ export default function EsportsEventDetailPage() {
   // Error state
   if (error || !event) {
     return (
-      <div className="min-h-screen bg-[#0a0a1a] text-white flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[#030303] text-white flex items-center justify-center px-4">
         <NeuralNoise className="fixed inset-0 -z-10 bg-black pointer-events-none" />
         <div className="text-center max-w-md relative z-10">
           <div className="mb-8 relative">
@@ -145,7 +136,7 @@ export default function EsportsEventDetailPage() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-[#0a0a1a] text-white overflow-x-hidden selection:bg-[#33ABB9]/30 selection:text-white font-rajdhani tracking-wide relative"
+      className="min-h-screen bg-[#030303] text-white overflow-x-hidden selection:bg-[#33ABB9]/30 selection:text-white font-rajdhani tracking-wide relative"
     >
       <NeuralNoise className="fixed inset-0 -z-10 bg-black pointer-events-none" />
 
@@ -222,7 +213,7 @@ export default function EsportsEventDetailPage() {
             <InfoCard
               icon={Trophy}
               label="ENTRY FEE"
-              value={(isAuthenticated && isSvnitian) ? '₹0' : (event.entryFee === 0 ? 'FREE_ENTRY' : `₹${event.entryFee}`)}
+              value={event.entryFee === 0 ? 'FREE_ENTRY' : `₹${event.entryFee}`}
               color="text-white"
               delay={0.6}
             />
@@ -269,7 +260,6 @@ export default function EsportsEventDetailPage() {
             eventId={event._id}
             eventName={event.name}
             isTeamEvent={event.isTeamEvent}
-            isSvnitian={isSvnitian}
             eventType="esports"
           />
         )}
