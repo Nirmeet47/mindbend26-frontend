@@ -239,6 +239,7 @@ export default function EsportsEventDetailPage() {
           structure={event.structure}
           contact={event.contact}
           whatsappGrpLink={event.whatsappGrpLink}
+          eventType="esports"
         />
 
         {/* Registered Team Modal or Registration CTA */}

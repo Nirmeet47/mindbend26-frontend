@@ -18,6 +18,7 @@ interface EventTabsProps {
   structure?: StructuredRule[];
   contact?: EventContact[];
   whatsappGrpLink?: string;
+  eventType?: 'technical' | 'managerial' | 'esports' | 'workshop';
 }
 
 const EventTabs: React.FC<EventTabsProps> = ({
@@ -29,7 +30,8 @@ const EventTabs: React.FC<EventTabsProps> = ({
   structuredRules,
   structure,
   contact,
-  whatsappGrpLink
+  whatsappGrpLink,
+  eventType
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('about');
 
@@ -50,7 +52,7 @@ const EventTabs: React.FC<EventTabsProps> = ({
             ...(structure && structure.length > 0 ? [{ id: 'structure', label: 'Structure' }] : []),
             ...(rules && rules.length > 0 || structuredRules && structuredRules.length > 0 ? [{ id: 'rules', label: 'Protocol' }] : []),
             ...(contact && contact.length > 0 ? [{ id: 'contact', label: 'Contact' }] : []),
-            ].map((tab) => (
+          ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabType)}
@@ -95,19 +97,21 @@ const EventTabs: React.FC<EventTabsProps> = ({
               </p>
             </div>
 
-            {/* Important Note - Hologram Style */}
-            <div className="bg-[#00F0FF]/5 border-l-2 border-[#00F0FF] p-6 relative overflow-hidden backdrop-blur-sm">
-              {/* Scanlines */}
-              <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,_rgba(0,240,255,0.05)_50%)] bg-[length:100%_4px] pointer-events-none" />
+            {/* Important Note - Hologram Style (Only for non-esports events) */}
+            {eventType !== 'esports' && (
+              <div className="bg-[#00F0FF]/5 border-l-2 border-[#00F0FF] p-6 relative overflow-hidden backdrop-blur-sm">
+                {/* Scanlines */}
+                <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,_rgba(0,240,255,0.05)_50%)] bg-[length:100%_4px] pointer-events-none" />
 
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-2 h-2 bg-[#00F0FF] animate-pulse" />
-                  <p className="font-bold text-[#00F0FF] font-orbitron tracking-wider">NOTE</p>
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-2 h-2 bg-[#00F0FF] animate-pulse" />
+                    <p className="font-bold text-[#00F0FF] font-orbitron tracking-wider">NOTE</p>
+                  </div>
+                  <p className="text-gray-300 font-rajdhani text-lg">SVNitians must use their institute ID and create team on the website for free registration.</p>
                 </div>
-                <p className="text-gray-300 font-rajdhani text-lg">SVNitians must use their institute ID and create team on the website for free registration.</p>
               </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -131,7 +135,7 @@ const EventTabs: React.FC<EventTabsProps> = ({
                       </h3>
                       <div className="w-40 h-0.5 bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent mx-auto mt-3"></div>
                     </div>
-                    
+
                     {/* Section Content */}
                     <div className="space-y-4">
                       {section.content.map((content, contentIndex) => (
@@ -180,7 +184,7 @@ const EventTabs: React.FC<EventTabsProps> = ({
                       </h3>
                       <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent mx-auto mt-2"></div>
                     </div>
-                    
+
                     {/* Section Rules */}
                     <div className="grid gap-3">
                       {section.content.map((rule, contentIndex) => (
@@ -232,7 +236,7 @@ const EventTabs: React.FC<EventTabsProps> = ({
                       </h3>
                       <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent mx-auto mt-2"></div>
                     </div>
-                    
+
                     {/* Rule Content */}
                     <div className="bg-white/5 border-l-4 border-cyan-500/30 p-4 pl-6 hover:bg-white/10 hover:border-cyan-400 transition-all group flex items-start gap-4">
                       <span className="font-share-tech-mono text-[#00F0FF] opacity-50 text-sm mt-1">
