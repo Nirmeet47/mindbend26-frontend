@@ -24,7 +24,7 @@ type SponsorLogoItem = { src: string; darkOnBlack: boolean };
 // Mark ONLY the logos that disappear on black (1-based index: 1..31).
 const DARK_LOGO_INDEXES = new Set<number>([4, 8, 17, 29]);
 
-const sponsorLogos: SponsorLogoItem[] = Array.from({ length: 31 }, (_, i) => {
+const sponsorLogos: SponsorLogoItem[] = Array.from({ length: 38 }, (_, i) => {
   const idx = i + 1;
   const sponsorKey = `s${idx}` as keyof typeof SPONSORS;
   return {

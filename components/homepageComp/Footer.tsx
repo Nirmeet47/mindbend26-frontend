@@ -45,10 +45,10 @@ export default function Footer() {
           {/* Social Media */}
           <div className="flex items-center justify-center gap-6 md:gap-10 mb-12">
             {[
-              { Icon: Instagram, href: "#" },
-              { Icon: Linkedin, href: "#" },
-              { Icon: Facebook, href: "#" },
-              { Icon: Youtube, href: "#" },
+              { Icon: Instagram, href: "https://www.instagram.com/mindbend_nitsurat" },
+              { Icon: Linkedin, href: "https://www.linkedin.com/company/mindbend-svnit-surat" },
+              { Icon: Facebook, href: "https://www.facebook.com/Mindbend20" },
+              { Icon: Youtube, href: "https://www.youtube.com/channel/UCKhjH6ZT6HocHg3X0gsBNgg" },
             ].map(({ Icon, href }, idx) => (
               <a
                 key={idx}

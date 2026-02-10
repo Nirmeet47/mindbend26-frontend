@@ -1,4 +1,4 @@
-import { Instagram, Linkedin, Twitter, Mail } from "lucide-react";
+import { Instagram, Linkedin, Facebook, Youtube } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -10,8 +10,13 @@ export default function Footer() {
         </p>
         
         <div className="flex justify-center space-x-6 mb-8">
-          {[Instagram, Linkedin, Twitter, Mail].map((Icon, i) => (
-            <a key={i} href="#" className="text-gray-400 hover:text-mindbend-neon transition-colors transform hover:scale-110">
+          {[
+            { Icon: Instagram, href: "https://www.instagram.com/mindbend_nitsurat" },
+            { Icon: Linkedin, href: "https://www.linkedin.com/company/mindbend-svnit-surat" },
+            { Icon: Facebook, href: "https://www.facebook.com/Mindbend20" },
+            { Icon: Youtube, href: "https://www.youtube.com/channel/UCKhjH6ZT6HocHg3X0gsBNgg" }
+          ].map(({Icon, href}, i) => (
+            <a key={i} href={href} className="text-gray-400 hover:text-mindbend-neon transition-colors transform hover:scale-110">
               <Icon size={24} />
             </a>
           ))}
