@@ -101,7 +101,11 @@ export default function ProfilePage() {
       api.get("/users/teams")
         .then((res) => {
           console.log("Teams API response:", res.data)
-          setTeams(res.data?.data?.teams || [])
+          const regularTeams = res.data?.data?.teams || []
+          const codewarsTeams = res.data?.data?.codewarsTeams || []
+          // Combine both teams
+          const allTeams = [...regularTeams, ...codewarsTeams]
+          setTeams(allTeams)
           setFetchedData(prev => ({ ...prev, teams: true }))
         })
         .catch((err) => {
@@ -326,7 +330,10 @@ export default function ProfilePage() {
                         // Refetch teams to update UI
                         try {
                           const res = await api.get("/users/teams");
-                          setTeams(res.data?.data?.teams || []);
+                          const regularTeams = res.data?.data?.teams || []
+                          const codewarsTeams = res.data?.data?.codewarsTeams || []
+                          const allTeams = [...regularTeams, ...codewarsTeams]
+                          setTeams(allTeams);
                           setPendingInvites(prev => prev.filter(i => i.teamId !== teamId));
                         } catch (err: any) {
                           console.error('Error refetching teams:', err);

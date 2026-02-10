@@ -2,11 +2,12 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { Users, Crown, Copy, Check, RefreshCw, Mail, UserMinus, X, Shield, Zap, ChevronRight } from 'lucide-react';
+import { Users, Crown, Copy, Check, RefreshCw, Mail, UserMinus, X, Shield, Zap, ChevronRight, ExternalLink } from 'lucide-react';
 import { DetailedTeam, Team } from '@/types';
 import { eventTeamApi } from '@/lib/eventTeam';
 import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from '../ui/TechDecorations';
 import SciFiConfirmModal from '../ui/SciFiConfirmModal';
+import api from '@/lib/api';
 
 interface RegisteredTeamModalProps {
   team: DetailedTeam;
@@ -58,20 +59,29 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
     try {
       switch (confirmModal.type) {
         case 'leave':
-          await eventTeamApi.leaveTeam(team._id);
+          if (team.isCodeWarsTeam) {
+            await api.post(`/codewars/${team._id}/leave`);
+          } else {
+            await eventTeamApi.leaveTeam(team._id);
+          }
           window.location.reload();
           break;
         case 'delete':
-          await eventTeamApi.deleteTeam(team._id);
-          window.location.reload();
-          break;
         case 'unregister':
-          await eventTeamApi.deleteTeam(team._id);
+          if (team.isCodeWarsTeam) {
+            await api.delete(`/codewars/${team._id}`);
+          } else {
+            await eventTeamApi.deleteTeam(team._id);
+          }
           window.location.reload();
           break;
         case 'remove_member':
           if (confirmModal.data?.memberId) {
-            await eventTeamApi.removeMember(team._id, confirmModal.data.memberId);
+            if (team.isCodeWarsTeam) {
+              await api.delete(`/codewars/${team._id}/member/${confirmModal.data.memberId}`);
+            } else {
+              await eventTeamApi.removeMember(team._id, confirmModal.data.memberId);
+            }
             window.location.reload();
           }
           break;
@@ -111,8 +121,13 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
     if (!isLeader) return;
     setRegenerating(true);
     try {
-      const response = await eventTeamApi.regenerateInvite(team._id);
-      setInviteToken(response.data?.data?.inviteToken || team.inviteToken);
+      if (team.isCodeWarsTeam) {
+        const response = await api.post(`/codewars/${team._id}/regenerate-invite`);
+        setInviteToken(response.data?.data?.inviteToken || team.inviteToken);
+      } else {
+        const response = await eventTeamApi.regenerateInvite(team._id);
+        setInviteToken(response.data?.data?.inviteToken || team.inviteToken);
+      }
     } catch (err) {
       console.error('Failed to regenerate link:', err);
     } finally {
@@ -128,7 +143,11 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
     setInviteLoading(true);
     setInviteError(null);
     try {
-      await eventTeamApi.inviteMemberByEmail(team._id, inviteEmail.trim());
+      if (team.isCodeWarsTeam) {
+        await api.post(`/codewars/${team._id}/invite`, { email: inviteEmail.trim() });
+      } else {
+        await eventTeamApi.inviteMemberByEmail(team._id, inviteEmail.trim());
+      }
       setInviteSuccess(true);
       setInviteEmail('');
       setTimeout(() => {
@@ -470,7 +489,11 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
                         setInviteStatus(null);
                         setInviteError(null);
                         try {
-                          await eventTeamApi.inviteMemberByEmail(team._id, inviteEmail);
+                          if (team.isCodeWarsTeam) {
+                            await api.post(`/codewars/${team._id}/invite`, { email: inviteEmail });
+                          } else {
+                            await eventTeamApi.inviteMemberByEmail(team._id, inviteEmail);
+                          }
                           setInviteStatus("Invite sent!");
                           setInviteEmail("");
                           setTimeout(() => setInviteStatus(null), 3000);
@@ -685,6 +708,46 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({ team, isLeade
                               Join Group
                             </span>
                             <div className="absolute inset-0 bg-green-500/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* GFG Contest Link - For CodeWars teams only */}
+                {team.isCodeWarsTeam && team.gfgLink && (
+                  <div className="mb-6 bg-linear-to-r from-orange-900/20 to-transparent border-l-2 border-orange-500 p-5 relative overflow-hidden">
+                    {/* Tech Pattern Background */}
+                    <div className="absolute inset-0 opacity-5">
+                      <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, #FF6B00 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                    </div>
+
+                    <div className="relative">
+                      <div className="flex items-center gap-2 mb-4">
+                        <ExternalLink className="w-5 h-5 text-orange-400" />
+                        <h3 className="text-lg font-bold text-white font-orbitron uppercase tracking-wider">GeeksforGeeks Contest</h3>
+                      </div>
+                      
+                      <div className="mb-3">
+                        <label className="text-orange-400/80 text-xs uppercase tracking-wider mb-2 block font-mono">Register & compete on GFG platform</label>
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          <input
+                            type="text"
+                            value={team.gfgLink}
+                            readOnly
+                            className="flex-1 bg-black/50 border border-orange-500/20 px-3 py-2 text-white font-mono text-sm focus:border-orange-500/50 focus:outline-none transition-colors"
+                          />
+                          <a
+                            href={team.gfgLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group/btn relative px-4 py-2 bg-orange-600/60 hover:bg-orange-500/20 border border-orange-500/50 text-orange-400 font-bold tracking-wider uppercase transition-all overflow-hidden text-sm shrink-0"
+                          >
+                            <span className="relative z-10 flex items-center gap-1">
+                              Open GFG
+                            </span>
+                            <div className="absolute inset-0 bg-orange-500/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
                           </a>
                         </div>
                       </div>

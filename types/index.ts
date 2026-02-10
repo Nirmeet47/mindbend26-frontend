@@ -106,6 +106,8 @@ export type DetailedTeam = {
   updatedAt?: Date;
   pendingInvite?: boolean,
   isLeader?: boolean,
+  gfgLink?: string;
+  isCodeWarsTeam?: boolean;
 }
 
 // Workshop interface

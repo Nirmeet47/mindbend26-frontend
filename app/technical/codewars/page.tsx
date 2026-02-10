@@ -9,6 +9,7 @@ import InfoCard from '@/components/events/InfoCard';
 import EventCard from '@/components/EventCard';
 import EventsHeader from '@/components/events/EventsHeader';
 import Navbar from '@/components/layoutComp/Navbar';
+import CodeWarsRegistration from '@/components/events/CodeWarsRegistration';
 
 // Lazy load the background scene
 const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScene'), {
@@ -397,37 +398,7 @@ export default function CodeWarsPage() {
           <CodeWarsTabs />
 
           {/* Registration CTA */}
-          <section className="max-w-7xl mx-auto px-4 pb-20">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="relative"
-            >
-              <div className="bg-linear-to-r from-[#2F8D46]/10 via-[#2F8D46]/5 to-transparent border border-[#2F8D46]/30 p-8 md:p-12">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div>
-                    <h3 className="text-2xl md:text-3xl font-bold font-orbitron text-white mb-2">
-                      Ready to Code?
-                    </h3>
-                    <p className="text-gray-400 font-rajdhani text-lg">
-                      Register individually on GeeksforGeeks and gear up for CodeWars!
-                    </p>
-                  </div>
-                  <a
-                    href="https://practice.geeksforgeeks.org/contest/mindbend-geeksforgeeks-codewars-round-1"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group/btn relative px-8 py-4 bg-[#2F8D46]/20 hover:bg-[#2F8D46]/40 border border-[#2F8D46]/60 text-[#2F8D46] font-bold tracking-wider uppercase transition-all overflow-hidden flex items-center gap-3 text-lg whitespace-nowrap"
-                  >
-                    <span className="relative z-10">Register on GFG</span>
-                    <ExternalLink className="w-5 h-5 relative z-10" />
-                    <div className="absolute inset-0 bg-[#2F8D46]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          </section>
+          <CodeWarsRegistration />
         </div>
       </motion.div>
     </>

@@ -13,6 +13,7 @@ interface Team {
     name: string;
     type: string;
     isTeamEvent: boolean;
+    whatsappGrpLink?: string;
   };
   leader: {
     _id: string;
@@ -29,6 +30,8 @@ interface Team {
     status: string;
   }>;
   createdAt: string;
+  gfgLink?: string;
+  isCodeWarsTeam?: boolean;
 }
 
 interface TeamStats {
@@ -537,7 +540,14 @@ export default function TeamsPage() {
               <div className="p-6 pb-4">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-semibold text-white truncate mb-1">{team.name}</h3>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-lg font-semibold text-white truncate">{team.name}</h3>
+                      {(team as any).isCodeWarsTeam && (
+                        <span className="px-2 py-0.5 bg-orange-500/20 border border-orange-500/40 text-orange-400 text-[10px] font-bold rounded tracking-wider shrink-0">
+                          CODEWARS
+                        </span>
+                      )}
+                    </div>
                     <p className="text-sm text-gray-400 truncate">{team.eventId?.name || "No Event"}</p>
                   </div>
                   <div className={`px-2.5 py-1 rounded-lg text-xs font-medium border shrink-0 ml-3 ${
@@ -779,6 +789,45 @@ export default function TeamsPage() {
                   <p className="mt-1 text-sm text-white">{new Date(selectedTeam.createdAt).toLocaleDateString()}</p>
                 </div>
               </div>
+              
+              {/* CodeWars GFG Link - Only for CodeWars teams */}
+              {(selectedTeam as any).isCodeWarsTeam && (selectedTeam as any).gfgLink && (
+                <div className="border-t border-white/10 pt-4">
+                  <label className="text-sm font-semibold text-white mb-2 block flex items-center gap-2">
+                    <span className="px-2 py-0.5 bg-orange-500/20 border border-orange-500/40 text-orange-400 text-[10px] font-bold rounded tracking-wider">
+                      CODEWARS
+                    </span>
+                    GFG Contest Link
+                  </label>
+                  <div className="p-3 bg-orange-500/5 rounded-lg border border-orange-500/20">
+                    <a 
+                      href={(selectedTeam as any).gfgLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-orange-400 hover:text-orange-300 text-sm break-all underline"
+                    >
+                      {(selectedTeam as any).gfgLink}
+                    </a>
+                  </div>
+                </div>
+              )}
+              
+              {/* WhatsApp Group Link */}
+              {selectedTeam.eventId?.whatsappGrpLink && (
+                <div className="border-t border-white/10 pt-4">
+                  <label className="text-sm font-semibold text-white mb-2 block">WhatsApp Group</label>
+                  <div className="p-3 bg-green-500/5 rounded-lg border border-green-500/20">
+                    <a 
+                      href={selectedTeam.eventId.whatsappGrpLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-green-400 hover:text-green-300 text-sm break-all underline"
+                    >
+                      {selectedTeam.eventId.whatsappGrpLink}
+                    </a>
+                  </div>
+                </div>
+              )}
               
               <div className="border-t border-white/10 pt-4">
                 <label className="text-sm font-semibold text-white mb-2 block">Team Leader</label>
