@@ -20,6 +20,17 @@ interface Event {
   // Add other fields as needed
 }
 
+// Hardcoded CodeWars event that appears alongside backend events
+const codewarsEvent: Event = {
+  _id: 'codewars-hardcoded',
+  name: 'Mindbend × GFG CodeWars',
+  aboutEvent: 'DSA + Competitive Programming based Coding Contest in collaboration with GeeksforGeeks. 1000+ individual registrations on the GFG platform!',
+  slug: 'technical/codewars', // will link to /codewars (not /technical/codewars)
+  prizeMoney: 15500,
+  eventDate: new Date('2026-02-21T20:00:00'),
+  eventPhoto: '/codewars-banner.png', // place your banner image in /public
+};
+
 function Technical() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +45,8 @@ function Technical() {
           const events = res.data?.data?.events || [];
           // Sort events by prize money in descending order (highest prize first)
           const sortedEvents = events.sort((a: Event, b: Event) => Number(b.prizeMoney) - Number(a.prizeMoney));
-          setEvents(sortedEvents);
+          // Append hardcoded CodeWars event
+          setEvents([codewarsEvent, ...sortedEvents]);
         })
         .catch(() => setError('Failed to load events'))
         .finally(() => setLoading(false));
@@ -88,13 +100,14 @@ function Technical() {
               {events.map(event => (
                 <EventCard
                   key={event._id}
-                  slug={`/technical/${event.slug}`}
+                  slug={event._id === 'codewars-hardcoded' ? '/technical/codewars' : `/technical/${event.slug}`}
                   title={`${event.name}`}
                   aboutEvent={event.aboutEvent?.substring(0, 100) + "..."}
                   date={event.eventDate ? (() => { const d = new Date(event.eventDate); return `${d.toLocaleString('default', { month: 'short' })} ${d.getDate()}th`; })() : 'Coming Soon'}
-                  prize={`₹${event.prizeMoney}`}
+                  prize={event._id === 'codewars-hardcoded' ? '₹15500 + Goodies & Swags' : `₹${event.prizeMoney}`}
                   // delay={index * 0.05}
                   image={event.eventPhoto}
+                  prizeLabel={event._id === 'codewars-hardcoded' ? 'Prizes' : 'Prize Money'}
                 />
               ))}
             </div>
