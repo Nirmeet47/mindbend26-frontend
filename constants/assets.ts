@@ -43,6 +43,14 @@ export const SPONSORS = {
 	s29: "https://res.cloudinary.com/dfbupup5c/image/upload/v1769489376/29_ppqtvo.png",
 	s30: "https://res.cloudinary.com/dfbupup5c/image/upload/v1769489395/30_mdxtva.png",
 	s31: "https://res.cloudinary.com/dfbupup5c/image/upload/v1769489382/31_mjuvuy.png",
+	s32: "https://res.cloudinary.com/dfbupup5c/image/upload/v1770743366/Amul_zl3gwe.svg",
+	s33: "https://res.cloudinary.com/dfbupup5c/image/upload/v1770743366/Rahul_Raj_wydyrr.png",
+	s34: "https://res.cloudinary.com/dfbupup5c/image/upload/v1770743366/zenith_hjzhag.jpg",
+	s35: "https://res.cloudinary.com/dfbupup5c/image/upload/v1770743366/y4g_rvkahr.png",
+	s36: "https://res.cloudinary.com/dfbupup5c/image/upload/v1770743365/DPG_uw3hsr.png",
+	s37: "https://res.cloudinary.com/dfbupup5c/image/upload/v1770743365/dst_ecqfho.png",
+	s38: "https://res.cloudinary.com/dfbupup5c/image/upload/v1770743365/Pintola_lgc1ky.avif",
+	
 } as const;
 
 export const VIDEOS = {

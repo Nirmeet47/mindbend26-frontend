@@ -7,6 +7,7 @@ import { Calendar, MapPin, Users, Ticket, Award, Trophy, Phone, Mail, Graduation
 import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from "@/components/ui/TechDecorations";
 import Navbar from "@/components/layoutComp/Navbar";
 import { IMAGES } from "@/constants/assets";
+import Footer from "@/components/homepageComp/Footer";
 
 const InfoCard = ({ title, children, className = "", delay = 0, icon: Icon }: { title: string, children: React.ReactNode, className?: string, delay?: number, icon?: any }) => {
     return (
@@ -396,6 +397,7 @@ function MBMUN() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
     );
 }
