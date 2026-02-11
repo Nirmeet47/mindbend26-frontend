@@ -5,7 +5,7 @@ import { ExternalLink, X, Users, Eye } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from '../ui/TechDecorations';
 import { showSuccessToast, showErrorToast } from '@/utils/toast';
-import useAuth from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
 
