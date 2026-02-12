@@ -130,7 +130,7 @@ function CodeWarsTabs() {
                         </code>
                       </div>
                       <p className="text-gray-400 font-rajdhani text-xs sm:text-sm mt-3 italic">
-                        Example: Jeet Tandel - CodeWarriors - TL
+                        Example: Jeet Tandel CodeWarriors TL
                       </p>
 
                       {/* Screenshot demonstration */}
@@ -163,7 +163,7 @@ function CodeWarsTabs() {
                         </code>
                       </div>
                       <p className="text-gray-400 font-rajdhani text-xs sm:text-sm mt-3 italic">
-                        Example: Nirmeet Parmar - CodeWarriors
+                        Example: Nirmeet Parmar CodeWarriors
                       </p>
 
                       {/* Screenshot demonstration */}
