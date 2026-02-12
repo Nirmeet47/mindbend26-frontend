@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Users, Calendar, MapPin, Trophy, ExternalLink } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
+import Image from 'next/image';
 import InfoCard from '@/components/events/InfoCard';
 import EventCard from '@/components/EventCard';
 import EventsHeader from '@/components/events/EventsHeader';
@@ -101,65 +102,113 @@ function CodeWarsTabs() {
 
             {/* GFG Registration Format - Critical Note */}
             <div className="mt-12 border-2 border-[#FF4D00] bg-[#FF4D00]/5 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,_rgba(255,77,0,0.05)_50%)] bg-[length:100%_4px] pointer-events-none" />
-            <div className="relative z-10 p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-3 h-3 bg-[#FF4D00] animate-pulse" />
-                <h3 className="font-bold text-[#FF4D00] font-orbitron tracking-wider text-xl uppercase">
-                  📝 GeeksforGeeks Registration Format
-                </h3>
-              </div>
-              <div className="space-y-6">
-                <p className="text-gray-200 font-rajdhani text-lg leading-relaxed">
-                  After creating your team on Mindbend website, each member must register individually on GeeksforGeeks 
-                  with their name in the following format:
-                </p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Team Leader Format */}
-                  <div className="bg-black/30 border border-[#00F0FF]/30 p-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-[#00F0FF] text-2xl">👑</span>
-                      <h4 className="font-bold text-[#00F0FF] font-orbitron text-lg">TEAM LEADER</h4>
-                    </div>
-                    <p className="text-gray-300 font-rajdhani text-base mb-3">Format:</p>
-                    <div className="bg-[#00F0FF]/10 border-l-4 border-[#00F0FF] p-4">
-                      <code className="text-white font-mono text-base">
-                        &lt;Your Name on Mindbend website&gt; - &lt;Team Name on Mindbend website&gt; - TL
-                      </code>
-                    </div>
-                    <p className="text-gray-400 font-rajdhani text-sm mt-3 italic">
-                      Example: Jeet Tandel - CodeWarriors - TL
-                    </p>
-                  </div>
-
-                  {/* Team Member Format */}
-                  <div className="bg-black/30 border border-[#2F8D46]/30 p-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-[#2F8D46] text-2xl">👤</span>
-                      <h4 className="font-bold text-[#2F8D46] font-orbitron text-lg">TEAM MEMBERS</h4>
-                    </div>
-                    <p className="text-gray-300 font-rajdhani text-base mb-3">Format:</p>
-                    <div className="bg-[#2F8D46]/10 border-l-4 border-[#2F8D46] p-4">
-                      <code className="text-white font-mono text-base">
-                        &lt;Your Name on Mindbend website&gt; - &lt;Team Name on Mindbend website&gt;
-                      </code>
-                    </div>
-                    <p className="text-gray-400 font-rajdhani text-sm mt-3 italic">
-                      Example: Nirmeet Parmar - CodeWarriors
-                    </p>
-                  </div>
+              <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,_rgba(255,77,0,0.05)_50%)] bg-[length:100%_4px] pointer-events-none" />
+              <div className="relative z-10 p-6 sm:p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-3 h-3 bg-[#FF4D00] animate-pulse" />
+                  <h3 className="font-bold text-[#FF4D00] font-orbitron tracking-wider text-lg sm:text-xl uppercase">
+                    📝 GeeksforGeeks Registration Format
+                  </h3>
                 </div>
-
-                <div className="bg-yellow-500/10 border-l-4 border-yellow-500 p-5 mt-6">
-                  <p className="text-yellow-200 font-rajdhani text-base">
-                    ⚠️ <strong className="font-bold">Important:</strong> Use the exact same name as registered on Mindbend website. 
-                    This is crucial for verification and team identification during the contest.
+                <div className="space-y-6">
+                  <p className="text-gray-200 font-rajdhani text-base sm:text-lg leading-relaxed">
+                    After creating your team on Mindbend website, each member must register individually on GeeksforGeeks 
+                    with their name in the following format:
                   </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Team Leader Format */}
+                    <div className="bg-black/30 border border-[#00F0FF]/30 p-4 sm:p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-[#00F0FF] text-xl sm:text-2xl">👑</span>
+                        <h4 className="font-bold text-[#00F0FF] font-orbitron text-base sm:text-lg">TEAM LEADER</h4>
+                      </div>
+                      <p className="text-gray-300 font-rajdhani text-sm sm:text-base mb-3">Format:</p>
+                      <div className="bg-[#00F0FF]/10 border-l-4 border-[#00F0FF] p-3 sm:p-4">
+                        <code className="text-white font-mono text-xs sm:text-base break-all">
+                          &lt;Your Name on Mindbend website&gt; - &lt;Team Name on Mindbend website&gt; - TL
+                        </code>
+                      </div>
+                      <p className="text-gray-400 font-rajdhani text-xs sm:text-sm mt-3 italic">
+                        Example: Jeet Tandel - CodeWarriors - TL
+                      </p>
+
+                      {/* Screenshot demonstration */}
+                      <div className="mt-4">
+                        <p className="text-[#00F0FF]/70 font-share-tech-mono text-[10px] sm:text-xs uppercase tracking-widest mb-2">
+                          How it looks on GFG:
+                        </p>
+                        <div className="relative w-full border border-[#00F0FF]/20 rounded overflow-hidden bg-white">
+                          <Image
+                            src="/gfg-name-leader.png"
+                            alt="GFG Name field format for Team Leader — Name - TeamName - TL"
+                            width={600}
+                            height={80}
+                            className="w-full h-auto object-contain"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Team Member Format */}
+                    <div className="bg-black/30 border border-[#2F8D46]/30 p-4 sm:p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-[#2F8D46] text-xl sm:text-2xl">👤</span>
+                        <h4 className="font-bold text-[#2F8D46] font-orbitron text-base sm:text-lg">TEAM MEMBERS</h4>
+                      </div>
+                      <p className="text-gray-300 font-rajdhani text-sm sm:text-base mb-3">Format:</p>
+                      <div className="bg-[#2F8D46]/10 border-l-4 border-[#2F8D46] p-3 sm:p-4">
+                        <code className="text-white font-mono text-xs sm:text-base break-all">
+                          &lt;Your Name on Mindbend website&gt; - &lt;Team Name on Mindbend website&gt;
+                        </code>
+                      </div>
+                      <p className="text-gray-400 font-rajdhani text-xs sm:text-sm mt-3 italic">
+                        Example: Nirmeet Parmar - CodeWarriors
+                      </p>
+
+                      {/* Screenshot demonstration */}
+                      <div className="mt-4">
+                        <p className="text-[#2F8D46]/70 font-share-tech-mono text-[10px] sm:text-xs uppercase tracking-widest mb-2">
+                          How it looks on GFG:
+                        </p>
+                        <div className="relative w-full border border-[#2F8D46]/20 rounded overflow-hidden bg-white">
+                          <Image
+                            src="/gfg-name-member.png"
+                            alt="GFG Name field format for Team Member — Name - TeamName"
+                            width={600}
+                            height={80}
+                            className="w-full h-auto object-contain"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Warning: exact name match */}
+                  <div className="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 sm:p-5 mt-6">
+                    <p className="text-yellow-200 font-rajdhani text-sm sm:text-base">
+                      ⚠️ <strong className="font-bold">Important:</strong> Use the exact same name as registered on Mindbend website. 
+                      This is crucial for verification and team identification during the contest.
+                    </p>
+                  </div>
+
+                  {/* Warning: elimination */}
+                  <div className="bg-red-500/10 border-2 border-red-500/60 p-4 sm:p-5 mt-2 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,_rgba(239,68,68,0.04)_50%)] bg-[length:100%_4px] pointer-events-none" />
+                    <div className="relative z-10 flex items-start gap-3">
+                      <span className="text-red-400 text-xl sm:text-2xl mt-0.5">🚫</span>
+                      <div>
+                        <p className="text-red-200 font-rajdhani text-sm sm:text-base leading-relaxed">
+                          Not following the above naming format may lead to <strong className="font-bold text-red-300">elimination</strong> of 
+                          your team from the contest. Ensure every team member registers on GFG with the correct format 
+                          before the contest begins.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </>
         )}
 
@@ -226,7 +275,7 @@ function CodeWarsTabs() {
                   '📅 Date & Time: 28th February, 2:00 PM – 6:00 PM',
                   '📍 Venue: SVNIT Campus, Surat',
                   '💻 Platform: GeeksforGeeks',
-                  '👥 Participants: Top 30–40 teams shortlisted from Round 1',
+                  '👥 Participants: Top 25 teams shortlisted from Round 1',
                 ].map((content, i) => (
                   <motion.div
                     key={i}
@@ -363,7 +412,7 @@ export default function CodeWarsPage() {
             />
 
             {/* Event Image */}
-            <div className="relative w-full mb-12">
+            <div className="relative w-full mb-12 font-rajdhani">
               <EventCard
                 showExploreButton={false}
                 slug="#"
@@ -413,7 +462,7 @@ export default function CodeWarsPage() {
             </div>
           </section>
 
-          {/* Merchandise / Prize Section (custom, no prize money) */}
+          {/* Merchandise / Prize Section */}
           <section className="max-w-7xl mx-auto px-4 pb-16">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
