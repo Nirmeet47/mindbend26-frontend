@@ -1,1 +1,1 @@
-### Mindbend 2k26 - Frontend main 
+### Mindbend 2k26 - Frontend main repo
