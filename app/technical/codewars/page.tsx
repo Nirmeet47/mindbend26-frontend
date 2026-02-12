@@ -126,11 +126,11 @@ function CodeWarsTabs() {
                       <p className="text-gray-300 font-rajdhani text-sm sm:text-base mb-3">Format:</p>
                       <div className="bg-[#00F0FF]/10 border-l-4 border-[#00F0FF] p-3 sm:p-4">
                         <code className="text-white font-mono text-xs sm:text-base break-all">
-                          &lt;Your Name on Mindbend website&gt; - &lt;Team Name on Mindbend website&gt; - TL
+                          &lt;Your Name on Mindbend website&gt; &lt;Team Name on Mindbend website&gt; TL
                         </code>
                       </div>
                       <p className="text-gray-400 font-rajdhani text-xs sm:text-sm mt-3 italic">
-                        Example: Jeet Tandel - CodeWarriors - TL
+                        Example: Jeet Tandel CodeWarriors TL
                       </p>
 
                       {/* Screenshot demonstration */}
@@ -159,11 +159,11 @@ function CodeWarsTabs() {
                       <p className="text-gray-300 font-rajdhani text-sm sm:text-base mb-3">Format:</p>
                       <div className="bg-[#2F8D46]/10 border-l-4 border-[#2F8D46] p-3 sm:p-4">
                         <code className="text-white font-mono text-xs sm:text-base break-all">
-                          &lt;Your Name on Mindbend website&gt; - &lt;Team Name on Mindbend website&gt;
+                          &lt;Your Name on Mindbend website&gt; &lt;Team Name on Mindbend website&gt;
                         </code>
                       </div>
                       <p className="text-gray-400 font-rajdhani text-xs sm:text-sm mt-3 italic">
-                        Example: Nirmeet Parmar - CodeWarriors
+                        Example: Nirmeet Parmar CodeWarriors
                       </p>
 
                       {/* Screenshot demonstration */}
