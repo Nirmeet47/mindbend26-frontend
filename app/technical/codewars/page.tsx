@@ -71,32 +71,96 @@ function CodeWarsTabs() {
       >
         {/* About Tab */}
         {activeTab === 'about' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2">
-              <p className="text-xl md:text-2xl font-rajdhani font-medium leading-relaxed text-gray-300 tracking-wide text-justify">
-                Mindbend × GeeksforGeeks CodeWars is a DSA + Competitive Programming based Coding Contest
-                organized by SVNIT Surat in collaboration with GeeksforGeeks. The contest features two rounds —
-                an online qualifying round and an on-campus final round at SVNIT. Teams compete in
-                challenging problem-solving across varying difficulty levels. Registration is individual-based on
-                the GeeksforGeeks platform but participation is team-based (teams submit using team leader&apos;s account).
-              </p>
+          <>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+              <div className="lg:col-span-2">
+                <p className="text-xl md:text-2xl font-rajdhani font-medium leading-relaxed text-gray-300 tracking-wide text-justify">
+                  Mindbend × GeeksforGeeks CodeWars is a DSA + Competitive Programming based Coding Contest
+                  organized by SVNIT Surat in collaboration with GeeksforGeeks. The contest features two rounds —
+                  an online qualifying round and an on-campus final round at SVNIT. Teams compete in
+                  challenging problem-solving across varying difficulty levels. Registration is individual-based on
+                  the GeeksforGeeks platform but participation is team-based (teams submit using team leader&apos;s account).
+                </p>
+              </div>
+
+              {/* Important Note */}
+              <div className="bg-[#00F0FF]/5 border-l-2 border-[#00F0FF] p-6 relative overflow-hidden backdrop-blur-sm">
+                <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,_rgba(0,240,255,0.05)_50%)] bg-[length:100%_4px] pointer-events-none" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-2 h-2 bg-[#00F0FF] animate-pulse" />
+                    <p className="font-bold text-[#00F0FF] font-orbitron tracking-wider">IMPORTANT</p>
+                  </div>
+                  <p className="text-gray-300 font-rajdhani text-lg">
+                    Each team member must individually register on GeeksforGeeks to be eligible. The team will submit
+                    using the team leader&apos;s GFG account.
+                  </p>
+                </div>
+              </div>
             </div>
 
-            {/* Important Note */}
-            <div className="bg-[#00F0FF]/5 border-l-2 border-[#00F0FF] p-6 relative overflow-hidden backdrop-blur-sm">
-              <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,_rgba(0,240,255,0.05)_50%)] bg-[length:100%_4px] pointer-events-none" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-2 h-2 bg-[#00F0FF] animate-pulse" />
-                  <p className="font-bold text-[#00F0FF] font-orbitron tracking-wider">IMPORTANT</p>
-                </div>
-                <p className="text-gray-300 font-rajdhani text-lg">
-                  Each team member must individually register on GeeksforGeeks to be eligible. The team will submit
-                  using the team leader&apos;s GFG account.
+            {/* GFG Registration Format - Critical Note */}
+            <div className="mt-12 border-2 border-[#FF4D00] bg-[#FF4D00]/5 relative overflow-hidden">
+            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,_rgba(255,77,0,0.05)_50%)] bg-[length:100%_4px] pointer-events-none" />
+            <div className="relative z-10 p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-3 h-3 bg-[#FF4D00] animate-pulse" />
+                <h3 className="font-bold text-[#FF4D00] font-orbitron tracking-wider text-xl uppercase">
+                  📝 GeeksforGeeks Registration Format
+                </h3>
+              </div>
+              <div className="space-y-6">
+                <p className="text-gray-200 font-rajdhani text-lg leading-relaxed">
+                  After creating your team on Mindbend website, each member must register individually on GeeksforGeeks 
+                  with their name in the following format:
                 </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Team Leader Format */}
+                  <div className="bg-black/30 border border-[#00F0FF]/30 p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-[#00F0FF] text-2xl">👑</span>
+                      <h4 className="font-bold text-[#00F0FF] font-orbitron text-lg">TEAM LEADER</h4>
+                    </div>
+                    <p className="text-gray-300 font-rajdhani text-base mb-3">Format:</p>
+                    <div className="bg-[#00F0FF]/10 border-l-4 border-[#00F0FF] p-4">
+                      <code className="text-white font-mono text-base">
+                        &lt;Your Name on Mindbend website&gt; - &lt;Team Name on Mindbend website&gt; - TL
+                      </code>
+                    </div>
+                    <p className="text-gray-400 font-rajdhani text-sm mt-3 italic">
+                      Example: Jeet Tandel - CodeWarriors - TL
+                    </p>
+                  </div>
+
+                  {/* Team Member Format */}
+                  <div className="bg-black/30 border border-[#2F8D46]/30 p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-[#2F8D46] text-2xl">👤</span>
+                      <h4 className="font-bold text-[#2F8D46] font-orbitron text-lg">TEAM MEMBERS</h4>
+                    </div>
+                    <p className="text-gray-300 font-rajdhani text-base mb-3">Format:</p>
+                    <div className="bg-[#2F8D46]/10 border-l-4 border-[#2F8D46] p-4">
+                      <code className="text-white font-mono text-base">
+                        &lt;Your Name on Mindbend website&gt; - &lt;Team Name on Mindbend website&gt;
+                      </code>
+                    </div>
+                    <p className="text-gray-400 font-rajdhani text-sm mt-3 italic">
+                      Example: Nirmeet Parmar - CodeWarriors
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-yellow-500/10 border-l-4 border-yellow-500 p-5 mt-6">
+                  <p className="text-yellow-200 font-rajdhani text-base">
+                    ⚠️ <strong className="font-bold">Important:</strong> Use the exact same name as registered on Mindbend website. 
+                    This is crucial for verification and team identification during the contest.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
+          </>
         )}
 
         {/* Round 1 Tab */}
