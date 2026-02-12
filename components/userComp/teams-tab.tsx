@@ -9,7 +9,10 @@ type TeamsTabProps = {
   teams: DetailedTeam[];
   loading: boolean;
   error: string;
-  onAcceptRejectInvite?: (teamId: string, action: "accept" | "reject") => void;
+  onAcceptRejectInvite?: (
+    team: DetailedTeam,
+    action: "accept" | "reject",
+  ) => void;
   userEmail?: string;
 };
 
