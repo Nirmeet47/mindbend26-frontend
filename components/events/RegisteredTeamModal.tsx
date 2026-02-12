@@ -16,7 +16,7 @@ import {
   ChevronRight,
   ExternalLink,
 } from "lucide-react";
-import { DetailedTeam, Team } from "@/types";
+import { DetailedTeam } from "@/types";
 import { eventTeamApi } from "@/lib/eventTeam";
 import {
   TechDecorationBottomLeft,
@@ -30,7 +30,7 @@ import api from "@/lib/api";
 interface RegisteredTeamModalProps {
   team: DetailedTeam;
   isLeader: boolean;
-  eventId: string;
+  eventId?: string;
   eventName: string;
   isFullView?: boolean;
   userEmail?: string;
@@ -44,7 +44,6 @@ interface RegisteredTeamModalProps {
 const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({
   team,
   isLeader,
-  eventId,
   eventName,
   isFullView = true,
   userEmail,
@@ -75,7 +74,7 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({
       | null;
     title: string;
     description: string;
-    data?: any;
+    data?: { memberId?: string };
     variant?: "danger" | "success" | "info" | "warning";
     confirmText?: string;
   }>({
@@ -140,7 +139,7 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({
           }
           break;
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error(`Failed to ${confirmModal.type}:`, err);
       // Optional: Show error in modal or toast
     }
@@ -199,8 +198,9 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({
         setShowInviteModal(false);
         setInviteSuccess(false);
       }, 2000);
-    } catch (err: any) {
-      setInviteError(err?.response?.data?.message || "Failed to send invite");
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setInviteError(error?.response?.data?.message || "Failed to send invite");
     } finally {
       setInviteLoading(false);
     }
@@ -602,9 +602,12 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({
                           setInviteStatus("Invite sent!");
                           setInviteEmail("");
                           setTimeout(() => setInviteStatus(null), 3000);
-                        } catch (err: any) {
+                        } catch (err) {
+                          const error = err as {
+                            response?: { data?: { message?: string } };
+                          };
                           setInviteError(
-                            err?.response?.data?.message ||
+                            error?.response?.data?.message ||
                               "Failed to send invite",
                           );
                           setTimeout(() => setInviteError(null), 3000);
@@ -689,8 +692,8 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({
                 {/* Modal Header */}
                 <div className="mb-6 pb-4 border-b border-white/10">
                   <span className="block text-[10px] font-mono text-[#33ABB9] mb-2 tracking-widest uppercase">
-                    {isTeamEvent ? "TEAM.INTERFACE" : "REGISTRATION.STATUS"} //{" "}
-                    {team.eventId.name}
+                    {isTeamEvent ? "TEAM.INTERFACE" : "REGISTRATION.STATUS"}{" "}
+                    {/* */} {team.eventId.name}
                   </span>
                   <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white font-orbitron tracking-tight uppercase mb-2">
                     {isTeamEvent ? team.name : "SOLO REGISTRATION"}
@@ -944,47 +947,51 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({
                         </h3>
                       </div>
 
-                      {/* Invite Link */}
-                      <div className="mb-3">
-                        <label className="text-[#33ABB9]/80 text-xs uppercase tracking-wider mb-2 block font-mono">
-                          Invite Link
-                        </label>
-                        <div className="flex flex-col sm:flex-row gap-2">
-                          <input
-                            type="text"
-                            value={inviteLink}
-                            readOnly
-                            className="flex-1 bg-black/50 border border-white/20 px-3 py-2 text-white font-mono text-sm focus:border-[#33ABB9]/50 focus:outline-none transition-colors"
-                          />
-                          <button
-                            onClick={copyInviteLink}
-                            className="group/btn relative px-4 py-2 bg-[#184344]/60 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] font-bold tracking-wider uppercase transition-all overflow-hidden text-sm shrink-0"
-                          >
-                            <span className="relative z-10 flex items-center gap-1">
-                              {copied ? (
-                                <Check className="w-3 h-3" />
-                              ) : (
-                                <Copy className="w-3 h-3" />
-                              )}
-                              {copied ? "Copied" : "Copy"}
-                            </span>
-                            <div className="absolute inset-0 bg-[#33ABB9]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
-                          </button>
+                      {/* Invite Link - Hidden for CodeWars teams */}
+                      {!team.isCodeWarsTeam && (
+                        <div className="mb-3">
+                          <label className="text-[#33ABB9]/80 text-xs uppercase tracking-wider mb-2 block font-mono">
+                            Invite Link
+                          </label>
+                          <div className="flex flex-col sm:flex-row gap-2">
+                            <input
+                              type="text"
+                              value={inviteLink}
+                              readOnly
+                              className="flex-1 bg-black/50 border border-white/20 px-3 py-2 text-white font-mono text-sm focus:border-[#33ABB9]/50 focus:outline-none transition-colors"
+                            />
+                            <button
+                              onClick={copyInviteLink}
+                              className="group/btn relative px-4 py-2 bg-[#184344]/60 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] font-bold tracking-wider uppercase transition-all overflow-hidden text-sm shrink-0"
+                            >
+                              <span className="relative z-10 flex items-center gap-1">
+                                {copied ? (
+                                  <Check className="w-3 h-3" />
+                                ) : (
+                                  <Copy className="w-3 h-3" />
+                                )}
+                                {copied ? "Copied" : "Copy"}
+                              </span>
+                              <div className="absolute inset-0 bg-[#33ABB9]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
+                            </button>
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       {/* Action Buttons */}
                       <div className="flex flex-col sm:flex-row flex-wrap gap-2">
-                        <button
-                          onClick={handleRegenerateLink}
-                          disabled={regenerating}
-                          className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/20 hover:border-[#33ABB9]/50 text-white text-sm font-medium transition-all flex items-center gap-2 disabled:opacity-50"
-                        >
-                          <RefreshCw
-                            className={`w-3 h-3 ${regenerating ? "animate-spin" : ""}`}
-                          />
-                          {regenerating ? "Regenerating..." : "Regenerate"}
-                        </button>
+                        {!team.isCodeWarsTeam && (
+                          <button
+                            onClick={handleRegenerateLink}
+                            disabled={regenerating}
+                            className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/20 hover:border-[#33ABB9]/50 text-white text-sm font-medium transition-all flex items-center gap-2 disabled:opacity-50"
+                          >
+                            <RefreshCw
+                              className={`w-3 h-3 ${regenerating ? "animate-spin" : ""}`}
+                            />
+                            {regenerating ? "Regenerating..." : "Regenerate"}
+                          </button>
+                        )}
                         <button
                           onClick={() => setShowInviteModal(true)}
                           className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/20 hover:border-[#33ABB9]/50 text-white text-sm font-medium transition-all flex items-center gap-2"
