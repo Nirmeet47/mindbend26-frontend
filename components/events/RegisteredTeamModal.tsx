@@ -34,7 +34,10 @@ interface RegisteredTeamModalProps {
   eventName: string;
   isFullView?: boolean;
   userEmail?: string;
-  onAcceptRejectInvite?: (teamId: string, action: "accept" | "reject") => void;
+  onAcceptRejectInvite?: (
+    team: DetailedTeam,
+    action: "accept" | "reject",
+  ) => void;
   isTeamEvent?: boolean;
 }
 
@@ -125,14 +128,14 @@ const RegisteredTeamModal: React.FC<RegisteredTeamModalProps> = ({
           break;
         case "accept_invite":
           if (onAcceptRejectInvite) {
-            onAcceptRejectInvite(team._id, "accept");
+            onAcceptRejectInvite(team, "accept");
             // Close modal immediately as action is handled by parent/props
             closeConfirmModal();
           }
           break;
         case "reject_invite":
           if (onAcceptRejectInvite) {
-            onAcceptRejectInvite(team._id, "reject");
+            onAcceptRejectInvite(team, "reject");
             closeConfirmModal();
           }
           break;
