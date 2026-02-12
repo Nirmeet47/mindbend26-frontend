@@ -40,8 +40,12 @@ export const teamsApi = {
     api.post(`/teams/${teamId}/regenerate-invite`),
   listAdmin: (payload: { page?: number; limit?: number; filter?: any; sortBy?: any } = { page: 1, limit: 20 }) =>
     api.post("/teams/admin/all", payload),
-  updateStatus: (id: string, isActive: boolean) =>
-    api.put(`/teams/${id}/status`, { isActive }),
+  adminDelete: (id: string, isCodeWars: boolean = false) => {
+    if (isCodeWars) {
+      return api.delete(`/codewars/admin/${id}`);
+    }
+    return api.delete(`/teams/admin/${id}`);
+  },
 };
 
 export const securityApi = {
@@ -75,6 +79,11 @@ export const workshopsApi = {
 export const getCounts = async () => {
   const response = await api.get("/admin/dashboard");
   return response.data.data.counts;
+};
+
+export const getAdminInfo = async () => {
+  const response = await api.get("/admin/dashboard");
+  return response.data.data.adminInfo;
 };
 
 export const getTeamStats = async () => {

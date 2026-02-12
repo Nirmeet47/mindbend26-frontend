@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
-import { teamsApi, getTeamStats, getEventTeamStats } from "../../../../lib/dashboardApi";
+import { teamsApi, getTeamStats, getEventTeamStats, getAdminInfo } from "../../../../lib/dashboardApi";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../../../../components/ui/dialog";
-import { Search, Filter, Users, UserCheck, UserX, Calendar, Mail, Phone, Eye, Settings, Trash2, AlertTriangle, CheckCircle, BarChart3, X } from "lucide-react";
+import { Search, Filter, Users, UserCheck, UserX, Calendar, Eye, Trash2, BarChart3, X } from "lucide-react";
 
 interface Team {
   _id: string;
@@ -60,6 +60,7 @@ export default function TeamsPage() {
   const [eventStats, setEventStats] = useState<EventTeamStats[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<string>("");
   const [showEventStats, setShowEventStats] = useState(false);
+  const [userRole, setUserRole] = useState<string>("");
   
   // Filters
   const [searchTerm, setSearchTerm] = useState("");
@@ -73,11 +74,22 @@ export default function TeamsPage() {
   const [confirmAction, setConfirmAction] = useState<{
     show: boolean;
     team: Team | null;
-    action: "activate" | "deactivate";
-  }>({ show: false, team: null, action: "activate" });
+    action: "delete";
+  }>({ show: false, team: null, action: "delete" });
 
   const limit = 20;
   const hasActiveFilters = searchTerm || statusFilter !== "all" || typeFilter !== "all" || eventFilter;
+  const isSuperAdmin = userRole === "superAdmin" || userRole === "dev";
+
+  // Fetch admin info to get user role
+  const fetchAdminInfo = async () => {
+    try {
+      const adminInfo = await getAdminInfo();
+      setUserRole(adminInfo?.role || "");
+    } catch (err) {
+      console.error("Failed to fetch admin info:", err);
+    }
+  };
 
   // Fetch team statistics
   const fetchStats = async () => {
@@ -169,17 +181,19 @@ export default function TeamsPage() {
     fetchTeams();
     fetchStats();
     fetchEventStats();
+    fetchAdminInfo();
   }, [fetchTeams]);
 
-  // Handle team status toggle
-  const handleStatusToggle = async (team: Team, newStatus: boolean) => {
+  // Handle permanent team deletion (SuperAdmin only)
+  const handleDeleteTeam = async (team: Team) => {
     try {
-      await teamsApi.updateStatus(team._id, newStatus);
+      const isCodeWars = (team as any).isCodeWarsTeam || false;
+      await teamsApi.adminDelete(team._id, isCodeWars);
       await fetchTeams();
       await fetchStats();
-      setConfirmAction({ show: false, team: null, action: "activate" });
+      setConfirmAction({ show: false, team: null, action: "delete" });
     } catch (err: any) {
-      alert(err.response?.data?.message || "Failed to update team status");
+      alert(err.response?.data?.message || "Failed to delete team");
     }
   };
 
@@ -613,32 +627,22 @@ export default function TeamsPage() {
                     View Details
                   </button>
                   
-                  <button
-                    onClick={() => {
-                      setConfirmAction({
-                        show: true,
-                        team,
-                        action: team.isActive ? "deactivate" : "activate"
-                      });
-                    }}
-                    className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium border transition-all duration-200 ${
-                      team.isActive
-                        ? "bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500/30"
-                        : "bg-green-500/20 border-green-500/30 text-green-400 hover:bg-green-500/30"
-                    }`}
-                  >
-                    {team.isActive ? (
-                      <>
-                        <UserX className="h-4 w-4" />
-                        Deactivate
-                      </>
-                    ) : (
-                      <>
-                        <UserCheck className="h-4 w-4" />
-                        Activate
-                      </>
-                    )}
-                  </button>
+                  {isSuperAdmin && (
+                    <button
+                      onClick={() => {
+                        setConfirmAction({
+                          show: true,
+                          team,
+                          action: "delete"
+                        });
+                      }}
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-600/20 border-red-600/30 text-red-500 hover:bg-red-600/30 rounded-lg text-sm font-medium transition-all duration-200"
+                      title="Permanently delete team (SuperAdmin only)"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Delete
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -898,18 +902,11 @@ export default function TeamsPage() {
         <DialogContent className="bg-[#0a0a0a] border border-white/5 shadow-2xl max-w-sm" data-lenis-prevent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-white text-lg">
-              {confirmAction.action === "activate" ? (
-                <CheckCircle className="h-5 w-5 text-green-400" />
-              ) : (
-                <AlertTriangle className="h-5 w-5 text-yellow-400" />
-              )}
-              {confirmAction.action === "activate" ? "Activate Team" : "Deactivate Team"}
+              <Trash2 className="h-5 w-5 text-red-500" />
+              Permanently Delete Team
             </DialogTitle>
             <DialogDescription className="text-gray-400 text-sm">
-              {confirmAction.action === "activate"
-                ? "This will allow the team to participate in events."
-                : "This will prevent the team from participating in events."
-              }
+              ⚠️ Warning: This will PERMANENTLY delete the team from the database. This action cannot be undone!
             </DialogDescription>
           </DialogHeader>
           
@@ -918,24 +915,25 @@ export default function TeamsPage() {
               <div className="p-3 bg-black/40 rounded-lg border border-white/10">
                 <p className="font-medium text-white text-sm">{confirmAction.team.name}</p>
                 <p className="text-xs text-gray-400">{confirmAction.team.eventId?.name}</p>
+                {(confirmAction.team as any).isCodeWarsTeam && (
+                  <span className="inline-block mt-1 px-2 py-0.5 bg-orange-500/20 border border-orange-500/40 text-orange-400 text-[10px] font-bold rounded tracking-wider">
+                    CODEWARS
+                  </span>
+                )}
               </div>
               
               <div className="flex gap-2 justify-end">
                 <button
-                  onClick={() => setConfirmAction({ show: false, team: null, action: "activate" })}
+                  onClick={() => setConfirmAction({ show: false, team: null, action: "delete" })}
                   className="px-3 py-2 text-xs font-medium text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-lg transition-all duration-200"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={() => handleStatusToggle(confirmAction.team!, confirmAction.action === "activate")}
-                  className={`px-3 py-2 text-xs font-medium rounded-lg border transition-all duration-200 ${
-                    confirmAction.action === "activate"
-                      ? "bg-green-500/20 border-green-500/30 text-green-400 hover:bg-green-500/30"
-                      : "bg-red-500/20 border-red-500/30 text-red-400 hover:bg-red-500/30"
-                  }`}
+                  onClick={() => handleDeleteTeam(confirmAction.team!)}
+                  className="px-3 py-2 text-xs font-medium rounded-lg border transition-all duration-200 bg-red-600/20 border-red-600/30 text-red-500 hover:bg-red-600/30"
                 >
-                  {confirmAction.action === "activate" ? "Activate" : "Deactivate"}
+                  Permanently Delete
                 </button>
               </div>
             </div>
