@@ -1,19 +1,25 @@
-"use client"
+"use client";
 
-import { Users } from "lucide-react"
-import { motion } from "framer-motion"
-import RegisteredTeamModal from "../events/RegisteredTeamModal"
-import { DetailedTeam } from "@/types"
+import { Users } from "lucide-react";
+import { motion } from "framer-motion";
+import RegisteredTeamModal from "../events/RegisteredTeamModal";
+import { DetailedTeam } from "@/types";
 
 type TeamsTabProps = {
-  teams: DetailedTeam[]
-  loading: boolean
-  error: string
-  onAcceptRejectInvite?: (teamId: string, action: 'accept' | 'reject') => void
-  userEmail?: string
-}
+  teams: DetailedTeam[];
+  loading: boolean;
+  error: string;
+  onAcceptRejectInvite?: (teamId: string, action: "accept" | "reject") => void;
+  userEmail?: string;
+};
 
-export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, userEmail }: TeamsTabProps) {
+export default function TeamsTab({
+  teams,
+  loading,
+  error,
+  onAcceptRejectInvite,
+  userEmail,
+}: TeamsTabProps) {
   if (loading) {
     return (
       <motion.div
@@ -26,10 +32,12 @@ export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, 
         <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]" />
         <div className="relative p-12 text-center">
           <div className="w-8 h-8 border-2 border-[#33ABB9] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-[#33ABB9] font-mono text-sm">Loading your teams...</p>
+          <p className="text-[#33ABB9] font-mono text-sm">
+            Loading your teams...
+          </p>
         </div>
       </motion.div>
-    )
+    );
   }
 
   if (error) {
@@ -46,7 +54,7 @@ export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, 
           <p className="text-red-400 font-mono text-sm">{error}</p>
         </div>
       </motion.div>
-    )
+    );
   }
 
   if (teams.length === 0) {
@@ -61,14 +69,16 @@ export default function TeamsTab({ teams, loading, error, onAcceptRejectInvite, 
         <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]" />
         <div className="relative p-12 text-center">
           <Users className="w-12 h-12 text-[#33ABB9]/40 mx-auto mb-4" />
-          <p className="text-gray-400 font-mono text-sm">You haven't joined any teams yet.</p>
+          <p className="text-gray-400 font-mono text-sm">
+            You haven't joined any teams yet.
+          </p>
         </div>
       </motion.div>
-    )
+    );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#33ABB9]/30 scrollbar-track-transparent">
       {teams.map((team, index) => {
         return (
           <motion.div
