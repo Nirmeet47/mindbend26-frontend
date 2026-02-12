@@ -1,13 +1,18 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, X, Users, Eye } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { TechDecorationBottomLeft, TechDecorationBottomRight, TechDecorationTopLeft, TechDecorationTopRight } from '../ui/TechDecorations';
-import { showSuccessToast, showErrorToast } from '@/utils/toast';
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
-import api from '@/lib/api';
+import { motion, AnimatePresence } from "framer-motion";
+import { ExternalLink, X, Users, Eye } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  TechDecorationBottomLeft,
+  TechDecorationBottomRight,
+  TechDecorationTopLeft,
+  TechDecorationTopRight,
+} from "../ui/TechDecorations";
+import { showSuccessToast, showErrorToast } from "@/utils/toast";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import api from "@/lib/api";
 
 const CodeWarsRegistration = () => {
   const { isAuthenticated } = useAuth();
@@ -15,9 +20,11 @@ const CodeWarsRegistration = () => {
   const [showModal, setShowModal] = useState(false);
   const [regLoading, setRegLoading] = useState(false);
   const [regSuccess, setRegSuccess] = useState(false);
-  const [teamName, setTeamName] = useState('');
+  const [teamName, setTeamName] = useState("");
   const [regError, setRegError] = useState<string | null>(null);
-  const [gfgLink] = useState('https://practice.geeksforgeeks.org/contest/mindbend-geeksforgeeks-codewars-round-1');
+  const [gfgLink] = useState(
+    "https://practice.geeksforgeeks.org/contest/mindbend-geeksforgeeks-codewars-round-1",
+  );
   const [hasTeam, setHasTeam] = useState(false);
   const [checkingTeam, setCheckingTeam] = useState(true);
 
@@ -29,11 +36,11 @@ const CodeWarsRegistration = () => {
         return;
       }
       try {
-        const response = await api.get('/codewars/my-team');
+        const response = await api.get("/codewars/my-team");
         if (response.data?.data?.team) {
           setHasTeam(true);
         }
-      } catch (err) {
+      } catch {
         // No team found, that's okay
         setHasTeam(false);
       } finally {
@@ -45,13 +52,13 @@ const CodeWarsRegistration = () => {
 
   const handleRegister = async () => {
     if (!isAuthenticated) {
-      showErrorToast('Please login to register for CodeWars');
-      router.push('/login');
+      showErrorToast("Please login to register for CodeWars");
+      router.push("/login");
       return;
     }
 
     if (!teamName.trim()) {
-      setRegError('Please enter a team name');
+      setRegError("Please enter a team name");
       return;
     }
 
@@ -59,11 +66,13 @@ const CodeWarsRegistration = () => {
     setRegError(null);
 
     try {
-      await api.post('/codewars/register', { teamName: teamName.trim() });
+      await api.post("/codewars/register", { teamName: teamName.trim() });
       showSuccessToast(`Team "${teamName}" registered successfully!`);
       setRegSuccess(true);
-    } catch (err: any) {
-      const errorMessage = err?.response?.data?.message || 'Registration failed';
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      const errorMessage =
+        error?.response?.data?.message || "Registration failed";
       setRegError(errorMessage);
       showErrorToast(errorMessage);
     } finally {
@@ -98,7 +107,7 @@ const CodeWarsRegistration = () => {
                   </div>
                 ) : hasTeam ? (
                   <button
-                    onClick={() => router.push('/user/dashboard')}
+                    onClick={() => router.push("/user/dashboard")}
                     className="group/btn relative px-8 py-4 bg-[#2F8D46]/20 hover:bg-[#2F8D46]/40 border border-[#2F8D46]/60 text-[#2F8D46] font-bold tracking-wider uppercase transition-all overflow-hidden flex items-center gap-3 text-lg whitespace-nowrap"
                   >
                     <Eye className="w-5 h-5 relative z-10" />
@@ -109,8 +118,8 @@ const CodeWarsRegistration = () => {
                   <button
                     onClick={() => {
                       if (!isAuthenticated) {
-                        showErrorToast('Please login to register');
-                        router.push('/login');
+                        showErrorToast("Please login to register");
+                        router.push("/login");
                       } else {
                         setShowModal(true);
                       }
@@ -153,7 +162,8 @@ const CodeWarsRegistration = () => {
                 <div
                   className="absolute inset-0 bg-[#0a0a0a]/95 backdrop-blur-xl border-0 border-white/5 shadow-2xl"
                   style={{
-                    clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)'
+                    clipPath:
+                      "polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)",
                   }}
                 />
                 <TechDecorationTopLeft />
@@ -168,7 +178,10 @@ const CodeWarsRegistration = () => {
 
               {/* Close Button */}
               <button
-                onClick={() => { setShowModal(false); if (regSuccess) window.location.reload(); }}
+                onClick={() => {
+                  setShowModal(false);
+                  if (regSuccess) window.location.reload();
+                }}
                 disabled={regLoading}
                 className="absolute top-6 right-6 z-30 w-10 h-10 bg-red-500/20 hover:bg-red-500/30 border-2 border-red-500/50 hover:border-red-500 flex items-center justify-center transition-all group pointer-events-auto"
               >
@@ -179,7 +192,8 @@ const CodeWarsRegistration = () => {
               <div
                 className="relative z-10 flex-1 overflow-y-auto p-6 md:p-8 pointer-events-auto"
                 style={{
-                  clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)'
+                  clipPath:
+                    "polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 32px) 100%, 0 100%, 0 16px)",
                 }}
               >
                 {!regSuccess ? (
@@ -208,12 +222,17 @@ const CodeWarsRegistration = () => {
                           className="w-full px-4 py-3 bg-slate-950/80 border-2 border-[#2F8D46]/50 focus:outline-none focus:ring-2 focus:ring-[#2F8D46] focus:border-[#2F8D46] text-white font-rajdhani text-lg transition-all"
                           placeholder="Enter your team name..."
                           value={teamName}
-                          onChange={e => { setTeamName(e.target.value); setRegError(null); }}
+                          onChange={(e) => {
+                            setTeamName(e.target.value);
+                            setRegError(null);
+                          }}
                           disabled={regLoading}
                           autoFocus
                         />
                         {regError && (
-                          <div className="text-red-400 text-sm mt-2 font-rajdhani">{regError}</div>
+                          <div className="text-red-400 text-sm mt-2 font-rajdhani">
+                            {regError}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -227,7 +246,7 @@ const CodeWarsRegistration = () => {
                       >
                         <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover:translate-x-0 transition-transform duration-300 opacity-30" />
                         <span className="relative z-10">
-                          {regLoading ? 'REGISTERING...' : 'REGISTER TEAM'}
+                          {regLoading ? "REGISTERING..." : "REGISTER TEAM"}
                         </span>
                       </button>
                       <button
@@ -271,7 +290,8 @@ const CodeWarsRegistration = () => {
                         </h3>
                       </div>
                       <p className="text-gray-300 text-sm mb-4 font-rajdhani">
-                        Register individually on GeeksforGeeks and compete using your team leader's account
+                        Register individually on GeeksforGeeks and compete using
+                        your team leader&apos;s account
                       </p>
                       <a
                         href={gfgLink}
@@ -286,13 +306,16 @@ const CodeWarsRegistration = () => {
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-4">
                       <button
-                        onClick={() => { setShowModal(false); setHasTeam(true); }}
+                        onClick={() => {
+                          setShowModal(false);
+                          setHasTeam(true);
+                        }}
                         className="flex-1 px-6 py-3 bg-[#2F8D46] hover:bg-[#2F8D46]/80 text-black font-bold font-orbitron tracking-wider text-lg transition-all uppercase"
                       >
                         Done
                       </button>
                       <button
-                        onClick={() => router.push('/user/dashboard')}
+                        onClick={() => router.push("/user/dashboard")}
                         className="px-6 py-3 border-2 border-white/20 text-white font-bold font-orbitron tracking-wider text-lg hover:bg-white/10 transition-all uppercase"
                       >
                         View Dashboard

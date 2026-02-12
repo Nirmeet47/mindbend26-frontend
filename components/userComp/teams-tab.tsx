@@ -73,7 +73,7 @@ export default function TeamsTab({
         <div className="relative p-12 text-center">
           <Users className="w-12 h-12 text-[#33ABB9]/40 mx-auto mb-4" />
           <p className="text-gray-400 font-mono text-sm">
-            You haven't joined any teams yet.
+            You haven&apos;t joined any teams yet.
           </p>
         </div>
       </motion.div>
