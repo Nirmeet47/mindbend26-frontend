@@ -1,33 +1,36 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Users, Calendar, MapPin, Trophy, ExternalLink } from 'lucide-react';
-import dynamic from 'next/dynamic';
-import { useState } from 'react';
-import Image from 'next/image';
-import InfoCard from '@/components/events/InfoCard';
-import EventCard from '@/components/EventCard';
-import EventsHeader from '@/components/events/EventsHeader';
-import Navbar from '@/components/layoutComp/Navbar';
-import CodeWarsRegistration from '@/components/events/CodeWarsRegistration';
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { Users, Calendar, MapPin, Trophy, ExternalLink } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+import Image from "next/image";
+import InfoCard from "@/components/events/InfoCard";
+import EventCard from "@/components/EventCard";
+import EventsHeader from "@/components/events/EventsHeader";
+import Navbar from "@/components/layoutComp/Navbar";
+import CodeWarsRegistration from "@/components/events/CodeWarsRegistration";
 
 // Lazy load the background scene
-const BackgroundScene = dynamic(() => import('@/components/events/BackgroundScene'), {
-  ssr: false,
-});
+const BackgroundScene = dynamic(
+  () => import("@/components/events/BackgroundScene"),
+  {
+    ssr: false,
+  },
+);
 
 // ─── Hardcoded CodeWars Round Tab Component ─────────────────────────────────
-type TabType = 'about' | 'round1' | 'round2' | 'prizes';
+type TabType = "about" | "round1" | "round2" | "prizes";
 
 function CodeWarsTabs() {
-  const [activeTab, setActiveTab] = useState<TabType>('about');
+  const [activeTab, setActiveTab] = useState<TabType>("about");
 
   const tabs = [
-    { id: 'about', label: 'About' },
-    { id: 'round1', label: 'Round 1' },
-    { id: 'round2', label: 'Round 2' },
-    { id: 'prizes', label: 'Prizes' },
+    { id: "about", label: "About" },
+    { id: "round1", label: "Round 1" },
+    { id: "round2", label: "Round 2" },
+    { id: "prizes", label: "Prizes" },
   ];
 
   return (
@@ -39,11 +42,16 @@ function CodeWarsTabs() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabType)}
-              className={`pb-4 px-4 font-orbitron font-bold tracking-wider text-sm relative transition-all whitespace-nowrap ${activeTab === tab.id ? 'text-[#00F0FF]' : 'text-gray-500 hover:text-gray-300'
-                }`}
+              className={`pb-4 px-4 font-orbitron font-bold tracking-wider text-sm relative transition-all whitespace-nowrap ${
+                activeTab === tab.id
+                  ? "text-[#00F0FF]"
+                  : "text-gray-500 hover:text-gray-300"
+              }`}
             >
               <span className="relative z-10 px-2">
-                {activeTab === tab.id && <span className="text-[#00F0FF] mr-2">&gt;</span>}
+                {activeTab === tab.id && (
+                  <span className="text-[#00F0FF] mr-2">&gt;</span>
+                )}
                 {tab.label}
               </span>
               {activeTab === tab.id && (
@@ -71,16 +79,20 @@ function CodeWarsTabs() {
         className="min-h-[300px]"
       >
         {/* About Tab */}
-        {activeTab === 'about' && (
+        {activeTab === "about" && (
           <>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
               <div className="lg:col-span-2">
                 <p className="text-xl md:text-2xl font-rajdhani font-medium leading-relaxed text-gray-300 tracking-wide text-justify">
-                  Mindbend × GeeksforGeeks CodeWars is a DSA + Competitive Programming based Coding Contest
-                  organized by SVNIT Surat in collaboration with GeeksforGeeks. The contest features two rounds —
-                  an online qualifying round and an on-campus final round at SVNIT. Teams compete in
-                  challenging problem-solving across varying difficulty levels. Registration is individual-based on
-                  the GeeksforGeeks platform but participation is team-based (teams submit using team leader&apos;s account).
+                  Mindbend × GeeksforGeeks CodeWars is a DSA + Competitive
+                  Programming based Coding Contest organized by SVNIT Surat in
+                  collaboration with GeeksforGeeks. The contest features two
+                  rounds — an online qualifying round and an on-campus final
+                  round at SVNIT. Teams compete in challenging problem-solving
+                  across varying difficulty levels. Registration is
+                  individual-based on the GeeksforGeeks platform but
+                  participation is team-based (teams submit using team
+                  leader&apos;s account).
                 </p>
               </div>
 
@@ -90,11 +102,14 @@ function CodeWarsTabs() {
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-2 h-2 bg-[#00F0FF] animate-pulse" />
-                    <p className="font-bold text-[#00F0FF] font-orbitron tracking-wider">IMPORTANT</p>
+                    <p className="font-bold text-[#00F0FF] font-orbitron tracking-wider">
+                      IMPORTANT
+                    </p>
                   </div>
                   <p className="text-gray-300 font-rajdhani text-lg">
-                    Each team member must individually register on GeeksforGeeks to be eligible. The team will submit
-                    using the team leader&apos;s GFG account.
+                    Each team member must individually register on GeeksforGeeks
+                    to be eligible. The team will submit using the team
+                    leader&apos;s GFG account.
                   </p>
                 </div>
               </div>
@@ -112,21 +127,29 @@ function CodeWarsTabs() {
                 </div>
                 <div className="space-y-6">
                   <p className="text-gray-200 font-rajdhani text-base sm:text-lg leading-relaxed">
-                    After creating your team on Mindbend website, each member must register individually on GeeksforGeeks 
-                    with their name in the following format:
+                    After creating your team on Mindbend website, each member
+                    must register individually on GeeksforGeeks with their name
+                    in the following format:
                   </p>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Team Leader Format */}
                     <div className="bg-black/30 border border-[#00F0FF]/30 p-4 sm:p-6">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-[#00F0FF] text-xl sm:text-2xl">👑</span>
-                        <h4 className="font-bold text-[#00F0FF] font-orbitron text-base sm:text-lg">TEAM LEADER</h4>
+                        <span className="text-[#00F0FF] text-xl sm:text-2xl">
+                          👑
+                        </span>
+                        <h4 className="font-bold text-[#00F0FF] font-orbitron text-base sm:text-lg">
+                          TEAM LEADER
+                        </h4>
                       </div>
-                      <p className="text-gray-300 font-rajdhani text-sm sm:text-base mb-3">Format:</p>
+                      <p className="text-gray-300 font-rajdhani text-sm sm:text-base mb-3">
+                        Format:
+                      </p>
                       <div className="bg-[#00F0FF]/10 border-l-4 border-[#00F0FF] p-3 sm:p-4">
                         <code className="text-white font-mono text-xs sm:text-base break-all">
-                          &lt;Your Name on Mindbend website&gt; &lt;Team Name on Mindbend website&gt; TL
+                          &lt;Your Name on Mindbend website&gt; &lt;Team Name on
+                          Mindbend website&gt; TL
                         </code>
                       </div>
                       <p className="text-gray-400 font-rajdhani text-xs sm:text-sm mt-3 italic">
@@ -153,13 +176,20 @@ function CodeWarsTabs() {
                     {/* Team Member Format */}
                     <div className="bg-black/30 border border-[#2F8D46]/30 p-4 sm:p-6">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-[#2F8D46] text-xl sm:text-2xl">👤</span>
-                        <h4 className="font-bold text-[#2F8D46] font-orbitron text-base sm:text-lg">TEAM MEMBERS</h4>
+                        <span className="text-[#2F8D46] text-xl sm:text-2xl">
+                          👤
+                        </span>
+                        <h4 className="font-bold text-[#2F8D46] font-orbitron text-base sm:text-lg">
+                          TEAM MEMBERS
+                        </h4>
                       </div>
-                      <p className="text-gray-300 font-rajdhani text-sm sm:text-base mb-3">Format:</p>
+                      <p className="text-gray-300 font-rajdhani text-sm sm:text-base mb-3">
+                        Format:
+                      </p>
                       <div className="bg-[#2F8D46]/10 border-l-4 border-[#2F8D46] p-3 sm:p-4">
                         <code className="text-white font-mono text-xs sm:text-base break-all">
-                          &lt;Your Name on Mindbend website&gt; &lt;Team Name on Mindbend website&gt;
+                          &lt;Your Name on Mindbend website&gt; &lt;Team Name on
+                          Mindbend website&gt;
                         </code>
                       </div>
                       <p className="text-gray-400 font-rajdhani text-xs sm:text-sm mt-3 italic">
@@ -187,8 +217,10 @@ function CodeWarsTabs() {
                   {/* Warning: exact name match */}
                   <div className="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 sm:p-5 mt-6">
                     <p className="text-yellow-200 font-rajdhani text-sm sm:text-base">
-                      ⚠️ <strong className="font-bold">Important:</strong> Use the exact same name as registered on Mindbend website. 
-                      This is crucial for verification and team identification during the contest.
+                      ⚠️ <strong className="font-bold">Important:</strong> Use
+                      the exact same name as registered on Mindbend website.
+                      This is crucial for verification and team identification
+                      during the contest.
                     </p>
                   </div>
 
@@ -196,15 +228,34 @@ function CodeWarsTabs() {
                   <div className="bg-red-500/10 border-2 border-red-500/60 p-4 sm:p-5 mt-2 relative overflow-hidden">
                     <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,_rgba(239,68,68,0.04)_50%)] bg-[length:100%_4px] pointer-events-none" />
                     <div className="relative z-10 flex items-start gap-3">
-                      <span className="text-red-400 text-xl sm:text-2xl mt-0.5">🚫</span>
+                      <span className="text-red-400 text-xl sm:text-2xl mt-0.5">
+                        🚫
+                      </span>
                       <div>
                         <p className="text-red-200 font-rajdhani text-sm sm:text-base leading-relaxed">
-                          Not following the above naming format may lead to <strong className="font-bold text-red-300">elimination</strong> of 
-                          your team from the contest. Ensure every team member registers on GFG with the correct format 
-                          before the contest begins.
+                          Not following the above naming format may lead to{" "}
+                          <strong className="font-bold text-red-300">
+                            elimination
+                          </strong>{" "}
+                          of your team from the contest. Ensure every team
+                          member registers on GFG with the correct format before
+                          the contest begins.
                         </p>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 sm:p-5 mt-6">
+                    <p className="text-yellow-200 font-rajdhani text-sm sm:text-base">
+                      ⚠️ <strong className="font-bold">Note :</strong> if
+                      individual registration on GFG platform are below 1000 no
+                      goodies (bag, diary, pen) to winners from gfg side will be
+                      provided.
+                    </p>
+                    <p className="text-yellow-200 font-rajdhani text-sm sm:text-base">
+                      &#9;&#9;Only Price money from Mindbend side will be
+                      provided.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -213,7 +264,7 @@ function CodeWarsTabs() {
         )}
 
         {/* Round 1 Tab */}
-        {activeTab === 'round1' && (
+        {activeTab === "round1" && (
           <div className="space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -232,8 +283,8 @@ function CodeWarsTabs() {
               {/* Round Details */}
               <div className="space-y-4">
                 {[
-                  '📅 Date & Time: 21st February, 8:00 PM – 9:30 PM',
-                  '💻 Platform: GeeksforGeeks (Online)',
+                  "📅 Date & Time: 21st February, 8:00 PM – 9:30 PM",
+                  "💻 Platform: GeeksforGeeks (Online)",
                 ].map((content, i) => (
                   <motion.div
                     key={i}
@@ -253,7 +304,7 @@ function CodeWarsTabs() {
         )}
 
         {/* Round 2 Tab */}
-        {activeTab === 'round2' && (
+        {activeTab === "round2" && (
           <div className="space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -272,10 +323,10 @@ function CodeWarsTabs() {
               {/* Round Details */}
               <div className="space-y-4">
                 {[
-                  '📅 Date & Time: 28th February, 2:00 PM – 6:00 PM',
-                  '📍 Venue: SVNIT Campus, Surat',
-                  '💻 Platform: GeeksforGeeks',
-                  '👥 Participants: Top 25 teams shortlisted from Round 1',
+                  "📅 Date & Time: 28th February, 2:00 PM – 6:00 PM",
+                  "📍 Venue: SVNIT Campus, Surat",
+                  "💻 Platform: GeeksforGeeks",
+                  "👥 Participants: Top 25 teams shortlisted from Round 1",
                 ].map((content, i) => (
                   <motion.div
                     key={i}
@@ -297,12 +348,15 @@ function CodeWarsTabs() {
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-2 h-2 bg-[#FF4D00] animate-pulse" />
-                    <p className="font-bold text-[#FF4D00] font-orbitron tracking-wider">HOW IT WORKS</p>
+                    <p className="font-bold text-[#FF4D00] font-orbitron tracking-wider">
+                      HOW IT WORKS
+                    </p>
                   </div>
                   <p className="text-gray-300 font-rajdhani text-lg leading-relaxed">
-                    Round 1 will be conducted on GeeksforGeeks. Each member of the team needs to register individually
-                    on GFG and appear for Round 1. The top 30 shortlisted teams will qualify for the offline
-                    final round held during Mindbend at SVNIT.
+                    Round 1 will be conducted on GeeksforGeeks. Each member of
+                    the team needs to register individually on GFG and appear
+                    for Round 1. The top 30 shortlisted teams will qualify for
+                    the offline final round held during Mindbend at SVNIT.
                   </p>
                 </div>
               </div>
@@ -311,7 +365,7 @@ function CodeWarsTabs() {
         )}
 
         {/* Prizes Tab */}
-        {activeTab === 'prizes' && (
+        {activeTab === "prizes" && (
           <div className="space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -329,9 +383,33 @@ function CodeWarsTabs() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Top 3 teams */}
                 {[
-                  { place: '🥇 1st Place', items: ['₹8000','3 Laptop Bags', '3 Sticker Sheets', '3 Pens'] },
-                  { place: '🥈 2nd Place', items: ['₹5000','3 Laptop Bags', '3 Sticker Sheets', '3 Pens'] },
-                  { place: '🥉 3rd Place', items: ['₹2500','3 Laptop Bags', '3 Sticker Sheets', '3 Pens'] },
+                  {
+                    place: "🥇 1st Place",
+                    items: [
+                      "₹8000",
+                      "3 Laptop Bags",
+                      "3 Sticker Sheets",
+                      "3 Pens",
+                    ],
+                  },
+                  {
+                    place: "🥈 2nd Place",
+                    items: [
+                      "₹5000",
+                      "3 Laptop Bags",
+                      "3 Sticker Sheets",
+                      "3 Pens",
+                    ],
+                  },
+                  {
+                    place: "🥉 3rd Place",
+                    items: [
+                      "₹2500",
+                      "3 Laptop Bags",
+                      "3 Sticker Sheets",
+                      "3 Pens",
+                    ],
+                  },
                 ].map((prize, i) => (
                   <motion.div
                     key={i}
@@ -340,10 +418,15 @@ function CodeWarsTabs() {
                     transition={{ delay: i * 0.1 }}
                     className="bg-white/5 border border-white/10 p-6 hover:bg-white/[0.08] transition-all text-center"
                   >
-                    <h4 className="text-xl font-bold text-[#E8823A] font-orbitron mb-4">{prize.place}</h4>
+                    <h4 className="text-xl font-bold text-[#E8823A] font-orbitron mb-4">
+                      {prize.place}
+                    </h4>
                     <ul className="space-y-2">
                       {prize.items.map((item, j) => (
-                        <li key={j} className="text-gray-300 font-rajdhani text-lg">
+                        <li
+                          key={j}
+                          className="text-gray-300 font-rajdhani text-lg"
+                        >
                           {item}
                         </li>
                       ))}
@@ -351,8 +434,6 @@ function CodeWarsTabs() {
                   </motion.div>
                 ))}
               </div>
-
-            
             </motion.div>
           </div>
         )}
@@ -366,11 +447,11 @@ export default function CodeWarsPage() {
   const router = useRouter();
 
   const goHome = () => {
-    router.push('/');
+    router.push("/");
   };
 
   const handleBack = () => {
-    router.push('/technical');
+    router.push("/technical");
   };
 
   return (
@@ -389,14 +470,16 @@ export default function CodeWarsPage() {
         </div>
 
         {/* Cyberpunk Grid Overlay */}
-        <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
+        <div
+          className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
           style={{
             backgroundImage: `
               linear-gradient(rgba(0, 240, 255, 0.4) 1px, transparent 1px),
               linear-gradient(90deg, rgba(0, 240, 255, 0.4) 1px, transparent 1px)
             `,
-            backgroundSize: '40px 40px',
-            maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
+            backgroundSize: "40px 40px",
+            maskImage:
+              "radial-gradient(circle at center, black 40%, transparent 100%)",
           }}
         />
 
@@ -471,33 +554,63 @@ export default function CodeWarsPage() {
               className="relative p-px bg-linear-to-r from-transparent via-[#2F8D46] to-transparent"
             >
               <div className="bg-[#050505] p-8 md:p-12 relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10"
-                  style={{ backgroundImage: 'radial-gradient(#2F8D46 1px, transparent 1px)', backgroundSize: '20px 20px' }}
+                <div
+                  className="absolute inset-0 opacity-10"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(#2F8D46 1px, transparent 1px)",
+                    backgroundSize: "20px 20px",
+                  }}
                 />
                 <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-20">
                   <div className="text-center lg:text-left">
                     <div className="inline-flex items-center gap-2 border-l-2 border-[#2F8D46] pl-3 mb-3">
-                      <span className="text-[#2F8D46] font-share-tech-mono text-xs uppercase tracking-[0.2em]">Powered by</span>
+                      <span className="text-[#2F8D46] font-share-tech-mono text-xs uppercase tracking-[0.2em]">
+                        Powered by
+                      </span>
                     </div>
                     <div className="text-4xl md:text-5xl font-black font-orbitron text-white tracking-tight">
                       GeeksforGeeks
                     </div>
                     <p className="text-gray-400 font-rajdhani text-lg mt-2">
-                       Prize Money + Swags &  Goodies for Top 3 Teams
+                      Prize Money + Swags & Goodies for Top 3 Teams
                     </p>
                   </div>
 
                   <div className="flex-1 w-full lg:w-auto">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/10 border border-white/10 overflow-hidden">
                       {[
-                        { label: '🥇 1st Place', value: '₹8000 + GFG Swags & Goodies', color: 'text-amber-400' },
-                        { label: '🥈 2nd Place', value: '₹5000 + GFG Swags & Goodies', color: 'text-slate-300' },
-                        { label: '🥉 3rd Place', value: '₹2500 + GFG Swags & Goodies', color: 'text-orange-600' },
+                        {
+                          label: "🥇 1st Place",
+                          value: "₹8000 + GFG Swags & Goodies",
+                          color: "text-amber-400",
+                        },
+                        {
+                          label: "🥈 2nd Place",
+                          value: "₹5000 + GFG Swags & Goodies",
+                          color: "text-slate-300",
+                        },
+                        {
+                          label: "🥉 3rd Place",
+                          value: "₹2500 + GFG Swags & Goodies",
+                          color: "text-orange-600",
+                        },
                       ].map((prize, i) => (
-                        <div key={i} className="bg-[#050505] p-4 md:p-6 text-center group hover:bg-white/5 transition-colors relative">
-                          <div className={`text-xs md:text-sm font-share-tech-mono ${prize.color} mb-1 uppercase tracking-wider`}>{prize.label}</div>
-                          <div className="text-sm md:text-lg font-bold font-orbitron text-white">{prize.value}</div>
-                          <div className={`absolute bottom-0 left-0 w-full h-0.5 bg-current opacity-0 group-hover:opacity-100 transition-opacity ${prize.color}`} />
+                        <div
+                          key={i}
+                          className="bg-[#050505] p-4 md:p-6 text-center group hover:bg-white/5 transition-colors relative"
+                        >
+                          <div
+                            className={`text-xs md:text-sm font-share-tech-mono ${prize.color} mb-1 uppercase tracking-wider`}
+                          >
+                            {prize.label}
+                          </div>
+                          <div className="text-sm md:text-lg font-bold font-orbitron text-white">
+                            {prize.value}
+                          </div>
+                          <div
+                            className={`absolute bottom-0 left-0 w-full h-0.5 bg-current opacity-0 group-hover:opacity-100 transition-opacity ${prize.color}`}
+                          />
                         </div>
                       ))}
                     </div>
