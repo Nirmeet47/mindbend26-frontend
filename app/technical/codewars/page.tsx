@@ -42,11 +42,10 @@ function CodeWarsTabs() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabType)}
-              className={`pb-4 px-4 font-orbitron font-bold tracking-wider text-sm relative transition-all whitespace-nowrap ${
-                activeTab === tab.id
+              className={`pb-4 px-4 font-orbitron font-bold tracking-wider text-sm relative transition-all whitespace-nowrap ${activeTab === tab.id
                   ? "text-[#00F0FF]"
                   : "text-gray-500 hover:text-gray-300"
-              }`}
+                }`}
             >
               <span className="relative z-10 px-2">
                 {activeTab === tab.id && (
@@ -383,33 +382,9 @@ function CodeWarsTabs() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Top 3 teams */}
                 {[
-                  {
-                    place: "🥇 1st Place",
-                    items: [
-                      "₹8000",
-                      "3 Laptop Bags",
-                      "3 Sticker Sheets",
-                      "3 Pens",
-                    ],
-                  },
-                  {
-                    place: "🥈 2nd Place",
-                    items: [
-                      "₹5000",
-                      "3 Laptop Bags",
-                      "3 Sticker Sheets",
-                      "3 Pens",
-                    ],
-                  },
-                  {
-                    place: "🥉 3rd Place",
-                    items: [
-                      "₹2500",
-                      "3 Laptop Bags",
-                      "3 Sticker Sheets",
-                      "3 Pens",
-                    ],
-                  },
+                  { place: '🥇 1st Place', items: ['₹8000'] },
+                  { place: '🥈 2nd Place', items: ['₹5000'] },
+                  { place: '🥉 3rd Place', items: ['₹2500'] },
                 ].map((prize, i) => (
                   <motion.div
                     key={i}
@@ -502,7 +477,7 @@ export default function CodeWarsPage() {
                 title="Mindbend × GeeksforGeeks CodeWars"
                 aboutEvent="DSA + Competitive Programming based Coding Contest in collaboration with GeeksforGeeks..."
                 date="Feb 21st"
-                prize="₹15000 + GFG Goodies & Swag"
+                prize="₹15000"
                 image="/codewars-banner.png"
                 prizeLabel="Prizes"
               />
@@ -572,29 +547,14 @@ export default function CodeWarsPage() {
                     <div className="text-4xl md:text-5xl font-black font-orbitron text-white tracking-tight">
                       GeeksforGeeks
                     </div>
-                    <p className="text-gray-400 font-rajdhani text-lg mt-2">
-                      Prize Money + Swags & Goodies for Top 3 Teams
-                    </p>
                   </div>
 
                   <div className="flex-1 w-full lg:w-auto">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/10 border border-white/10 overflow-hidden">
                       {[
-                        {
-                          label: "🥇 1st Place",
-                          value: "₹8000 + GFG Swags & Goodies",
-                          color: "text-amber-400",
-                        },
-                        {
-                          label: "🥈 2nd Place",
-                          value: "₹5000 + GFG Swags & Goodies",
-                          color: "text-slate-300",
-                        },
-                        {
-                          label: "🥉 3rd Place",
-                          value: "₹2500 + GFG Swags & Goodies",
-                          color: "text-orange-600",
-                        },
+                        { label: '🥇 1st Place', value: '₹8000', color: 'text-amber-400' },
+                        { label: '🥈 2nd Place', value: '₹5000', color: 'text-slate-300' },
+                        { label: '🥉 3rd Place', value: '₹2500', color: 'text-orange-600' },
                       ].map((prize, i) => (
                         <div
                           key={i}

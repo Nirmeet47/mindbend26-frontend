@@ -141,7 +141,7 @@ export default function Navbar() {
         { label: "ESPORTS", id: "2.3", href: "/esports" },
         { label: "WORKSHOPS", id: "2.4", href: "/workshops" },
         { label: "GUEST LECTURES", id: "2.5", href: "/guest-lectures" },
-        { label: "HACKATHON", id: "2.6", href: "/hackathon" },
+        { label: "SCIENCE FAIR", id: "2.6", href: "/sciencefair" },
         { label: "MUN", id: "2.7", href: "/mun" },
       ],
     },
@@ -170,8 +170,8 @@ export default function Navbar() {
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className={`fixed top-0 left-0 w-full z-50 px-6 md:px-8 py-3 md:py-4 flex justify-between items-center text-white ${scrollY > (isHome ? viewportHeight - 100 : 10)
-            ? "bg-black/80 backdrop-blur-md shadow-lg"
-            : "bg-transparent"
+          ? "bg-black/80 backdrop-blur-md shadow-lg"
+          : "bg-transparent"
           }`}
         style={{
           fontFamily: "Barlow Condensed, sans-serif",
