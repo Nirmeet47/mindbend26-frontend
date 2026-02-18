@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Navbar from '@/components/layoutComp/Navbar';
+import EventsHeader from '@/components/events/EventsHeader';
 import {
     TechDecorationBottomLeft,
     TechDecorationBottomRight,
@@ -49,36 +50,14 @@ export default function ScienceFairPage() {
                 />
 
                 <div className="relative z-10">
-                    {/* ── Header / Breadcrumb ─────────────────────────────────── */}
-                    <section className="max-w-7xl mx-auto px-4 pt-24 pb-8">
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4 }}
-                            className="flex items-center gap-2 text-xs font-mono text-gray-500 mb-6 uppercase tracking-widest"
-                        >
-                            <button
-                                onClick={() => router.push('/')}
-                                className="hover:text-[#00F0FF] transition-colors cursor-pointer"
-                            >
-                                HOME
-                            </button>
-                            <span className="text-gray-700">/</span>
-                            <span className="text-[#00F0FF]">SCIENCE FAIR</span>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.1 }}
-                        >
-
-                            <h1 className="text-4xl md:text-6xl font-black font-orbitron text-white tracking-tight uppercase leading-none mb-3">
-                                Science Fair
-                            </h1>
-                            <div className="h-[2px] w-48 bg-gradient-to-r from-[#00F0FF] to-transparent mb-2" />
-                            <div className="h-[1px] w-32 bg-gradient-to-r from-[#00F0FF]/40 to-transparent" />
-                        </motion.div>
+                    {/* ── Header ────────────────────────────────────────────── */}
+                    <section className="max-w-7xl mx-auto px-4 pt-16 pb-4">
+                        <EventsHeader
+                            eventName="Science Fair"
+                            eventType="Exhibition"
+                            eventStatus="OPEN"
+                            breadcrumbType="TECHNICAL"
+                        />
                     </section>
 
                     {/* ── Poster Card ─────────────────────────────────────────── */}

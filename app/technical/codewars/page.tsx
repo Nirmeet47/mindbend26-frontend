@@ -112,10 +112,10 @@ function CodeWarsTabs() {
                 </div>
                 <div className="space-y-6">
                   <p className="text-gray-200 font-rajdhani text-base sm:text-lg leading-relaxed">
-                    After creating your team on Mindbend website, each member must register individually on GeeksforGeeks 
+                    After creating your team on Mindbend website, each member must register individually on GeeksforGeeks
                     with their name in the following format:
                   </p>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Team Leader Format */}
                     <div className="bg-black/30 border border-[#00F0FF]/30 p-4 sm:p-6">
@@ -187,7 +187,7 @@ function CodeWarsTabs() {
                   {/* Warning: exact name match */}
                   <div className="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 sm:p-5 mt-6">
                     <p className="text-yellow-200 font-rajdhani text-sm sm:text-base">
-                      ⚠️ <strong className="font-bold">Important:</strong> Use the exact same name as registered on Mindbend website. 
+                      ⚠️ <strong className="font-bold">Important:</strong> Use the exact same name as registered on Mindbend website.
                       This is crucial for verification and team identification during the contest.
                     </p>
                   </div>
@@ -199,8 +199,8 @@ function CodeWarsTabs() {
                       <span className="text-red-400 text-xl sm:text-2xl mt-0.5">🚫</span>
                       <div>
                         <p className="text-red-200 font-rajdhani text-sm sm:text-base leading-relaxed">
-                          Not following the above naming format may lead to <strong className="font-bold text-red-300">elimination</strong> of 
-                          your team from the contest. Ensure every team member registers on GFG with the correct format 
+                          Not following the above naming format may lead to <strong className="font-bold text-red-300">elimination</strong> of
+                          your team from the contest. Ensure every team member registers on GFG with the correct format
                           before the contest begins.
                         </p>
                       </div>
@@ -329,9 +329,9 @@ function CodeWarsTabs() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Top 3 teams */}
                 {[
-                  { place: '🥇 1st Place', items: ['₹8000','3 Laptop Bags', '3 Sticker Sheets', '3 Pens'] },
-                  { place: '🥈 2nd Place', items: ['₹5000','3 Laptop Bags', '3 Sticker Sheets', '3 Pens'] },
-                  { place: '🥉 3rd Place', items: ['₹2500','3 Laptop Bags', '3 Sticker Sheets', '3 Pens'] },
+                  { place: '🥇 1st Place', items: ['₹8000'] },
+                  { place: '🥈 2nd Place', items: ['₹5000'] },
+                  { place: '🥉 3rd Place', items: ['₹2500'] },
                 ].map((prize, i) => (
                   <motion.div
                     key={i}
@@ -352,7 +352,7 @@ function CodeWarsTabs() {
                 ))}
               </div>
 
-            
+
             </motion.div>
           </div>
         )}
@@ -419,7 +419,7 @@ export default function CodeWarsPage() {
                 title="Mindbend × GeeksforGeeks CodeWars"
                 aboutEvent="DSA + Competitive Programming based Coding Contest in collaboration with GeeksforGeeks..."
                 date="Feb 21st"
-                prize="₹15000 + GFG Goodies & Swag"
+                prize="₹15000"
                 image="/codewars-banner.png"
                 prizeLabel="Prizes"
               />
@@ -483,16 +483,16 @@ export default function CodeWarsPage() {
                       GeeksforGeeks
                     </div>
                     <p className="text-gray-400 font-rajdhani text-lg mt-2">
-                       Prize Money + Swags &  Goodies for Top 3 Teams
+                      Prize Money for Top 3 Teams
                     </p>
                   </div>
 
                   <div className="flex-1 w-full lg:w-auto">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/10 border border-white/10 overflow-hidden">
                       {[
-                        { label: '🥇 1st Place', value: '₹8000 + GFG Swags & Goodies', color: 'text-amber-400' },
-                        { label: '🥈 2nd Place', value: '₹5000 + GFG Swags & Goodies', color: 'text-slate-300' },
-                        { label: '🥉 3rd Place', value: '₹2500 + GFG Swags & Goodies', color: 'text-orange-600' },
+                        { label: '🥇 1st Place', value: '₹8000', color: 'text-amber-400' },
+                        { label: '🥈 2nd Place', value: '₹5000', color: 'text-slate-300' },
+                        { label: '🥉 3rd Place', value: '₹2500', color: 'text-orange-600' },
                       ].map((prize, i) => (
                         <div key={i} className="bg-[#050505] p-4 md:p-6 text-center group hover:bg-white/5 transition-colors relative">
                           <div className={`text-xs md:text-sm font-share-tech-mono ${prize.color} mb-1 uppercase tracking-wider`}>{prize.label}</div>
