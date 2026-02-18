@@ -124,9 +124,6 @@ export const metadata: Metadata = {
     apple: "/images/mb_logo.png",
   },
 
-  // Manifest for PWA
-  manifest: "/manifest.json",
-
   // Alternate languages (if applicable)
   alternates: {
     canonical: siteUrl,

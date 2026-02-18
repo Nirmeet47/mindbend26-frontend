@@ -111,8 +111,6 @@ export default function ScienceFairPage() {
                                         fill
                                         className="object-cover opacity-90 group-hover:opacity-100 transition-opacity"
                                     />
-                                    {/* Image overlay texture */}
-                                    <div className="absolute inset-0 bg-[url('/grid-pixel.png')] opacity-20 pointer-events-none mix-blend-overlay" />
                                     <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/80 to-transparent" />
                                 </div>
 
@@ -198,13 +196,15 @@ export default function ScienceFairPage() {
                             transition={{ delay: 0.6 }}
                             className="flex justify-center"
                         >
-                            <button
-                                onClick={() => router.push('/register')}
-                                className="group/btn relative px-10 py-4 bg-[#00F0FF]/10 hover:bg-[#00F0FF]/20 border border-[#00F0FF]/60 hover:border-[#00F0FF] text-[#00F0FF] font-bold tracking-wider uppercase transition-all overflow-hidden flex items-center gap-3 text-lg font-orbitron"
+                            <a
+                                href="https://forms.gle/F7hZsyxCSEVRv2HJ6"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group/btn relative px-10 py-4 bg-[#00F0FF] hover:bg-[#00F0FF]/90 text-black font-bold tracking-wider uppercase transition-all overflow-hidden flex items-center gap-3 text-lg font-orbitron"
                             >
                                 <span className="relative z-10">Register Now</span>
-                                <div className="absolute inset-0 bg-[#00F0FF]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
-                            </button>
+                                <div className="absolute inset-0 bg-white/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
+                            </a>
                         </motion.div>
                     </section>
                 </div>

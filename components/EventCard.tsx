@@ -88,8 +88,6 @@ const EventCard: React.FC<EventCardProps> = ({ showExploreButton = true, title, 
                             </div>
                         )}
 
-                        {/* Image Overlay Texture */}
-                        <div className="absolute inset-0 bg-[url('/grid-pixel.png')] opacity-20 pointer-events-none mix-blend-overlay" />
                         <div className="absolute bottom-0 left-0 right-0 h-10 bg-linear-to-t from-black/80 to-transparent" />
                     </div>
                 )}

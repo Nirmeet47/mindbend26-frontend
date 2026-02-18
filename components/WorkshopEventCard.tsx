@@ -111,7 +111,7 @@ const WorkshopEventCard: React.FC<EventCardProps> = ({ showExploreButton = true,
                         fill
                         className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                     {/* Image Overlay Texture */}
-                    <div className="absolute inset-0 bg-[url('/grid-pixel.png')] opacity-20 pointer-events-none mix-blend-overlay" />
+
                     <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/80 to-transparent" />
                 </div>
 
@@ -123,12 +123,12 @@ const WorkshopEventCard: React.FC<EventCardProps> = ({ showExploreButton = true,
                     </div>
 
                     {showExploreButton &&
-                    <Link href={slug} className="block">
-                        <button className="group/btn relative px-5 py-2 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-xs font-bold tracking-wider uppercase transition-all overflow-hidden cursor-pointer">
-                            <span className="relative z-10">Explore</span>
-                            <div className="absolute inset-0 bg-[#33ABB9]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
-                        </button>
-                    </Link>
+                        <Link href={slug} className="block">
+                            <button className="group/btn relative px-5 py-2 bg-[#184344]/40 hover:bg-[#33ABB9]/20 border border-[#33ABB9]/50 text-[#33ABB9] text-xs font-bold tracking-wider uppercase transition-all overflow-hidden cursor-pointer">
+                                <span className="relative z-10">Explore</span>
+                                <div className="absolute inset-0 bg-[#33ABB9]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
+                            </button>
+                        </Link>
                     }
                 </div>
             </div>
