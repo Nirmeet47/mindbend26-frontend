@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Upload, X, AlertCircle } from "lucide-react";
 import Image from "next/image";
+import api from "@/lib/api";
 
 interface PaymentUploadModalProps {
   open: boolean;
@@ -66,32 +67,40 @@ export default function PaymentUploadModal({
       return;
     }
 
+    const confirmed = window.confirm(
+      "Submit payment proof now? Make sure screenshot and transaction ID are correct.",
+    );
+    if (!confirmed) return;
+
     setUploading(true);
     setError("");
 
     try {
       let finalUrl = screenshotUrl;
 
-      // If uploading file, upload to Cloudinary first
+      // If uploading file, upload via backend endpoint first
       if (uploadMethod === "file" && imageFile) {
         const formData = new FormData();
-        formData.append("file", imageFile);
-        formData.append("upload_preset", "ml_default"); // You can configure this in your Cloudinary settings
+        formData.append("paymentImage", imageFile);
 
-        const cloudinaryResponse = await fetch(
-          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        const uploadResponse = await api.post(
+          "/workshops/payment-image-upload",
+          formData,
           {
-            method: "POST",
-            body: formData,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           }
         );
 
-        if (!cloudinaryResponse.ok) {
-          throw new Error("Failed to upload image to Cloudinary");
+        const imageUrl = uploadResponse.data?.data?.imageUrl;
+        console.log("Image upload response:", uploadResponse.data);
+        if (!imageUrl) {
+          console.log("Image upload response:", uploadResponse.data);
+          throw new Error("Failed to upload image");
         }
 
-        const cloudinaryData = await cloudinaryResponse.json();
-        finalUrl = cloudinaryData.secure_url;
+        finalUrl = imageUrl;
       }
 
       await onUpload(finalUrl, transactionId);
@@ -102,6 +111,7 @@ export default function PaymentUploadModal({
       setScreenshotUrl("");
       setTransactionId("");
     } catch (err: any) {
+      // console.error("Error uploading payment proof:", err);
       setError(err.message || "Failed to upload payment proof");
     } finally {
       setUploading(false);
