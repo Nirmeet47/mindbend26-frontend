@@ -10,6 +10,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Plus, X, Upload, ChevronUp, ChevronDown } from "lucide-react";
 
+function formatDateTimeLocal(value?: string) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
 interface EditEventModalProps {
   event: Event;
   open: boolean;
@@ -28,8 +43,8 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
     prizeMoney: event.prizeMoney || 0,
     entryFee: event.entryFee || 0,
     aboutEvent: event.aboutEvent || "",
-    eventDate: event.eventDate ? event.eventDate.slice(0, 10) : "",
-    registrationDeadline: event.registrationDeadline ? event.registrationDeadline.slice(0, 10) : "",
+    eventDate: formatDateTimeLocal(event.eventDate),
+    registrationDeadline: formatDateTimeLocal(event.registrationDeadline),
     venue: event.venue || "",
     hideEvent: event.hideEvent || false,
     stopRegistration: event.stopRegistration || false,
@@ -77,6 +92,7 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
         [name]: fieldValue,
       }));
     }
+    console.log(name, fieldValue);
   }
 
   function addContact() {
@@ -452,7 +468,7 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
                 <Input
                   id="eventDate"
                   name="eventDate"
-                  type="date"
+                  type="datetime-local"
                   value={form.eventDate}
                   onChange={handleChange}
                 />
@@ -462,7 +478,7 @@ export default function EditEventModal({ event, open, onClose, onSuccess }: Edit
                 <Input
                   id="registrationDeadline"
                   name="registrationDeadline"
-                  type="date"
+                  type="datetime-local"
                   value={form.registrationDeadline}
                   onChange={handleChange}
                 />

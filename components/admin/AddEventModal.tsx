@@ -480,7 +480,7 @@ export default function AddEventModal({ open, onClose, onSuccess }: AddEventModa
                 <Input
                   id="eventDate"
                   name="eventDate"
-                  type="date"
+                  type="datetime-local"
                   value={form.eventDate}
                   onChange={handleChange}
                 />
@@ -490,7 +490,7 @@ export default function AddEventModal({ open, onClose, onSuccess }: AddEventModa
                 <Input
                   id="registrationDeadline"
                   name="registrationDeadline"
-                  type="date"
+                  type="datetime-local"
                   value={form.registrationDeadline}
                   onChange={handleChange}
                 />
