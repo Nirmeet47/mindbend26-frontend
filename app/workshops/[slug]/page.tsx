@@ -284,26 +284,12 @@ export default function WorkshopDetailPage() {
               delay={0.4}
             />
             <InfoCard
-              icon={Users}
-              label="PARTICIPANTS"
-              value={`${workshop.registeredCount}/${workshop.maxParticipants}`}
-              sub="REGISTERED"
-              color="text-[#33ABB9]"
-              delay={0.5}
-            />
-            <InfoCard
               icon={Trophy}
               label="ENTRY FEE"
               value={(isAuthenticated && isSvnitian) ? '₹0' : (workshop.entryFee === 0 ? 'FREE' : `₹${workshop.entryFee}`)}
               color="text-[#33ABB9]"
               delay={0.6}
             />
-          </div>
-        </section>
-
-        {/* Workshop Date */}
-        <section className="max-w-7xl mx-auto px-4 pb-16">
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-6 max-w-md mx-auto">
             <InfoCard
               icon={Calendar}
               label="WORKSHOP DATE"
@@ -313,7 +299,6 @@ export default function WorkshopDetailPage() {
             />
           </div>
         </section>
-
         {/* Tabbed Navigation - Terminal Style */}
         <EventTabs
           aboutEvent={workshop.aboutWorkshop}
