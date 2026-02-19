@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, X, Users, Eye } from "lucide-react";
+import { ExternalLink, X, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import {
   TechDecorationBottomLeft,
@@ -13,6 +13,8 @@ import { showSuccessToast, showErrorToast } from "@/utils/toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
+import { DetailedTeam } from "@/types";
+import RegisteredTeamModal from "./RegisteredTeamModal";
 
 const CodeWarsRegistration = () => {
   const { isAuthenticated } = useAuth();
@@ -20,6 +22,8 @@ const CodeWarsRegistration = () => {
   const [showModal, setShowModal] = useState(false);
   const [regLoading, setRegLoading] = useState(false);
   const [regSuccess, setRegSuccess] = useState(false);
+  const [eventTeam, setEventTeam] = useState<DetailedTeam | null>(null);
+  const [isLeader, setIsLeader] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [regError, setRegError] = useState<string | null>(null);
   const [gfgLink] = useState(
@@ -37,11 +41,16 @@ const CodeWarsRegistration = () => {
       }
       try {
         const response = await api.get("/codewars/my-team");
-        if (response.data?.data?.team) {
+        const payload = response.data?.data ?? response.data;
+        if (payload?.team) {
+          setEventTeam(payload.team);
+          setIsLeader(Boolean(payload.isLeader));
           setHasTeam(true);
         }
       } catch {
         // No team found, that's okay
+        setEventTeam(null);
+        setIsLeader(false);
         setHasTeam(false);
       } finally {
         setCheckingTeam(false);
@@ -83,38 +92,55 @@ const CodeWarsRegistration = () => {
   return (
     <>
       <section className="max-w-7xl mx-auto px-4 pb-20">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="relative"
-        >
-          <div className="bg-linear-to-r from-[#2F8D46]/10 via-[#2F8D46]/5 to-transparent border border-[#2F8D46]/30 p-8 md:p-12">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div>
-                <h3 className="text-2xl md:text-3xl font-bold font-orbitron text-white mb-2">
-                  Ready to Code?
-                </h3>
-                <p className="text-gray-400 font-rajdhani text-lg">
-                  Create your team (max 3 members) and get the GFG contest link!
-                </p>
+        {checkingTeam ? (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="relative"
+          >
+            <div className="bg-linear-to-r from-[#2F8D46]/10 via-[#2F8D46]/5 to-transparent border border-[#2F8D46]/30 p-8 md:p-12">
+              <div className="px-8 py-4 bg-[#2F8D46]/10 border border-[#2F8D46]/30 text-[#2F8D46] font-bold tracking-wider uppercase flex items-center gap-3 text-lg w-fit">
+                <div className="w-5 h-5 border-2 border-[#2F8D46] border-t-transparent rounded-full animate-spin" />
+                <span>Loading...</span>
               </div>
-              <div className="flex gap-4">
-                {checkingTeam ? (
-                  <div className="px-8 py-4 bg-[#2F8D46]/10 border border-[#2F8D46]/30 text-[#2F8D46] font-bold tracking-wider uppercase flex items-center gap-3 text-lg">
-                    <div className="w-5 h-5 border-2 border-[#2F8D46] border-t-transparent rounded-full animate-spin" />
-                    <span>Loading...</span>
-                  </div>
-                ) : hasTeam ? (
-                  <button
-                    onClick={() => router.push("/user/dashboard")}
-                    className="group/btn relative px-8 py-4 bg-[#2F8D46]/20 hover:bg-[#2F8D46]/40 border border-[#2F8D46]/60 text-[#2F8D46] font-bold tracking-wider uppercase transition-all overflow-hidden flex items-center gap-3 text-lg whitespace-nowrap"
-                  >
-                    <Eye className="w-5 h-5 relative z-10" />
-                    <span className="relative z-10">View Team</span>
-                    <div className="absolute inset-0 bg-[#2F8D46]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
-                  </button>
-                ) : (
+            </div>
+          </motion.div>
+        ) : hasTeam && eventTeam ? (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="relative"
+          >
+            <div className="flex justify-end">
+              <RegisteredTeamModal
+                team={eventTeam}
+                isLeader={isLeader}
+                eventId={eventTeam.eventId?._id}
+                eventName={eventTeam.eventId?.name || "CodeWars"}
+                isTeamEvent={true}
+              />
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="relative"
+          >
+            <div className="bg-linear-to-r from-[#2F8D46]/10 via-[#2F8D46]/5 to-transparent border border-[#2F8D46]/30 p-8 md:p-12">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-bold font-orbitron text-white mb-2">
+                    Ready to Code?
+                  </h3>
+                  <p className="text-gray-400 font-rajdhani text-lg">
+                    Create your team (max 3 members) and get the GFG contest link!
+                  </p>
+                </div>
+                <div className="flex gap-4">
                   <button
                     onClick={() => {
                       if (!isAuthenticated) {
@@ -130,11 +156,11 @@ const CodeWarsRegistration = () => {
                     <span className="relative z-10">Register Team</span>
                     <div className="absolute inset-0 bg-[#2F8D46]/20 transform -skew-x-12 translate-x-[-150%] group-hover/btn:translate-x-full transition-transform duration-500" />
                   </button>
-                )}
+                </div>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        )}
       </section>
 
       {/* Registration Modal */}
