@@ -124,6 +124,7 @@ export interface Workshop {
   };
   duration: string;
   entryFee: number;
+  isFree: boolean;
   contact: {
     name: string;
     whatsappNo: string;
@@ -142,3 +143,24 @@ export interface Workshop {
   stopRegistration: boolean;
   isRegistrationOpen: boolean;
 }
+
+// Workshop Registration interface
+export interface WorkshopRegistration {
+  _id: string;
+  user: string;
+  workshop: Workshop | string;
+  status: 'registered' | 'cancelled' | 'waitlisted';
+  paymentRequired: boolean;
+  paymentScreenshot?: string;
+  paymentStatus: 'not_required' | 'pending' | 'approved' | 'rejected';
+  paymentVerifiedBy?: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  paymentVerifiedAt?: string;
+  paymentRejectionReason?: string;
+  registeredAt: string;
+  cancelledAt?: string;
+}
+

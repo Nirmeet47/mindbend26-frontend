@@ -54,4 +54,12 @@ export const workshopsRegistrationApi = {
   // Get user's workshop registrations
   getMyWorkshopRegistrations: () => 
     api.get('/workshops/my-registrations'),
+
+  // Upload payment proof
+  uploadPaymentProof: (workshopSlug: string, paymentScreenshot: string, transactionId: string) =>
+    api.post(`/workshops/${workshopSlug}/payment-proof`, { paymentScreenshot, transactionId }),
+
+  // Get payment status
+  getPaymentStatus: (workshopSlug: string) =>
+    api.get(`/workshops/${workshopSlug}/payment-status`),
 };

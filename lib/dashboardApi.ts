@@ -58,7 +58,16 @@ export const securityApi = {
 export const workshopsApi = {
   listAdmin: () => api.get("/workshops/admin/all"),
   getAdmin: (id: string) => api.get(`/workshops/admin/${id}`),
-  create: (body: any) => api.post("/workshops", body),
+  create: (body: any) => {
+    // Check if body is FormData, if so, use multipart headers
+    if (body instanceof FormData) {
+      return api.post("/workshops", body, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    } else {
+      return api.post("/workshops", body);
+    }
+  },
   update: (id: string, body: any) => {
     // Check if body is FormData, if so, use multipart headers
     if (body instanceof FormData) {
@@ -74,6 +83,13 @@ export const workshopsApi = {
   toggleRegistration: (id: string) =>
     api.patch(`/workshops/${id}/toggle-registration`),
   delete: (id: string) => api.delete(`/workshops/${id}`),
+  // Payment verification endpoints
+  getAllPayments: () => api.get("/admin/workshops/payments"),
+  getPendingPayments: () => api.get("/admin/workshops/payments/pending"),
+  approvePayment: (registrationId: string) =>
+    api.patch(`/admin/workshops/payments/${registrationId}/approve`),
+  rejectPayment: (registrationId: string, reason: string) =>
+    api.patch(`/admin/workshops/payments/${registrationId}/reject`, { reason }),
 };
 
 export const getCounts = async () => {

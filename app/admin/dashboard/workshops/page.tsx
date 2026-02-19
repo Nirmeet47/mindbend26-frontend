@@ -3,17 +3,19 @@ import React, { useEffect, useState } from "react";
 import { workshopsApi } from "../../../../lib/dashboardApi";
 import Table from "../../../../components/admin/Table";
 import EditWorkshopModal from "../../../../components/admin/EditWorkshopModal";
+import AddWorkshopModal from "../../../../components/admin/AddWorkshopModal";
 import { Button } from "../../../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Workshop } from "@/types";
-import { RefreshCw, Calendar, Users } from "lucide-react";
+import { RefreshCw, Calendar, Users, Plus } from "lucide-react";
 
 export default function WorkshopsPage() {
   const [workshops, setWorkshops] = useState<Workshop[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editWorkshop, setEditWorkshop] = useState<Workshop | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const fetchWorkshops = () => {
     setLoading(true);
@@ -47,7 +49,7 @@ export default function WorkshopsPage() {
     }
   };
 
-  const columns = ["name", "instructor", "entryFee", "workshopDate", "maxParticipants", "edit"];
+  const columns = ["name", "entryFee", "workshopDate", "venue", "edit"];
 
   return (
     <div className="min-h-screen bg-black">
@@ -59,15 +61,26 @@ export default function WorkshopsPage() {
               <h1 className="text-2xl font-bold text-white mb-1">Workshops Management</h1>
               <p className="text-sm text-gray-400">Manage all workshops and sessions</p>
             </div>
-            <Button
-              onClick={fetchWorkshops}
-              variant="outline"
-              size="sm"
-              className="bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refresh
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => setShowAddModal(true)}
+                variant="outline"
+                size="sm"
+                className="bg-blue-600 border-blue-600 text-white hover:bg-blue-700 hover:border-blue-700"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Workshop
+              </Button>
+              <Button
+                onClick={fetchWorkshops}
+                variant="outline"
+                size="sm"
+                className="bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -101,17 +114,12 @@ export default function WorkshopsPage() {
                   columns={columns}
                   data={workshops.map((workshop: any) => ({
                     ...workshop,
-                    instructor: workshop.instructor?.name ? (
-                      <span className="text-blue-400">{workshop.instructor.name}</span>
-                    ) : (
-                      <span className="text-gray-500">N/A</span>
-                    ),
-                    entryFee: workshop.entryFee ? (
-                      <span className="text-green-400 font-medium">₹{workshop.entryFee.toLocaleString()}</span>
-                    ) : (
+                    entryFee: workshop.isFree || workshop.entryFee === 0 ? (
                       <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/20">
                         Free
                       </Badge>
+                    ) : (
+                      <span className="text-green-400 font-medium">₹{workshop.entryFee.toLocaleString()}</span>
                     ),
                     workshopDate: workshop.workshopDate ? (
                       <div className="flex items-center gap-2">
@@ -121,13 +129,10 @@ export default function WorkshopsPage() {
                     ) : (
                       <span className="text-gray-500">N/A</span>
                     ),
-                    maxParticipants: workshop.maxParticipants ? (
-                      <div className="flex items-center gap-2">
-                        <Users className="w-3 h-3 text-gray-400" />
-                        <span className="text-gray-300">{workshop.maxParticipants}</span>
-                      </div>
+                    venue: workshop.venue ? (
+                      <span className="text-gray-300">{workshop.venue}</span>
                     ) : (
-                      <span className="text-gray-500">Unlimited</span>
+                      <span className="text-gray-500">N/A</span>
                     ),
                     edit: (
                       <Button
@@ -147,9 +152,19 @@ export default function WorkshopsPage() {
         </Card>
       </div>
 
+      <AddWorkshopModal
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSuccess={() => {
+          setShowAddModal(false);
+          fetchWorkshops();
+        }}
+      />
+
       {editWorkshop && (
         <EditWorkshopModal
           workshop={editWorkshop}
+          open={true}
           onClose={() => setEditWorkshop(null)}
           onSuccess={() => {
             setEditWorkshop(null);

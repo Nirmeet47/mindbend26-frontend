@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { workshopsRegistrationApi } from '@/lib/workshopsApi';
 import { showSuccessToast, showErrorToast, toastMessages } from '@/utils/toast';
 import useAuth from '@/hooks/useAuth';
+import PaymentUploadModal from './PaymentUploadModal';
 
 interface WorkshopRegistrationCTAProps {
   workshopSlug: string;
@@ -16,6 +17,8 @@ interface WorkshopRegistrationCTAProps {
   stopRegistration: boolean;
   registrationDeadline?: string;
   isSvnitian?: boolean;
+  entryFee: number;
+  isFree: boolean;
   formatDate: (date: string) => string;
 }
 
@@ -28,6 +31,8 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   stopRegistration,
   registrationDeadline,
   isSvnitian,
+  entryFee,
+  isFree,
   formatDate
 }) => {
   const { isAuthenticated } = useAuth();
@@ -37,12 +42,25 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   const [regError, setRegError] = useState<string | null>(null);
   const [isRegistered, setIsRegistered] = useState(false);
   const [unregLoading, setUnregLoading] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
 
   // Check if user is already registered
   const checkRegistrationStatus = async () => {
     try {
       const response = await workshopsRegistrationApi.checkWorkshopRegistration(workshopSlug);
-      setIsRegistered(response.data?.data?.isRegistered || false);
+      const registered = response.data?.data?.isRegistered || false;
+      setIsRegistered(registered);
+      
+      // If registered, check payment status
+      if (registered) {
+        try {
+          const paymentResponse = await workshopsRegistrationApi.getPaymentStatus(workshopSlug);
+          setPaymentStatus(paymentResponse.data?.data?.paymentStatus || null);
+        } catch (error) {
+          console.error('Error fetching payment status:', error);
+        }
+      }
     } catch (error) {
       console.error('Error checking registration status:', error);
     }
@@ -66,12 +84,31 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
       setRegSuccess(true);
       setIsRegistered(true);
       showSuccessToast(toastMessages.registration.success(workshopName));
+      
+      // If payment is required (non-SVNIT user on paid workshop), show payment modal
+      const requiresPayment = !isFree && entryFee > 0 && !isSvnitian;
+      if (requiresPayment) {
+        setShowPaymentModal(true);
+        // Payment will be approved once uploaded
+      }
     } catch (err: any) {
       const errorMessage = err?.response?.data?.message || err.message || 'Registration failed.';
       setRegError(errorMessage);
       showErrorToast(toastMessages.registration.error(errorMessage));
     } finally {
       setRegLoading(false);
+    }
+  };
+
+  const handlePaymentUpload = async (screenshotUrl: string, transactionId: string) => {
+    try {
+      await workshopsRegistrationApi.uploadPaymentProof(workshopSlug, screenshotUrl, transactionId);
+      setPaymentStatus('approved');
+      showSuccessToast('Payment proof uploaded successfully! You are now registered.');
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.message || 'Failed to upload payment proof';
+      showErrorToast(errorMessage);
+      throw err;
     }
   };
 
@@ -98,6 +135,21 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   };
 
   const isRegOpen = !stopRegistration;
+
+  // Helper to render payment status
+  const renderPaymentStatus = () => {
+    if (!paymentStatus || paymentStatus === 'not_required') return null;
+
+    if (paymentStatus === 'approved') {
+      return (
+        <div className="mt-4 px-6 py-2 bg-green-600/20 border border-green-500/40 text-green-400 font-orbitron text-sm tracking-wider rounded">
+          PAYMENT: VERIFIED ✓
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <section className="max-w-7xl mx-auto px-4 pb-24">
@@ -136,9 +188,9 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                     </span>
                   </button>
                 </>
-              ) : isSvnitian ? (
+              ) : (isFree || entryFee === 0) ? (
                 <>
-                  {/* Registration for authenticated SVNIT students */}
+                  {/* FREE WORKSHOP - Everyone can register */}
                   {!isRegistered && registeredCount < maxParticipants && (
                     <button
                       onClick={handleRegister}
@@ -147,7 +199,7 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                     >
                       <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover/register:translate-x-0 transition-transform duration-300 opacity-30" />
                       <span className="relative z-10 flex items-center gap-2">
-                        {regLoading ? 'REGISTERING...' : 'REGISTER_NOW'}
+                        {regLoading ? 'REGISTERING...' : 'REGISTER_FREE'}
                       </span>
                     </button>
                   )}
@@ -164,6 +216,61 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                         
                         <span className="relative z-10">YOU ARE REGISTERED</span>
                       </div>
+                      {renderPaymentStatus()}
+                      <button
+                        onClick={handleUnregister}
+                        disabled={unregLoading}
+                        className="group/unregister relative px-8 py-3 bg-linear-to-r from-red-600/20 to-red-500/10 border border-red-500/40 text-red-400 font-bold font-orbitron tracking-wider text-sm hover:from-red-600/30 hover:to-red-500/20 hover:border-red-400/60 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed overflow-hidden"
+                      >
+                        {/* Corner accents */}
+                        <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-red-400/60" />
+                        <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-red-400/60" />
+                        
+                        {/* Hover effect */}
+                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-red-400/10 to-transparent transform -translate-x-full group-hover/unregister:translate-x-full transition-transform duration-500" />
+                        
+                        <span className="relative z-10">
+                          {unregLoading ? 'UNREGISTERING...' : 'UNREGISTER'}
+                        </span>
+                      </button>
+                    </div>
+                  )}
+
+                  {registeredCount >= maxParticipants && !isRegistered && (
+                    <div className="px-8 py-4 bg-yellow-600/20 border-2 border-yellow-500/50 text-yellow-400 font-bold font-orbitron tracking-wider text-lg rounded-lg">
+                      WORKSHOP FULL
+                    </div>
+                  )}
+                </>
+              ) : isSvnitian ? (
+                <>
+                  {/* PAID WORKSHOP - SVNIT students get it free */}
+                  {!isRegistered && registeredCount < maxParticipants && (
+                    <button
+                      onClick={handleRegister}
+                      disabled={regLoading}
+                      className="group/register relative px-8 py-4 bg-[#33ABB9] text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover/register:translate-x-0 transition-transform duration-300 opacity-30" />
+                      <span className="relative z-10 flex items-center gap-2">
+                        {regLoading ? 'REGISTERING...' : 'REGISTER_FREE (SVNIT)'}
+                      </span>
+                    </button>
+                  )}
+
+                  {isRegistered && (
+                    <div className="flex flex-col items-center gap-6">
+                      <div className="relative px-10 py-4 bg-linear-to-r from-[#33ABB9]/10 to-[#33ABB9]/5 backdrop-blur-xl border border-[#33ABB9]/40 text-[#33ABB9] font-bold font-orbitron tracking-wider text-lg overflow-hidden">
+                        {/* Corner accents */}
+                        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]" />
+                        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]" />
+                        
+                        {/* Glowing background effect */}
+                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-[#33ABB9]/20 to-transparent transform -translate-x-full animate-pulse" />
+                        
+                        <span className="relative z-10">YOU ARE REGISTERED</span>
+                      </div>
+                      {renderPaymentStatus()}
                       <button
                         onClick={handleUnregister}
                         disabled={unregLoading}
@@ -190,9 +297,58 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                   )}
                 </>
               ) : (
-                <div className="px-8 py-4 bg-red-600/20 border-2 border-red-500/50 text-red-400 font-bold font-orbitron tracking-wider text-lg rounded-lg mx-auto max-w-md">
-                  ONLY SVNIT STUDENTS CAN REGISTER
-                </div>
+                <>
+                  {/* PAID WORKSHOP - Non-SVNIT students must pay */}
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="px-8 py-4 bg-orange-600/20 border-2 border-orange-500/50 text-orange-400 font-bold font-orbitron tracking-wider text-lg rounded-lg mx-auto max-w-xl text-center">
+                      <div className="mb-2">PAID WORKSHOP - ₹{entryFee}</div>
+                      <div className="text-sm font-normal text-orange-300">Non-SVNIT students must complete payment to register</div>
+                    </div>
+                    {!isRegistered && registeredCount < maxParticipants && (
+                      <button
+                        onClick={handleRegister}
+                        disabled={regLoading}
+                        className="group/register relative px-8 py-4 bg-orange-600 text-white font-bold font-orbitron tracking-wider text-lg overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed hover:bg-orange-500 transition-colors"
+                      >
+                        <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover/register:translate-x-0 transition-transform duration-300 opacity-20" />
+                        <span className="relative z-10 flex items-center gap-2">
+                          {regLoading ? 'REGISTERING...' : `PAY & REGISTER - ₹${entryFee}`}
+                        </span>
+                      </button>
+                    )}
+                    {isRegistered && (
+                      <div className="flex flex-col items-center gap-6">
+                        <div className="relative px-10 py-4 bg-linear-to-r from-[#33ABB9]/10 to-[#33ABB9]/5 backdrop-blur-xl border border-[#33ABB9]/40 text-[#33ABB9] font-bold font-orbitron tracking-wider text-lg overflow-hidden">
+                          {/* Corner accents */}
+                          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#33ABB9]" />
+                          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#33ABB9]" />
+                          
+                          {/* Glowing background effect */}
+                          <div className="absolute inset-0 bg-linear-to-r from-transparent via-[#33ABB9]/20 to-transparent transform -translate-x-full animate-pulse" />
+                          
+                          <span className="relative z-10">YOU ARE REGISTERED</span>
+                        </div>
+                        {renderPaymentStatus()}
+                        <button
+                          onClick={handleUnregister}
+                          disabled={unregLoading}
+                          className="group/unregister relative px-8 py-3 bg-linear-to-r from-red-600/20 to-red-500/10 border border-red-500/40 text-red-400 font-bold font-orbitron tracking-wider text-sm hover:from-red-600/30 hover:to-red-500/20 hover:border-red-400/60 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed overflow-hidden"
+                        >
+                          {/* Corner accents */}
+                          <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-red-400/60" />
+                          <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-red-400/60" />
+                          
+                          {/* Hover effect */}
+                          <div className="absolute inset-0 bg-linear-to-r from-transparent via-red-400/10 to-transparent transform -translate-x-full group-hover/unregister:translate-x-full transition-transform duration-500" />
+                          
+                          <span className="relative z-10">
+                            {unregLoading ? 'UNREGISTERING...' : 'UNREGISTER'}
+                          </span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </>
               )}
             </div>
 
@@ -215,6 +371,15 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
           </div>
         )}
       </motion.div>
+
+      {/* Payment Upload Modal */}
+      <PaymentUploadModal
+        open={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        onUpload={handlePaymentUpload}
+        workshopName={workshopName}
+        entryFee={entryFee}
+      />
     </section>
   );
 };

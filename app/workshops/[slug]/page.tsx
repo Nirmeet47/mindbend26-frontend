@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Users, Calendar, MapPin, Trophy, Clock, Building } from 'lucide-react';
+import { Users, Calendar, MapPin, Trophy } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import InfoCard from '@/components/events/InfoCard';
@@ -26,14 +26,8 @@ interface Workshop {
   name: string;
   slug: string;
   workshopPhoto: string;
-  instructor: {
-    name: string;
-    company: string;
-    photo: string;
-    linkedin: string;
-  };
-  duration: string;
   entryFee: number;
+  isFree: boolean;
   contact: {
     name: string;
     whatsappNo: string;
@@ -43,8 +37,6 @@ interface Workshop {
   prerequisites: string[];
   registrationDeadline: string;
   workshopDate: string;
-  startTime: string;
-  endTime: string;
   venue: string;
   maxParticipants: number;
   registeredCount: number;
@@ -309,31 +301,15 @@ export default function WorkshopDetailPage() {
           </div>
         </section>
 
-        {/* Additional Workshop Info Cards */}
+        {/* Workshop Date */}
         <section className="max-w-7xl mx-auto px-4 pb-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <InfoCard
-              icon={Clock}
-              label="DURATION"
-              value={workshop.duration}
-              sub={`${workshop.startTime} - ${workshop.endTime}`}
-              color="text-[#33ABB9]"
-              delay={0.7}
-            />
-            <InfoCard
-              icon={Building}
-              label="INSTRUCTOR"
-              value={workshop.instructor.name}
-              sub={workshop.instructor.company}
-              color="text-[#33ABB9]"
-              delay={0.8}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-6 max-w-md mx-auto">
             <InfoCard
               icon={Calendar}
               label="WORKSHOP DATE"
               value={formatWorkshopDate(workshop.workshopDate)}
               color="text-[#33ABB9]"
-              delay={0.9}
+              delay={0.7}
             />
           </div>
         </section>
@@ -362,6 +338,8 @@ export default function WorkshopDetailPage() {
           stopRegistration={workshop.stopRegistration}
           registrationDeadline={workshop.registrationDeadline}
           isSvnitian={isSvnitian}
+          entryFee={workshop.entryFee}
+          isFree={workshop.isFree}
           formatDate={formatDate}
         />
       </div>

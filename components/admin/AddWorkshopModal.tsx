@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { workshopsApi } from "../../lib/dashboardApi";
-import { Workshop } from "@/types";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -10,31 +9,31 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Plus, X, Upload } from "lucide-react";
 
-interface EditWorkshopModalProps {
-  workshop: Workshop;
+interface AddWorkshopModalProps {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export default function EditWorkshopModal({ workshop, open, onClose, onSuccess }: EditWorkshopModalProps) {
+export default function AddWorkshopModal({ open, onClose, onSuccess }: AddWorkshopModalProps) {
   const [form, setForm] = useState({
-    name: workshop.name || "",
-    slug: workshop.slug || "",
-    entryFee: workshop.entryFee || 0,
-    isFree: workshop.isFree !== undefined ? workshop.isFree : true,
-    aboutWorkshop: workshop.aboutWorkshop || "",
-    prerequisites: workshop.prerequisites || [] as string[],
-    registrationDeadline: workshop.registrationDeadline ? workshop.registrationDeadline.slice(0, 10) : "",
-    workshopDate: workshop.workshopDate ? workshop.workshopDate.slice(0, 10) : "",
-    venue: workshop.venue || "",
-    hideWorkshop: workshop.hideWorkshop || false,
-    stopRegistration: workshop.stopRegistration || false,
-    contact: workshop.contact || [] as { name: string; whatsappNo: string }[],
-    whatsappGrpLink: workshop.whatsappGrpLink || "",
+    name: "",
+    slug: "",
+    entryFee: 0,
+    isFree: true,
+    aboutWorkshop: "",
+    prerequisites: [] as string[],
+    registrationDeadline: "",
+    workshopDate: "",
+    venue: "",
+    workshopPhoto: "",
+    hideWorkshop: false,
+    stopRegistration: false,
+    contact: [] as { name: string; whatsappNo: string }[],
+    whatsappGrpLink: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>(workshop.workshopPhoto || "");
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -115,10 +114,12 @@ export default function EditWorkshopModal({ workshop, open, onClose, onSuccess }
     try {
       const formData = new FormData();
       Object.entries(form).forEach(([key, value]) => {
-        if (key === 'contact' || key === 'prerequisites') {
-          formData.append(key, JSON.stringify(value));
-        } else {
-          formData.append(key, String(value));
+        if (key !== 'workshopPhoto') {
+          if (key === 'contact' || key === 'prerequisites') {
+            formData.append(key, JSON.stringify(value));
+          } else {
+            formData.append(key, String(value));
+          }
         }
       });
       
@@ -126,11 +127,31 @@ export default function EditWorkshopModal({ workshop, open, onClose, onSuccess }
         formData.append('workshopPhoto', imageFile);
       }
       
-      await workshopsApi.update(workshop._id, formData);
+      await workshopsApi.create(formData);
       onSuccess();
       onClose();
+      
+      // Reset form
+      setForm({
+        name: "",
+        slug: "",
+        entryFee: 0,
+        isFree: true,
+        aboutWorkshop: "",
+        prerequisites: [],
+        registrationDeadline: "",
+        workshopDate: "",
+        venue: "",
+        workshopPhoto: "",
+        hideWorkshop: false,
+        stopRegistration: false,
+        contact: [],
+        whatsappGrpLink: "",
+      });
+      setImageFile(null);
+      setImagePreview("");
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Failed to update workshop");
+      setError(err?.response?.data?.message || "Failed to create workshop");
     } finally {
       setLoading(false);
     }
@@ -141,11 +162,11 @@ export default function EditWorkshopModal({ workshop, open, onClose, onSuccess }
       <DialogContent className="bg-[#0a0a0a] border border-white/5 shadow-2xl w-[90vw] max-w-6xl max-h-[85vh] overflow-y-auto" data-lenis-prevent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white text-xl">
-            <Plus className="h-5 w-5 text-blue-400" />
-            Edit Workshop
+            <Plus className="h-5 w-5 text-green-400" />
+            Add New Workshop
           </DialogTitle>
           <DialogDescription className="text-gray-400 text-sm">
-            Update workshop details and configurations.
+            Create a new workshop with all necessary details and configurations.
           </DialogDescription>
         </DialogHeader>
 
@@ -432,9 +453,9 @@ export default function EditWorkshopModal({ workshop, open, onClose, onSuccess }
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 bg-blue-500/20 border-blue-500/30 text-blue-400 hover:bg-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 bg-green-500/20 border-green-500/30 text-green-400 hover:bg-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Updating..." : "Update Workshop"}
+              {loading ? "Creating..." : "Create Workshop"}
             </button>
           </div>
         </form>

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Calendar, Users, Shield, LogOut, BookOpen, ChevronLeft } from 'lucide-react';
+import { Home, Calendar, Users, Shield, LogOut, BookOpen, ChevronLeft, CreditCard } from 'lucide-react';
 import { logout } from '../../lib/auth';
 import { permissions } from '../../lib/permissions';
 import api from '@/lib/api';
@@ -54,6 +54,7 @@ const AdminSidebar = () => {
     { icon: Home, label: 'Dashboard', href: '/admin/dashboard', active: pathname === '/admin/dashboard' },
     { icon: Calendar, label: 'Events', href: '/admin/dashboard/events', active: pathname?.startsWith('/admin/dashboard/events') },
     { icon: BookOpen, label: 'Workshops', href: '/admin/dashboard/workshops', active: pathname?.startsWith('/admin/dashboard/workshops') },
+    { icon: CreditCard, label: 'Payments', href: '/admin/dashboard/payments', active: pathname?.startsWith('/admin/dashboard/payments') },
     ...(canViewUsers ? [{ icon: HiUser, label: 'Users', href: '/admin/dashboard/users', active: pathname?.startsWith('/admin/dashboard/users') }] : []),
     ...(canViewTeams ? [{ icon: HiMiniUserGroup, label: 'Teams', href: '/admin/dashboard/teams', active: pathname?.startsWith('/admin/dashboard/teams') }] : []),
     ...(canViewSecurity ? [{ icon: Shield, label: 'Security', href: '/admin/dashboard/security', active: pathname?.startsWith('/admin/dashboard/security') }] : []),

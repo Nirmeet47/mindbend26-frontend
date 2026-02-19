@@ -9,16 +9,19 @@ type Workshop = {
   name: string;
   slug: string;
   workshopDate: string;
-  startTime: string;
-  endTime: string;
+  startTime?: string;
+  endTime?: string;
   venue: string;
-  instructor: {
+  instructor?: {
     name: string;
-    company: string;
-    photo: string;
-    linkedin: string;
+    company?: string;
+    photo?: string;
+    linkedin?: string;
   };
   registeredAt: string;
+  paymentStatus?: 'not_required' | 'pending' | 'approved' | 'rejected';
+  paymentScreenshot?: string;
+  transactionId?: string;
 }
 
 type WorkshopsTabProps = {
@@ -27,6 +30,33 @@ type WorkshopsTabProps = {
 
 export default function WorkshopsTab({ workshops }: WorkshopsTabProps) {
   const router = useRouter()
+
+  const getPaymentStatusBadge = (status?: string) => {
+    if (!status || status === 'not_required') return null;
+    
+    switch (status) {
+      case 'pending':
+        return (
+          <span className="px-3 py-1 text-xs font-bold uppercase tracking-widest font-mono bg-yellow-500/20 text-yellow-400 border border-yellow-500/40">
+            Payment Pending
+          </span>
+        );
+      case 'approved':
+        return (
+          <span className="px-3 py-1 text-xs font-bold uppercase tracking-widest font-mono bg-green-500/20 text-green-400 border border-green-500/40">
+            Payment Verified ✓
+          </span>
+        );
+      case 'rejected':
+        return (
+          <span className="px-3 py-1 text-xs font-bold uppercase tracking-widest font-mono bg-red-500/20 text-red-400 border border-red-500/40">
+            Payment Rejected
+          </span>
+        );
+      default:
+        return null;
+    }
+  }
 
   if (workshops.length === 0) {
     return (
@@ -77,9 +107,11 @@ export default function WorkshopsTab({ workshops }: WorkshopsTabProps) {
             <div>
               <h4 className="text-white font-bold text-lg mb-2 group-hover:text-[#33ABB9] transition-colors">{workshop.name}</h4>
               <div className="flex flex-wrap gap-4 text-gray-400 text-sm">
-                <span className="text-[#33ABB9] font-mono text-xs flex items-center gap-1">
-                  <span className="text-gray-500">By</span> {workshop.instructor.name}
-                </span>
+                {workshop.instructor?.name && (
+                  <span className="text-[#33ABB9] font-mono text-xs flex items-center gap-1">
+                    <span className="text-gray-500">By</span> {workshop.instructor.name}
+                  </span>
+                )}
                 <span className="font-mono text-xs flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   {formatDate(workshop.workshopDate)}
@@ -99,9 +131,12 @@ export default function WorkshopsTab({ workshops }: WorkshopsTabProps) {
               )}
             </div>
             <div className="flex items-center gap-3">
-              <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest font-mono bg-[#33ABB9]/20 text-[#33ABB9] border border-[#33ABB9]/30">
-                Registered
-              </span>
+              <div className="flex flex-col gap-2">
+                <span className="px-4 py-1 text-xs font-bold uppercase tracking-widest font-mono bg-[#33ABB9]/20 text-[#33ABB9] border border-[#33ABB9]/30">
+                  Registered
+                </span>
+                {getPaymentStatusBadge(workshop.paymentStatus)}
+              </div>
               <ChevronRight className="text-[#33ABB9] group-hover:translate-x-1 transition-transform" size={20} />
             </div>
           </div>
