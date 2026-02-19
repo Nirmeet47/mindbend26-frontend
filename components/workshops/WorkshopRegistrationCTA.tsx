@@ -7,6 +7,7 @@ import { workshopsRegistrationApi } from '@/lib/workshopsApi';
 import { showSuccessToast, showErrorToast, toastMessages } from '@/utils/toast';
 import useAuth from '@/hooks/useAuth';
 import PaymentUploadModal from './PaymentUploadModal';
+import SciFiConfirmModal from '@/components/ui/SciFiConfirmModal';
 
 interface WorkshopRegistrationCTAProps {
   workshopSlug: string;
@@ -44,6 +45,7 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   const [unregLoading, setUnregLoading] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<"register" | "unregister" | null>(null);
 
   // Check if user is already registered
   const checkRegistrationStatus = async () => {
@@ -148,6 +150,23 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
     }
   };
 
+  const requestRegister = () => {
+    setConfirmAction("register");
+  };
+
+  const requestUnregister = () => {
+    setConfirmAction("unregister");
+  };
+
+  const handleConfirmAction = async () => {
+    if (confirmAction === "register") {
+      await handleRegister();
+    } else if (confirmAction === "unregister") {
+      await handleUnregister();
+    }
+    setConfirmAction(null);
+  };
+
   const isRegOpen = !stopRegistration;
 
   // Helper to render payment status
@@ -207,7 +226,7 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                   {/* FREE WORKSHOP - Everyone can register */}
                   {!isRegistered && registeredCount < maxParticipants && (
                     <button
-                      onClick={handleRegister}
+                      onClick={requestRegister}
                       disabled={regLoading}
                       className="group/register relative px-8 py-4 bg-[#33ABB9] text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
                     >
@@ -232,7 +251,7 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                       </div>
                       {renderPaymentStatus()}
                       <button
-                        onClick={handleUnregister}
+                        onClick={requestUnregister}
                         disabled={unregLoading}
                         className="group/unregister relative px-8 py-3 bg-linear-to-r from-red-600/20 to-red-500/10 border border-red-500/40 text-red-400 font-bold font-orbitron tracking-wider text-sm hover:from-red-600/30 hover:to-red-500/20 hover:border-red-400/60 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed overflow-hidden"
                       >
@@ -261,7 +280,7 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                   {/* PAID WORKSHOP - SVNIT students get it free */}
                   {!isRegistered && registeredCount < maxParticipants && (
                     <button
-                      onClick={handleRegister}
+                      onClick={requestRegister}
                       disabled={regLoading}
                       className="group/register relative px-8 py-4 bg-[#33ABB9] text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed"
                     >
@@ -286,7 +305,7 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                       </div>
                       {renderPaymentStatus()}
                       <button
-                        onClick={handleUnregister}
+                        onClick={requestUnregister}
                         disabled={unregLoading}
                         className="group/unregister relative px-8 py-3 bg-linear-to-r from-red-600/20 to-red-500/10 border border-red-500/40 text-red-400 font-bold font-orbitron tracking-wider text-sm hover:from-red-600/30 hover:to-red-500/20 hover:border-red-400/60 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed overflow-hidden"
                       >
@@ -320,7 +339,7 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                     </div>
                     {!isRegistered && registeredCount < maxParticipants && (
                       <button
-                        onClick={handleRegister}
+                        onClick={requestRegister}
                         disabled={regLoading}
                         className="group/register relative px-8 py-4 bg-[#33ABB9] text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed hover:bg-[#2a9aa5] transition-colors"
                       >
@@ -344,7 +363,7 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                         </div>
                         {renderPaymentStatus()}
                         <button
-                          onClick={handleUnregister}
+                          onClick={requestUnregister}
                           disabled={unregLoading}
                           className="group/unregister relative px-8 py-3 bg-linear-to-r from-red-600/20 to-red-500/10 border border-red-500/40 text-red-400 font-bold font-orbitron tracking-wider text-sm hover:from-red-600/30 hover:to-red-500/20 hover:border-red-400/60 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed overflow-hidden"
                         >
@@ -393,6 +412,20 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
         onUpload={handlePaymentUpload}
         workshopName={workshopName}
         entryFee={entryFee}
+      />
+
+      <SciFiConfirmModal
+        isOpen={confirmAction !== null}
+        onClose={() => setConfirmAction(null)}
+        onConfirm={handleConfirmAction}
+        title={confirmAction === "unregister" ? "Unregister?" : "Confirm Registration?"}
+        description={
+          confirmAction === "unregister"
+            ? `Are you sure you want to unregister from ${workshopName}?`
+            : `Proceed with registration for ${workshopName}?`
+        }
+        confirmText={confirmAction === "unregister" ? "Unregister" : "Proceed"}
+        variant={confirmAction === "unregister" ? "danger" : "info"}
       />
     </section>
   );
