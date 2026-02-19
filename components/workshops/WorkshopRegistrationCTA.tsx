@@ -77,6 +77,17 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
       router.push('/login');
       return;
     }
+
+    // Check if payment is required (non-SVNIT user on paid workshop)
+    const requiresPayment = !isFree && entryFee > 0 && !isSvnitian;
+    
+    // If payment required, show modal FIRST without registering
+    if (requiresPayment) {
+      setShowPaymentModal(true);
+      return;
+    }
+
+    // For free workshops or SVNIT students, register immediately
     setRegLoading(true);
     setRegError(null);
     try {
@@ -84,13 +95,6 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
       setRegSuccess(true);
       setIsRegistered(true);
       showSuccessToast(toastMessages.registration.success(workshopName));
-      
-      // If payment is required (non-SVNIT user on paid workshop), show payment modal
-      const requiresPayment = !isFree && entryFee > 0 && !isSvnitian;
-      if (requiresPayment) {
-        setShowPaymentModal(true);
-        // Payment will be approved once uploaded
-      }
     } catch (err: any) {
       const errorMessage = err?.response?.data?.message || err.message || 'Registration failed.';
       setRegError(errorMessage);
@@ -101,14 +105,24 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
   };
 
   const handlePaymentUpload = async (screenshotUrl: string, transactionId: string) => {
+    setRegLoading(true);
     try {
+      // First register for the workshop
+      await workshopsRegistrationApi.registerForWorkshop(workshopSlug);
+      
+      // Then upload payment proof
       await workshopsRegistrationApi.uploadPaymentProof(workshopSlug, screenshotUrl, transactionId);
+      
       setPaymentStatus('approved');
+      setIsRegistered(true);
+      setRegSuccess(true);
       showSuccessToast('Payment proof uploaded successfully! You are now registered.');
     } catch (err: any) {
-      const errorMessage = err?.response?.data?.message || 'Failed to upload payment proof';
+      const errorMessage = err?.response?.data?.message || 'Failed to complete registration';
       showErrorToast(errorMessage);
       throw err;
+    } finally {
+      setRegLoading(false);
     }
   };
 
@@ -300,19 +314,19 @@ const WorkshopRegistrationCTA: React.FC<WorkshopRegistrationCTAProps> = ({
                 <>
                   {/* PAID WORKSHOP - Non-SVNIT students must pay */}
                   <div className="flex flex-col items-center gap-4">
-                    <div className="px-8 py-4 bg-orange-600/20 border-2 border-orange-500/50 text-orange-400 font-bold font-orbitron tracking-wider text-lg rounded-lg mx-auto max-w-xl text-center">
+                    <div className="px-8 py-4 bg-[#33ABB9]/20 border-2 border-[#33ABB9]/50 text-[#33ABB9] font-bold font-orbitron tracking-wider text-lg rounded-lg mx-auto max-w-xl text-center">
                       <div className="mb-2">PAID WORKSHOP - ₹{entryFee}</div>
-                      <div className="text-sm font-normal text-orange-300">Non-SVNIT students must complete payment to register</div>
+                      <div className="text-sm font-normal text-cyan-300">Upload payment proof to complete registration</div>
                     </div>
                     {!isRegistered && registeredCount < maxParticipants && (
                       <button
                         onClick={handleRegister}
                         disabled={regLoading}
-                        className="group/register relative px-8 py-4 bg-orange-600 text-white font-bold font-orbitron tracking-wider text-lg overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed hover:bg-orange-500 transition-colors"
+                        className="group/register relative px-8 py-4 bg-[#33ABB9] text-black font-bold font-orbitron tracking-wider text-lg overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed hover:bg-[#2a9aa5] transition-colors"
                       >
                         <div className="absolute inset-0 bg-white transform -translate-x-full skew-x-12 group-hover/register:translate-x-0 transition-transform duration-300 opacity-20" />
                         <span className="relative z-10 flex items-center gap-2">
-                          {regLoading ? 'REGISTERING...' : `PAY & REGISTER - ₹${entryFee}`}
+                          {regLoading ? 'PROCESSING...' : `UPLOAD PAYMENT - ₹${entryFee}`}
                         </span>
                       </button>
                     )}

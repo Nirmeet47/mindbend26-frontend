@@ -113,7 +113,7 @@ export default function PaymentUploadModal({
       <DialogContent className="bg-[#0a0a0a] border border-white/5 shadow-2xl w-[90vw] max-w-2xl max-h-[85vh] overflow-y-auto" data-lenis-prevent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white text-xl">
-            <Upload className="h-5 w-5 text-orange-400" />
+            <Upload className="h-5 w-5 text-[#33ABB9]" />
             Upload Payment Proof
           </DialogTitle>
           <DialogDescription className="text-gray-400 text-sm">
@@ -126,7 +126,7 @@ export default function PaymentUploadModal({
           <div className="bg-white/5 border border-white/10 p-4 rounded-lg">
             <div className="flex items-center justify-between">
               <span className="text-gray-400">Workshop Fee:</span>
-              <span className="text-2xl font-bold text-orange-400">₹{entryFee}</span>
+              <span className="text-2xl font-bold text-[#33ABB9]">₹{entryFee}</span>
             </div>
           </div>
 
@@ -278,7 +278,7 @@ export default function PaymentUploadModal({
             type="button"
             onClick={handleSubmit}
             disabled={uploading || !transactionId.trim() || (uploadMethod === "url" ? !screenshotUrl.trim() : !imageFile)}
-            className="bg-orange-600 text-white hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#33ABB9] text-black hover:bg-[#2a9aa5] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {uploading ? "Uploading..." : "Submit Payment Proof"}
           </Button>
