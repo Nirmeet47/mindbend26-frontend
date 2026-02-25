@@ -158,6 +158,12 @@ export default function Navbar() {
       href: "/ambassador",
       items: [],
     },
+    {
+      title: "Team",
+      isHyperlink: true,
+      href: "/team",
+      items: [],
+    },
   ];
 
   return (
@@ -249,7 +255,7 @@ export default function Navbar() {
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6 md:px-16 md:py-12 space-y-8 md:space-y-10 no-scrollbar">
+              <div data-lenis-prevent className="flex-1 overflow-y-auto p-6 md:px-16 md:py-12 space-y-8 md:space-y-10 no-scrollbar">
                 {/* Mobile Profile/Login Button */}
                 <div className="sm:hidden space-y-4 border-b border-white/10 pb-6">
                   {!isLoading &&
