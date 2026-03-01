@@ -325,6 +325,7 @@ export default function WorkshopDetailPage() {
           isSvnitian={isSvnitian}
           entryFee={workshop.entryFee}
           isFree={workshop.isFree}
+          whatsappGrpLink={workshop.whatsappGrpLink}
           formatDate={formatDate}
         />
       </div>
