@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import { Toaster } from 'react-hot-toast';
 import Analytics from '@/components/Analytics';
+import { Analytics as VercelAnalytics } from '@vercel/analytics/next';
 import SmoothScroll from '@/components/SmoothScroll';
 import "./globals.css";
 
@@ -315,6 +316,7 @@ export default function RootLayout({
             }
           }}
         />
+        <VercelAnalytics />
       </body>
     </html>
   );
