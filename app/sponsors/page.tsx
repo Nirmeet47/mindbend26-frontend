@@ -27,12 +27,38 @@ function Page() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen px-4 pt-22 pb-16 sm:px-5 lg:px-8 bg-[radial-gradient(circle_at_15%_10%,rgba(51,171,185,0.18),transparent_35%),radial-gradient(circle_at_85%_20%,rgba(24,67,68,0.45),transparent_30%),linear-gradient(180deg,#030607_0%,#061115_48%,#04080b_100%)]">
+      <main
+        className="min-h-screen px-4 pt-22 pb-16 sm:px-5 lg:px-8 bg-[#050505]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: "60px 60px",
+          fontFamily: "Space Grotesk, sans-serif",
+        }}
+      >
+        <div
+          className="fixed w-125 h-125 bg-cyan-500/10 rounded-full blur-[150px] pointer-events-none"
+          style={{ animation: "glowMove1 20s ease-in-out infinite" }}
+        ></div>
+        <div
+          className="fixed w-100 h-100 bg-blue-900/20 rounded-full blur-[120px] pointer-events-none"
+          style={{ animation: "glowMove2 25s ease-in-out infinite" }}
+        ></div>
+        <div
+          className="fixed w-75 h-75 bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none"
+          style={{ animation: "glowMove3 18s ease-in-out infinite" }}
+        ></div>
+
         <section className="max-w-4xl mx-auto text-center text-[#f3f2ef]">
           <p className="m-0 tracking-[0.18em] uppercase text-xs text-[#33ABB9]">
             Mindbend 2026
           </p>
-          <h1 className="mt-2 mb-1 text-[clamp(2rem,6vw,3.8rem)] leading-[1.08] font-black text-white uppercase tracking-[0.06em] font-['Orbitron']">
+          <h1
+            className="mt-2 mb-1 text-[clamp(2rem,6vw,3.8rem)] leading-[1.08] font-black text-white uppercase tracking-[0.06em]"
+            style={{ fontFamily: "Barlow Condensed, sans-serif" }}
+          >
             Sponsors
           </h1>
           <p className="mx-auto max-w-3xl text-[clamp(0.95rem,2.3vw,1.1rem)] leading-relaxed text-[#c7d7db]">
@@ -87,6 +113,62 @@ function Page() {
       <Footer />
 
       <style jsx>{`
+        @keyframes glowMove1 {
+          0%,
+          100% {
+            top: -10%;
+            right: -5%;
+          }
+          25% {
+            top: 20%;
+            right: 60%;
+          }
+          50% {
+            top: 60%;
+            right: 70%;
+          }
+          75% {
+            top: 80%;
+            right: 20%;
+          }
+        }
+
+        @keyframes glowMove2 {
+          0%,
+          100% {
+            bottom: -5%;
+            left: -5%;
+          }
+          25% {
+            bottom: 50%;
+            left: 70%;
+          }
+          50% {
+            bottom: 80%;
+            left: 50%;
+          }
+          75% {
+            bottom: 30%;
+            left: 10%;
+          }
+        }
+
+        @keyframes glowMove3 {
+          0%,
+          100% {
+            top: 50%;
+            left: 25%;
+          }
+          33% {
+            top: 10%;
+            left: 60%;
+          }
+          66% {
+            top: 70%;
+            left: 80%;
+          }
+        }
+
         .sponsor-reveal {
           opacity: 0;
           transform: translateY(30px) scale(0.98);
