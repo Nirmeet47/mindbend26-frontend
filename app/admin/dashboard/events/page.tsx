@@ -8,7 +8,11 @@ import { Button } from "../../../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Event } from "@/types";
-import { Plus, Filter, RefreshCw } from "lucide-react";
+import { Plus, Filter, RefreshCw, Download, CheckCircle, AlertCircle, FileSpreadsheet, Loader2 } from "lucide-react";
+
+interface DownloadStatus {
+  [eventId: string]: "idle" | "downloading" | "done" | "error";
+}
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -17,6 +21,61 @@ export default function EventsPage() {
   const [filter, setFilter] = useState<string>("all");
   const [editEvent, setEditEvent] = useState<Event | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [downloadStatus, setDownloadStatus] = useState<DownloadStatus>({});
+  const [downloadingAll, setDownloadingAll] = useState(false);
+  const [allExportDone, setAllExportDone] = useState(false);
+
+  const setStatus = (id: string, status: "idle" | "downloading" | "done" | "error") => {
+    setDownloadStatus((prev) => ({ ...prev, [id]: status }));
+  };
+
+  const downloadCSV = async (eventId: string, eventName: string): Promise<boolean> => {
+    try {
+      setStatus(eventId, "downloading");
+      const response = await eventsApi.exportTeamsCSV(eventId);
+      const blob = new Blob([response.data], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const sanitizedName = eventName.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
+      link.download = `${sanitizedName}_teams_${new Date().toISOString().split("T")[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      setStatus(eventId, "done");
+      // Reset to idle after 3 seconds
+      setTimeout(() => setStatus(eventId, "idle"), 3000);
+      return true;
+    } catch (err: any) {
+      setStatus(eventId, "error");
+      setTimeout(() => setStatus(eventId, "idle"), 3000);
+      let msg = "Failed to download CSV. No teams might be registered for this event.";
+      if (err?.response?.data instanceof Blob) {
+        const text = await err.response.data.text();
+        try {
+          const json = JSON.parse(text);
+          msg = json.message || msg;
+        } catch {}
+      }
+      console.error(`CSV export error for ${eventName}:`, msg);
+      return false;
+    }
+  };
+
+  const downloadAllCSV = async () => {
+    setDownloadingAll(true);
+    setAllExportDone(false);
+    const teamEvents = filteredEvents.filter((e) => e.isTeamEvent);
+    const soloEvents = filteredEvents.filter((e) => !e.isTeamEvent);
+    const allEventsToExport = [...teamEvents, ...soloEvents];
+    for (const event of allEventsToExport) {
+      await downloadCSV(event._id, event.name);
+    }
+    setDownloadingAll(false);
+    setAllExportDone(true);
+    setTimeout(() => setAllExportDone(false), 4000);
+  };
 
   const fetchEvents = () => {
     setLoading(true);
@@ -33,11 +92,63 @@ export default function EventsPage() {
   }, []);
 
   const filteredEvents =
-    filter === "all"
-      ? events
-      : events.filter((e) => e.type === filter);
+    filter === "all" ? events : events.filter((e) => e.type === filter);
 
-  const columns = ["name", "type", "slug", "isTeamEvent", "prizeMoney", "edit"];
+  const columns = ["name", "type", "slug", "isTeamEvent", "prizeMoney", "actions"];
+
+  const getDownloadButton = (event: any) => {
+    const status = downloadStatus[event._id] || "idle";
+    if (status === "downloading") {
+      return (
+        <Button
+          disabled
+          variant="outline"
+          size="sm"
+          className="bg-emerald-500/10 border-emerald-500/20 text-emerald-400 gap-1.5 min-w-[130px]"
+        >
+          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          Exporting...
+        </Button>
+      );
+    }
+    if (status === "done") {
+      return (
+        <Button
+          disabled
+          variant="outline"
+          size="sm"
+          className="bg-green-500/10 border-green-500/20 text-green-400 gap-1.5 min-w-[130px]"
+        >
+          <CheckCircle className="w-3.5 h-3.5" />
+          Downloaded!
+        </Button>
+      );
+    }
+    if (status === "error") {
+      return (
+        <Button
+          onClick={() => downloadCSV(event._id, event.name)}
+          variant="outline"
+          size="sm"
+          className="bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/20 gap-1.5 min-w-[130px]"
+        >
+          <AlertCircle className="w-3.5 h-3.5" />
+          No Teams
+        </Button>
+      );
+    }
+    return (
+      <Button
+        onClick={() => downloadCSV(event._id, event.name)}
+        variant="outline"
+        size="sm"
+        className="bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/20 gap-1.5 min-w-[130px]"
+      >
+        <FileSpreadsheet className="w-3.5 h-3.5" />
+        Export CSV
+      </Button>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-black">
@@ -72,7 +183,52 @@ export default function EventsPage() {
       </div>
 
       {/* Main Content */}
-      <div className="px-8 py-8">
+      <div className="px-8 py-8 space-y-6">
+
+        {/* CSV Export Panel */}
+        <div className="bg-[#0a0a0a] border border-emerald-500/20 rounded-2xl p-5 shadow-xl">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
+                <FileSpreadsheet className="h-5 w-5 text-emerald-400" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-white">Export Teams Data as CSV</h2>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Download team registrations for individual events or all at once.
+                  Use the <span className="text-emerald-400 font-medium">Export CSV</span> button in each row, or bulk-export below.
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={downloadAllCSV}
+              disabled={downloadingAll || filteredEvents.length === 0}
+              className={`gap-2 text-sm font-medium px-5 transition-all ${
+                allExportDone
+                  ? "bg-green-500/20 border border-green-500/30 text-green-400 hover:bg-green-500/30"
+                  : "bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30"
+              }`}
+            >
+              {downloadingAll ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Exporting All...
+                </>
+              ) : allExportDone ? (
+                <>
+                  <CheckCircle className="w-4 h-4" />
+                  All Exported!
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  Export All Events CSV
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
         <Card className="bg-[#0a0a0a] border-white/5">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -82,7 +238,7 @@ export default function EventsPage() {
                 <select
                   className="bg-white/5 border border-white/10 rounded-md px-3 py-1.5 text-sm text-white focus:ring-2 focus:ring-white/20 focus:border-transparent outline-none"
                   value={filter}
-                  onChange={e => setFilter(e.target.value)}
+                  onChange={(e) => setFilter(e.target.value)}
                 >
                   <option value="all" className="bg-black">All Events</option>
                   <option value="technical" className="bg-black">Technical</option>
@@ -118,10 +274,13 @@ export default function EventsPage() {
                     type: (
                       <Badge
                         variant="outline"
-                        className={`${event.type === 'technical'
-                          ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                          : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                          }`}
+                        className={`${
+                          event.type === "technical"
+                            ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                            : event.type === "esports"
+                            ? "bg-orange-500/10 text-orange-400 border-orange-500/20"
+                            : "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                        }`}
                       >
                         {event.type}
                       </Badge>
@@ -140,15 +299,18 @@ export default function EventsPage() {
                     ) : (
                       <span className="text-gray-500">₹0</span>
                     ),
-                    edit: (
-                      <Button
-                        onClick={() => setEditEvent(event)}
-                        variant="outline"
-                        size="sm"
-                        className="bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
-                      >
-                        Edit
-                      </Button>
+                    actions: (
+                      <div className="flex items-center gap-2">
+                        <Button
+                          onClick={() => setEditEvent(event)}
+                          variant="outline"
+                          size="sm"
+                          className="bg-transparent border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
+                        >
+                          Edit
+                        </Button>
+                        {getDownloadButton(event)}
+                      </div>
                     ),
                   }))}
                 />

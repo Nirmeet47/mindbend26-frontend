@@ -26,6 +26,9 @@ export const eventsApi = {
     api.patch(`/events/toggle-registration/${id}`),
   stats: () => api.get("/events/stats"),
   getEventTeams: (id: string) => api.get(`/events/${id}/teams`),
+  exportTeamsCSV: (id: string) => api.get(`/events/${id}/teams/export-csv`, {
+    responseType: 'blob',
+  }),
 };
 
 export const teamsApi = {
